@@ -6,6 +6,7 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.event.EventListener;
 import org.springframework.core.env.Environment;
 import org.springframework.scheduling.annotation.EnableAsync;
@@ -19,6 +20,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
  * @since 1.0
  */
 @Slf4j
+@EnableCaching
 @EnableAsync
 @MapperScan("cn.codesensi.leaf.rbac.**.mapper")
 @SpringBootApplication(scanBasePackages = "cn.codesensi.leaf.rbac")
