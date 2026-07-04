@@ -1,4 +1,4 @@
-package cn.codesensi.leaf.rbac.api.system.config;
+package cn.codesensi.leaf.rbac.api.config;
 
 import cn.codesensi.leaf.rbac.common.properties.AppProperties;
 import io.swagger.v3.oas.models.OpenAPI;

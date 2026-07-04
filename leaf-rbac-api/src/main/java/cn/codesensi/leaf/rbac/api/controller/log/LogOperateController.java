@@ -1,4 +1,4 @@
-package cn.codesensi.leaf.rbac.api.system.controller;
+package cn.codesensi.leaf.rbac.api.controller.log;
 
 import cn.codesensi.leaf.rbac.framework.annotation.ApiResponseBody;
 import cn.codesensi.leaf.rbac.system.entity.LogOperate;
