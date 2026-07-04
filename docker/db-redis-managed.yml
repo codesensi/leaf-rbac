@@ -1,0 +1,21 @@
+services:
+  redis:
+    image: redis:7.4.9
+    container_name: leaf-redis
+    restart: unless-stopped
+    ports: [ "6379:6379" ]
+    command: redis-server --requirepass ${REDIS_PASSWORD} --appendonly yes
+    volumes:
+      - /docker/redis/data:/data
+      - /docker/redis/conf/redis.conf:/etc/redis/redis.conf
+      - /docker/redis/logs:/logs
+    healthcheck:
+      test: [ "CMD", "redis-cli", "-a", "${REDIS_PASSWORD}", "ping" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+  leaf-rbac:
+    depends_on:
+      redis:
+        condition: service_healthy

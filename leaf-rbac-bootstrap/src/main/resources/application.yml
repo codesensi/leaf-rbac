@@ -1,0 +1,71 @@
+spring:
+  application:
+    name: leaf-rbac
+  lifecycle:
+    # 优雅停机最大等待时间
+    timeout-per-shutdown-phase: 60s
+  profiles:
+    active: dev
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+server:
+  port: 9098
+  # 开启优雅停机
+  shutdown: graceful
+# logback日志配置
+logging:
+  level:
+    cn.codesensi.leaf: info
+  pattern:
+    dateformat: yyyy-MM-dd HH:mm:ss.SSS
+    console: '%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(${LOG_LEVEL_PATTERN:%5p}) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%t]){faint} [${spring.profiles.active}] [%X{traceId:-}] %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n'
+    file: '%d{yyyy-MM-dd HH:mm:ss.SSS} ${LOG_LEVEL_PATTERN:%5p} ${PID:- } --- [%t] [${spring.profiles.active}] [%X{traceId:-}] %-40.40logger{39} : %m%n'
+  file:
+    name: ./logs/${spring.application.name}_${spring.profiles.active}.log
+  logback:
+    rollingpolicy:
+      file-name-pattern: ${logging.file.name}.%d.%i.log
+      max-file-size: 100MB
+      max-history: 180
+
+# springdoc-openapi项目配置
+springdoc:
+  # Swagger UI 路径（默认 /swagger-ui.html）
+  swagger-ui:
+    path: /swagger-ui.html
+    # 接口排序（method:按方法排序，alpha:按字母排序）
+    tags-sorter: alpha
+    operations-sorter: alpha
+    # 是否折叠或展开（list: 展开标签列表，折叠操作，默认值。full: 完全展开所有标签和操作。none: 全部折叠，只显示标签标题。）
+    doc-expansion: none
+  # API 文档路径（默认 /v3/api-docs）
+  api-docs:
+    path: /v3/api-docs
+  group-configs:
+    - group: 'default'
+      paths-to-match: '/**'
+      # 指定扫描的包（多个用逗号隔开）
+      packages-to-scan: cn.codesensi.leaf.rbac.api
+
+# mybatis-flex配置
+mybatis-flex:
+  global-config:
+    key-config:
+      key-type: generator
+      value: snowFlakeId
+    logic-delete-column: del_flag
+
+# 项目配置
+app:
+  # 锁文件
+  lock-file: ./data/app.lock
+  # 名称
+  name: 一叶后台管理系统
+  # 版本
+  version: @project.version@
+  # 负责人
+  author: codesensi
+  # 版权
+  copyright: 2026
+  # 请求缓存限制 5M
+  request-cache-limit: 5242880

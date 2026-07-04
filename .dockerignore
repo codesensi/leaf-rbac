@@ -1,0 +1,55 @@
+# ============================================
+# Docker 构建排除文件
+# 构建上下文 = 项目根目录 (context: ..)
+# ============================================
+
+# ---------- 版本控制 & IDE ----------
+.git
+.gitignore
+.idea
+*.iml
+.vscode
+*.swp
+*~
+
+# ---------- Docker 自身文件 ----------
+# ⭐ 避免把 docker 元数据 COPY 进镜像
+docker/data
+docker/.env
+docker/*.md
+docker-compose*.yml
+docker/Dockerfile
+
+# ---------- 构建产物 & 缓存 ----------
+# Maven
+target/
+!.mvn/wrapper/maven-wrapper.jar
+
+# Gradle
+build/
+.gradle/
+!gradle/wrapper/gradle-wrapper.jar
+
+# Node.js (若前后端同仓)
+node_modules/
+dist/
+.npm
+.yarn/cache
+
+# ---------- 文档 & 测试 ----------
+README.md
+CHANGELOG.md
+LICENSE
+docs/
+**/*Test.java
+**/*Tests.java
+**/test/
+**/tests/
+
+# ---------- CI/CD & 杂项 ----------
+.github
+.gitlab-ci.yml
+Jenkinsfile
+*.log
+.DS_Store
+Thumbs.db

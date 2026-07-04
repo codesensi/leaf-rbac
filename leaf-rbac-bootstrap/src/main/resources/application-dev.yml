@@ -1,0 +1,66 @@
+# logback日志配置
+logging:
+  level:
+    # trace级别可打印sql结果
+    cn.codesensi.leaf: trace
+
+# 数据库连接配置
+spring:
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    hikari:
+      # 客户端从连接池等待连接的最大毫秒数
+      connection-timeout: 20000
+      # 连接池中维护的最小空闲连接数
+      minimum-idle: 5
+      # 最大连接池数大小
+      maximum-pool-size: 20
+      # 允许一个连接在连接池中闲置的最大毫秒数
+      idle-timeout: 300000
+      # 池中连接关闭后的最长生存毫秒数
+      max-lifetime: 1200000
+      # 从池中返回的连接的默认自动提交行为
+      auto-commit: true
+      # 禁止在应用启动阶段因获取数据库连接失败而抛出异常或阻止应用启动
+      initialization-fail-timeout: -1
+
+# 线程池配置
+thread:
+  pool:
+    # 设置核心线程数
+    core-pool-size: 5
+    # 设置最大线程数
+    max-pool-size: 20
+    # 设置缓冲队列大小
+    queue-capacity: 100
+    # 设置线程的最大空闲秒数
+    keep-alive-seconds: 30
+    # 是否允许核心线程超时
+    allow-core-thread-timeout: true
+    # 是否等待剩余任务完成后才关闭应用
+    wait-for-tasks-to-complete-on-shutdown: true
+    # 等待剩余任务完成的最大秒数
+    await-termination-seconds: 60
+    # 拒绝策略
+    rejected-execution-handler: CallerRunsPolicy
+
+# 项目配置
+app:
+  db:
+    type: mysql
+    h2:
+      url: jdbc:h2:./data/leaf_rbac_dev;DB_CLOSE_DELAY=-1;MODE=MySQL
+      username: sa
+      password:
+      driver-class-name: org.h2.Driver
+    mysql:
+      url: jdbc:mysql://192.168.2.3:3306/leaf_rbac_dev?useSSL=false&characterEncoding=utf8&serverTimezone=Asia/Shanghai
+      username: root
+      password: mysql_GzxMw2
+      driver-class-name: com.mysql.cj.jdbc.Driver
+    postgresql:
+      url: jdbc:postgresql://192.168.2.3:5432/leaf_rbac_dev?ssl=false&sslmode=disable&client_encoding=UTF8&timezone=Asia/Shanghai
+      username: postgres
+      password: postgres_saiFPX
+      driver-class-name: org.postgresql.Driver
+  demo-mode: false
