@@ -62,8 +62,8 @@ public class CacheRequestBodyFilter extends OncePerRequestFilter {
      */
     @Override
     public void doFilterInternal(HttpServletRequest request,
-                                    @NonNull HttpServletResponse response,
-                                    @NonNull FilterChain filterChain) throws ServletException, IOException {
+                                 @NonNull HttpServletResponse response,
+                                 @NonNull FilterChain filterChain) throws ServletException, IOException {
         // 文件上传请求跳过包装，避免大文件缓存导致内存溢出
         if (request.getContentType() != null && request.getContentType().toLowerCase().contains("multipart/form-data")) {
             filterChain.doFilter(request, response);
