@@ -1,4 +1,4 @@
-package cn.codesensi.leaf.rbac.bootstrap.config;
+package cn.codesensi.leaf.rbac.common.properties;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -23,12 +23,12 @@ import org.springframework.stereotype.Component;
  *       driver-class-name: com.mysql.cj.jdbc.Driver
  * }</pre>
  *
- * @see DynamicDataSourceConfig
+ * @see cn.codesensi.leaf.rbac.bootstrap.config.DynamicDataSourceConfig
  */
 @Data
 @Component
 @ConfigurationProperties(prefix = "app.db")
-public class DatabaseProperties {
+public class AppDbProperties {
 
     /**
      * 当前选中的数据库类型（h2 / mysql / postgresql）
@@ -71,7 +71,7 @@ public class DatabaseProperties {
      * 单个数据源的连接配置。
      * <p>
      * 包含 JDBC URL、用户名、密码、驱动类名四个属性，
-     * 由 {@link DynamicDataSourceConfig} 读取并注入到 HikariCP 数据源中。
+     * 由 {@link cn.codesensi.leaf.rbac.bootstrap.config.DynamicDataSourceConfig} 读取并注入到 HikariCP 数据源中。
      */
     @Data
     public static class DataSourceConfig {

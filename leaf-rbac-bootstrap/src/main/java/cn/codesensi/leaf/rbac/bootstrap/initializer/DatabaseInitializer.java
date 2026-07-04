@@ -1,11 +1,12 @@
 package cn.codesensi.leaf.rbac.bootstrap.initializer;
 
 import cn.codesensi.leaf.rbac.bootstrap.condition.LockFileMissingCondition;
-import cn.codesensi.leaf.rbac.bootstrap.config.DatabaseProperties;
+import cn.codesensi.leaf.rbac.common.properties.AppDbProperties;
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.LocalDateTimeUtil;
 import cn.hutool.core.util.CharsetUtil;
 import jakarta.annotation.PostConstruct;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
@@ -42,9 +43,10 @@ import java.util.Properties;
  *
  * @see LockFileMissingCondition
  * @see DataSourceInitializer
- * @see DatabaseProperties
+ * @see AppDbProperties
  */
 @Slf4j
+@RequiredArgsConstructor
 @Configuration
 @Conditional(LockFileMissingCondition.class)
 public class DatabaseInitializer {
@@ -58,11 +60,7 @@ public class DatabaseInitializer {
     /**
      * 多数据源配置
      */
-    private final DatabaseProperties dbProps;
-
-    public DatabaseInitializer(DatabaseProperties dbProps) {
-        this.dbProps = dbProps;
-    }
+    private final AppDbProperties appDbProperties;
 
     /**
      * 使用 {@link DriverManager} 直连数据库服务，目标数据库不存在时自动创建。
@@ -78,7 +76,7 @@ public class DatabaseInitializer {
      */
     @PostConstruct
     public void createDatabaseIfNotExists() {
-        DatabaseProperties.DataSourceConfig config = dbProps.getCurrentConfig();
+        AppDbProperties.DataSourceConfig config = appDbProperties.getCurrentConfig();
         if (config == null) {
             throw new IllegalStateException("Failed to obtain current database configuration");
         }
@@ -158,7 +156,7 @@ public class DatabaseInitializer {
         initializer.setDataSource(dataSource);
         initializer.setEnabled(true);
 
-        String dbType = resolveDbTypeFromUrl(dbProps.getCurrentConfig().getUrl());
+        String dbType = resolveDbTypeFromUrl(appDbProperties.getCurrentConfig().getUrl());
         if (dbType == null) {
             throw new IllegalStateException("Unable to resolve database type from URL");
         }
