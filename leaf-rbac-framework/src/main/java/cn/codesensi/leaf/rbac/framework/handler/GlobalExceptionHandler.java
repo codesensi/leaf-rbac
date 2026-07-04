@@ -5,6 +5,7 @@ import cn.codesensi.leaf.rbac.common.exception.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 /**
  * 全局异常处理器
@@ -44,6 +45,13 @@ public class GlobalExceptionHandler {
     public Result<Void> handleAuthorizationException(AuthorizationException e) {
         log.error("授权异常：", e);
         return Result.forbidden(e.getMsg());
+    }
+
+    @ExceptionHandler(NoResourceFoundException.class)
+    public Result<Void> handleNoResourceFoundException(NoResourceFoundException e) {
+        String path = e.getResourcePath();
+        log.warn("资源不存在：{}", path);
+        return Result.notFound("[" + path + "]不存在");
     }
 
     // 处理其他未捕获异常
