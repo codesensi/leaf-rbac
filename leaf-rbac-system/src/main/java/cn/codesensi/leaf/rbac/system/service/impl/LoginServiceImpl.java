@@ -58,7 +58,7 @@ public class LoginServiceImpl implements LoginService {
                 throw new ValidationException("验证码为空");
             }
             // 与缓存中的值对比
-            String captchaCache = stringRedisTemplate.opsForValue().get(CacheUtil.getCaptchaImagePrefix().concat(loginAccountInDTO.getCaptchaKey()));
+            String captchaCache = stringRedisTemplate.opsForValue().getAndDelete(CacheUtil.getCaptchaImagePrefix().concat(loginAccountInDTO.getCaptchaKey()));
             if (StrUtil.isBlank(captchaCache)) {
                 throw new BusinessException("验证码不存在");
             }
