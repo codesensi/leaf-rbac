@@ -49,15 +49,15 @@ public class ImageCaptchaStrategyImpl implements CaptchaStrategy {
                 String arithmeticString = ((ArithmeticCaptcha) captcha).getArithmeticString();
                 log.info("算术验证码运算公式：{}", arithmeticString);
             }
-            String key = CacheUtil.getPrefix(CacheConst.CAPTCHA_PREFIX.concat(CacheConst.IMAGE_PREFIX)) + IdUtil.fastSimpleUUID();
+            String keyUuid = IdUtil.fastSimpleUUID();
             // 验证码结果
             String text = captcha.text();
-            log.info("图形验证码唯一标识：{}，验证码内容：{}", key, text);
+            log.info("图形验证码唯一标识：{}，验证码内容：{}", keyUuid, text);
             // 放入缓存
-            stringRedisTemplate.opsForValue().set(key, text, CacheConst.EXPIRE_5_MINUTES, TimeUnit.MINUTES);
+            stringRedisTemplate.opsForValue().set(CacheUtil.getCaptchaImagePrefix().concat(keyUuid), text, CacheConst.EXPIRE_5_MINUTES, TimeUnit.MINUTES);
             // 返回结果
-            captchaOutDTO.setKey(key);
-            captchaOutDTO.setResult(captcha.toBase64());
+            captchaOutDTO.setCaptchaKey(keyUuid);
+            captchaOutDTO.setCaptchaValue(captcha.toBase64());
         } catch (Exception e) {
             log.error("图形验证码生成失败：", e);
             throw new BusinessException("图形验证码生成失败");

@@ -28,12 +28,6 @@ public class LoginOutDTO implements Serializable {
     private String accessToken;
 
     /**
-     * 刷新令牌
-     */
-    @Schema(description = "刷新令牌")
-    private String refreshToken;
-
-    /**
      * 访问令牌过期时间（毫秒值）
      */
     @Schema(description = "访问令牌过期时间（毫秒值）")

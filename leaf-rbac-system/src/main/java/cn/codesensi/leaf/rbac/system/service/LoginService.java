@@ -17,13 +17,6 @@ public interface LoginService {
     LoginOutDTO loginAccount(LoginAccountInDTO loginAccountInDTO);
 
     /**
-     * 刷新访问令牌
-     *
-     * @return 刷新访问令牌结果
-     */
-    TokenRefreshOutDTO tokenRefresh(TokenRefreshInDTO tokenRefreshInDTO);
-
-    /**
      * 退出登录
      */
     void logout(LogoutInDTO logoutInDTO);

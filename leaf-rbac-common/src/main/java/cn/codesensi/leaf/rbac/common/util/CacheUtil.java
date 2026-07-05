@@ -1,5 +1,6 @@
 package cn.codesensi.leaf.rbac.common.util;
 
+import cn.codesensi.leaf.rbac.common.constants.CacheConst;
 import cn.hutool.extra.spring.SpringUtil;
 
 /**
@@ -8,17 +9,27 @@ import cn.hutool.extra.spring.SpringUtil;
 public class CacheUtil {
 
     /**
-     * 获取缓存key前缀
-     * 项目名称:部署环境
-     *
-     * @return 缓存key前缀
+     * 获取基础缓存前缀
      */
-    public static String getPrefix(String key) {
+    public static String getBasePrefix() {
         String applicationName = SpringUtil.getApplicationName();
         String activeProfile = SpringUtil.getActiveProfile();
         return applicationName.concat(":")
                 .concat(activeProfile)
-                .concat(":")
-                .concat(key);
+                .concat(":");
+    }
+
+    /**
+     * 获取图形验证码缓存前缀
+     */
+    public static String getCaptchaImagePrefix() {
+        return getBasePrefix().concat(CacheConst.CAPTCHA_PREFIX.concat(CacheConst.IMAGE_PREFIX));
+    }
+
+    /**
+     * 获取手机验证码缓存前缀
+     */
+    public static String getCaptchaSmsPrefix() {
+        return getBasePrefix().concat(CacheConst.CAPTCHA_PREFIX.concat(CacheConst.SMS_PREFIX));
     }
 }

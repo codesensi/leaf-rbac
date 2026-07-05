@@ -35,18 +35,17 @@ public class SmsCaptchaStrategyImpl implements CaptchaStrategy {
             throw new ValidationException("手机号不能为空");
         }
         // 生成验证码
-        String key = CacheUtil.getPrefix(CacheConst.CAPTCHA_PREFIX.concat(CacheConst.SMS_PREFIX)) + phone;
         String result = RandomUtil.randomNumbers(6);
         log.info("短信验证码手机号：{}，验证码内容：{}", phone, result);
 
         // TODO 发短信
 
         // 放入缓存
-        stringRedisTemplate.opsForValue().set(key, result, CacheConst.EXPIRE_5_MINUTES, TimeUnit.MINUTES);
+        stringRedisTemplate.opsForValue().set(CacheUtil.getCaptchaSmsPrefix().concat(phone), result, CacheConst.EXPIRE_5_MINUTES, TimeUnit.MINUTES);
         // 返回结果
         CaptchaOutDTO captchaOutDTO = new CaptchaOutDTO();
-        captchaOutDTO.setKey(key);
-        captchaOutDTO.setResult(result);
+        captchaOutDTO.setCaptchaKey(phone);
+        captchaOutDTO.setCaptchaValue(result);
         return captchaOutDTO;
     }
 }

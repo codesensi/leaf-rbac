@@ -1,11 +1,13 @@
 package cn.codesensi.leaf.rbac.system.service.impl;
 
-import cn.codesensi.leaf.rbac.common.constants.Const;
 import cn.codesensi.leaf.rbac.common.exception.BusinessException;
 import cn.codesensi.leaf.rbac.common.exception.ValidationException;
 import cn.codesensi.leaf.rbac.common.properties.AppCaptchaProperties;
 import cn.codesensi.leaf.rbac.common.properties.AppSecurityProperties;
-import cn.codesensi.leaf.rbac.system.dto.*;
+import cn.codesensi.leaf.rbac.common.util.CacheUtil;
+import cn.codesensi.leaf.rbac.system.dto.LoginAccountInDTO;
+import cn.codesensi.leaf.rbac.system.dto.LoginOutDTO;
+import cn.codesensi.leaf.rbac.system.dto.LogoutInDTO;
 import cn.codesensi.leaf.rbac.system.entity.SysUser;
 import cn.codesensi.leaf.rbac.system.service.LoginService;
 import cn.codesensi.leaf.rbac.system.service.SysUserService;
@@ -51,16 +53,16 @@ public class LoginServiceImpl implements LoginService {
             if (StrUtil.isBlank(loginAccountInDTO.getCaptchaKey())) {
                 throw new ValidationException("验证码唯一标识为空");
             }
-            String captcha = loginAccountInDTO.getCaptcha();
-            if (StrUtil.isBlank(captcha)) {
+            String captchaValue = loginAccountInDTO.getCaptchaValue();
+            if (StrUtil.isBlank(captchaValue)) {
                 throw new ValidationException("验证码为空");
             }
             // 与缓存中的值对比
-            String captchaCache = stringRedisTemplate.opsForValue().get(loginAccountInDTO.getCaptchaKey());
+            String captchaCache = stringRedisTemplate.opsForValue().get(CacheUtil.getCaptchaImagePrefix().concat(loginAccountInDTO.getCaptchaKey()));
             if (StrUtil.isBlank(captchaCache)) {
                 throw new BusinessException("验证码不存在");
             }
-            if (!captcha.equals(captchaCache)) {
+            if (!captchaValue.equals(captchaCache)) {
                 throw new BusinessException("验证码错误");
             }
         }
@@ -79,10 +81,6 @@ public class LoginServiceImpl implements LoginService {
 
         LoginOutDTO loginOutDTO = new LoginOutDTO();
         loginOutDTO.setAccessToken(StpUtil.getTokenValue());
-        // 获取刷新令牌
-        Long refreshTokenTimeout = appSecurityProperties.getRefreshTokenTimeout();
-        String refreshToken = SaTempUtil.createToken(userId, refreshTokenTimeout);
-        loginOutDTO.setRefreshToken(refreshToken);
         // 访问令牌过期时间
         long accessTokenTimeout = StpUtil.getTokenTimeout();
         loginOutDTO.setExpires(LocalDateTimeUtil.now().plusSeconds(accessTokenTimeout).toInstant(ZoneOffset.of("+8")).toEpochMilli());
@@ -100,37 +98,6 @@ public class LoginServiceImpl implements LoginService {
     }
 
     /**
-     * 刷新访问令牌
-     *
-     * @return 刷新访问令牌结果
-     */
-    @Override
-    public TokenRefreshOutDTO tokenRefresh(TokenRefreshInDTO tokenRefreshInDTO) {
-        String refreshToken = tokenRefreshInDTO.getRefreshToken();
-        // 访问令牌过期时间
-        long accessTokenTimeout = StpUtil.getTokenTimeout();
-        // 访问令牌过期后才可以获取新值
-        Object userId = SaTempUtil.parseToken(refreshToken);
-        if (accessTokenTimeout <= Const.ZERO_INT) {
-            if (ObjUtil.isNull(userId)) {
-                throw new BusinessException("登录已失效");
-            }
-            // 登出
-            StpUtil.logout();
-            // 重新登录，生成新访问令牌
-            StpUtil.login(userId);
-            // 访问令牌过期时间重新赋值
-            accessTokenTimeout = StpUtil.getTokenTimeout();
-        }
-
-        TokenRefreshOutDTO tokenRefreshOutDTO = new TokenRefreshOutDTO();
-        tokenRefreshOutDTO.setAccessToken(StpUtil.getTokenValue());
-        tokenRefreshOutDTO.setRefreshToken(refreshToken);
-        tokenRefreshOutDTO.setExpires(LocalDateTimeUtil.now().plusSeconds(accessTokenTimeout).toInstant(ZoneOffset.of("+8")).toEpochMilli());
-        return tokenRefreshOutDTO;
-    }
-
-    /**
      * 退出登录
      */
     @Override
@@ -141,11 +108,6 @@ public class LoginServiceImpl implements LoginService {
             if (ObjUtil.isNotNull(userId)) {
                 StpUtil.logout(userId);
             }
-        }
-        // 同步删除刷新令牌
-        String refreshToken = logoutInDTO.getRefreshToken();
-        if (StrUtil.isNotBlank(refreshToken)) {
-            SaTempUtil.deleteToken(refreshToken);
         }
     }
 

@@ -2,11 +2,11 @@ package cn.codesensi.leaf.rbac.api.controller.auth;
 
 import cn.codesensi.leaf.rbac.api.request.LoginAccountRequest;
 import cn.codesensi.leaf.rbac.api.request.LogoutRequest;
-import cn.codesensi.leaf.rbac.api.request.TokenRefreshRequest;
 import cn.codesensi.leaf.rbac.api.response.LoginResponse;
-import cn.codesensi.leaf.rbac.api.response.TokenRefreshResponse;
 import cn.codesensi.leaf.rbac.framework.annotation.ApiResponseBody;
-import cn.codesensi.leaf.rbac.system.dto.*;
+import cn.codesensi.leaf.rbac.system.dto.LoginAccountInDTO;
+import cn.codesensi.leaf.rbac.system.dto.LoginOutDTO;
+import cn.codesensi.leaf.rbac.system.dto.LogoutInDTO;
 import cn.codesensi.leaf.rbac.system.service.LoginService;
 import cn.dev33.satoken.annotation.SaIgnore;
 import cn.hutool.core.bean.BeanUtil;
@@ -44,18 +44,6 @@ public class LoginController {
         LoginAccountInDTO loginAccountInDTO = BeanUtil.copyProperties(request, LoginAccountInDTO.class);
         LoginOutDTO loginOutDTO = loginService.loginAccount(loginAccountInDTO);
         return BeanUtil.copyProperties(loginOutDTO, LoginResponse.class);
-    }
-
-    /**
-     * 刷新访问令牌
-     */
-    @SaIgnore
-    @Operation(summary = "刷新访问令牌")
-    @PostMapping("/token/refresh")
-    public TokenRefreshResponse tokenRefresh(@Validated @RequestBody TokenRefreshRequest request) {
-        TokenRefreshInDTO tokenRefreshInDTO = BeanUtil.copyProperties(request, TokenRefreshInDTO.class);
-        TokenRefreshOutDTO tokenRefreshOutDTO = loginService.tokenRefresh(tokenRefreshInDTO);
-        return BeanUtil.copyProperties(tokenRefreshOutDTO, TokenRefreshResponse.class);
     }
 
     /**

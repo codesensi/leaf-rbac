@@ -42,9 +42,9 @@ public class LoginAccountInDTO implements Serializable {
     private String captchaKey;
 
     /**
-     * 用户密码
+     * 验证码内容
      */
-    @Schema(description = "验证码")
-    private String captcha;
+    @Schema(description = "验证码内容")
+    private String captchaValue;
 
 }

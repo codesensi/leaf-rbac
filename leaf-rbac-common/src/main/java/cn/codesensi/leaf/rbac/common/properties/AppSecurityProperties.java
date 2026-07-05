@@ -35,11 +35,4 @@ public class AppSecurityProperties {
      */
     private Integer requestCacheLimit = 1048576;
 
-    /**
-     * 刷新令牌超时时间（秒）。
-     * <p>
-     * 刷新令牌超时后，将无法通过刷新令牌获取新的令牌，需要重新登录。
-     * 默认值：{@code 604800}（7天）。
-     */
-    private Long refreshTokenTimeout = 604800L;
 }

@@ -18,14 +18,14 @@ public class CaptchaOutDTO implements Serializable {
     private static final long serialVersionUID = 1L;
 
     /**
-     * 唯一标识
+     * 验证码唯一标识
      */
-    @Schema(description = "唯一标识")
-    private String key;
+    @Schema(description = "验证码唯一标识")
+    private String captchaKey;
 
     /**
-     * 验证码
+     * 验证码内容
      */
-    @Schema(description = "验证码")
-    private String result;
+    @Schema(description = "验证码内容")
+    private String captchaValue;
 }
