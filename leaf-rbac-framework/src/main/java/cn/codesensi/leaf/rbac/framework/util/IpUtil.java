@@ -64,7 +64,7 @@ public class IpUtil {
         }
 
         // 2. 检查其他常见的代理头
-        String[] headers = {"X-Real-IP", "Proxy-Client-IP", "WL-Proxy-Client-IP", "HTTP_CLIENT_IP"};
+        String[] headers = {"X-Real-IP", "Proxy-Client-IP", "WL-Proxy-Client-IP", "HTTP_CLIENT_IP", "HTTP_X_FORWARDED_FOR"};
         for (String header : headers) {
             ip = request.getHeader(header);
             if (isValidIp(ip)) {
