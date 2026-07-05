@@ -85,3 +85,10 @@ app:
       password: ${POSTGRESQL_PASSWORD}
       driver-class-name: org.postgresql.Driver
   demo-mode: false
+  # 验证码配置
+  captcha:
+    enabled: true
+    # 验证码类型
+    type: image
+    # 图形验证码类型，验证码类型为图形时需配置
+    image-type: arithmetic

@@ -107,7 +107,7 @@ public class Result<T> implements Serializable {
     }
 
     /**
-     * 快速失败：系统异常
+     * 快速失败：服务异常
      */
     public static <T> Result<T> systemError(String msg) {
         return error(ResultCode.INTERNAL_SERVER_ERROR, msg);

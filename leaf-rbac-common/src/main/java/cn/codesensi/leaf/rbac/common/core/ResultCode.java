@@ -20,8 +20,10 @@ public enum ResultCode {
     FORBIDDEN(403, "无权限访问该资源"),
     NOT_FOUND(404, "资源不存在"),
     METHOD_NOT_ALLOWED(405, "请求方法不允许"),
-    CONFLICT(409, "资源冲突，已存在"),
+    CONFLICT(409, "资源已存在"),
+    GONE(410, "资源已过期"),
     UNPROCESSABLE_ENTITY(422, "参数校验失败"),
+    TOO_MANY_REQUESTS(429, "请求过于频繁，请稍后重试"),
 
     // ---------- 5xx 服务端错误 ----------
     INTERNAL_SERVER_ERROR(500, "系统内部错误"),
