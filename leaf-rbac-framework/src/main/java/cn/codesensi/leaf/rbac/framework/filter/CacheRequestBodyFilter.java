@@ -1,6 +1,6 @@
 package cn.codesensi.leaf.rbac.framework.filter;
 
-import cn.codesensi.leaf.rbac.common.properties.AppProperties;
+import cn.codesensi.leaf.rbac.common.properties.AppSecurityProperties;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -42,7 +42,7 @@ import java.io.IOException;
 @Component
 public class CacheRequestBodyFilter extends OncePerRequestFilter {
 
-    private final AppProperties appProperties;
+    private final AppSecurityProperties appSecurityProperties;
 
     /**
      * 将请求包装为 {@link ContentCachingRequestWrapper}，缓存请求体以便重复读取。
@@ -70,7 +70,7 @@ public class CacheRequestBodyFilter extends OncePerRequestFilter {
             return;
         }
         // 将原始请求包装为可缓存请求体的包装器，传递给后续过滤器
-        ContentCachingRequestWrapper wrappedRequest = new ContentCachingRequestWrapper(request, appProperties.getRequestCacheLimit());
+        ContentCachingRequestWrapper wrappedRequest = new ContentCachingRequestWrapper(request, appSecurityProperties.getRequestCacheLimit());
         filterChain.doFilter(wrappedRequest, response);
     }
 }

@@ -66,6 +66,7 @@ thread:
 
 # 项目配置
 app:
+  # 数据库配置
   db:
     type: mysql
     h2:
@@ -91,3 +92,9 @@ app:
     type: image
     # 图形验证码类型，验证码类型为图形时需配置
     image-type: arithmetic
+  # 安全配置
+  security:
+    # 请求缓存限制 5M
+    request-cache-limit: 5242880
+    # 刷新令牌过期时间（单位：秒）
+    refresh-token-timeout: 2592000

@@ -1,6 +1,6 @@
 package cn.codesensi.leaf.rbac.system.strategy.captcha;
 
-import cn.codesensi.leaf.rbac.common.exception.CaptchaException;
+import cn.codesensi.leaf.rbac.common.exception.BusinessException;
 import cn.codesensi.leaf.rbac.system.dto.CaptchaInDTO;
 import cn.codesensi.leaf.rbac.system.dto.CaptchaOutDTO;
 import cn.codesensi.leaf.rbac.system.enums.CaptchaStrategyType;
@@ -37,7 +37,7 @@ public class CaptchaStrategyContext {
         CaptchaStrategyType captchaStrategyType = STRATEGY_TYPE_MAP.get(type);
         if (captchaStrategyType == null) {
             log.error("未匹配到验证码策略：{}", type);
-            throw new CaptchaException("验证码生成失败");
+            throw new BusinessException("验证码生成失败");
         }
         // 获取策略实现
         CaptchaStrategy captchaStrategy = captchaStrategyFactory.getCaptchaStrategy(captchaStrategyType);

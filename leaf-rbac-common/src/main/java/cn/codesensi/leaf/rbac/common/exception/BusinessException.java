@@ -1,5 +1,7 @@
 package cn.codesensi.leaf.rbac.common.exception;
 
+import cn.codesensi.leaf.rbac.common.core.ResultCode;
+
 /**
  * 业务异常 —— 表示业务逻辑处理过程中可预见的错误。
  * <p>
@@ -20,6 +22,10 @@ package cn.codesensi.leaf.rbac.common.exception;
  * @since 1.0
  */
 public class BusinessException extends BaseException {
+
+    public BusinessException(String msg) {
+        super(ResultCode.INTERNAL_SERVER_ERROR.getCode(), msg);
+    }
 
     public BusinessException(int code, String msg) {
         super(code, msg);

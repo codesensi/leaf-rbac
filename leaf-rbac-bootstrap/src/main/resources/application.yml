@@ -88,5 +88,3 @@ app:
   author: codesensi
   # 版权
   copyright: 2026
-  # 请求缓存限制 5M
-  request-cache-limit: 5242880

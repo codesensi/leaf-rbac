@@ -1,7 +1,7 @@
 package cn.codesensi.leaf.rbac.system.strategy.captcha.impl;
 
 import cn.codesensi.leaf.rbac.common.constants.CacheConst;
-import cn.codesensi.leaf.rbac.common.exception.CaptchaException;
+import cn.codesensi.leaf.rbac.common.exception.BusinessException;
 import cn.codesensi.leaf.rbac.common.properties.AppCaptchaProperties;
 import cn.codesensi.leaf.rbac.common.util.CacheUtil;
 import cn.codesensi.leaf.rbac.system.dto.CaptchaInDTO;
@@ -60,7 +60,7 @@ public class ImageCaptchaStrategyImpl implements CaptchaStrategy {
             captchaOutDTO.setResult(captcha.toBase64());
         } catch (Exception e) {
             log.error("图形验证码类型错误：{}", name);
-            throw new CaptchaException("图形验证码生成失败");
+            throw new BusinessException("图形验证码生成失败");
         }
         return captchaOutDTO;
     }

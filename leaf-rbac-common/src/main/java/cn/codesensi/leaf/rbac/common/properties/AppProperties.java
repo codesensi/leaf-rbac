@@ -55,13 +55,4 @@ public class AppProperties {
      */
     private Boolean demoMode;
 
-    /**
-     * 请求体缓存的最大字节数。
-     * <p>
-     * 用于 {@link cn.codesensi.leaf.rbac.framework.filter.CacheRequestBodyFilter}，
-     * 限制 {@link org.springframework.web.util.ContentCachingRequestWrapper} 可缓存的最大请求体大小，
-     * 避免超大请求体（如文件上传）导致内存溢出。
-     * 默认值：{@code 1048576}（1MB）。
-     */
-    private Integer requestCacheLimit = 1048576;
 }

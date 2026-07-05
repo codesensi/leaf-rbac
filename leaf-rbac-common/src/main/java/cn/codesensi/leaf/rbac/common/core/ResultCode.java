@@ -22,7 +22,6 @@ public enum ResultCode {
     METHOD_NOT_ALLOWED(405, "请求方法不允许"),
     CONFLICT(409, "资源已存在"),
     GONE(410, "资源已过期"),
-    UNPROCESSABLE_ENTITY(422, "参数校验失败"),
     TOO_MANY_REQUESTS(429, "请求过于频繁，请稍后重试"),
 
     // ---------- 5xx 服务端错误 ----------
