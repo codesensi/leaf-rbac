@@ -2,7 +2,9 @@ package cn.codesensi.leaf.rbac.api.controller.captcha;
 
 import cn.codesensi.leaf.rbac.api.request.CaptchaRequest;
 import cn.codesensi.leaf.rbac.api.response.CaptchaResponse;
+import cn.codesensi.leaf.rbac.common.enums.OperateType;
 import cn.codesensi.leaf.rbac.framework.annotation.ApiResponseBody;
+import cn.codesensi.leaf.rbac.framework.annotation.LogOperate;
 import cn.codesensi.leaf.rbac.system.dto.CaptchaInDTO;
 import cn.codesensi.leaf.rbac.system.dto.CaptchaOutDTO;
 import cn.codesensi.leaf.rbac.system.strategy.captcha.CaptchaStrategyContext;
@@ -35,6 +37,7 @@ public class CaptchaController {
     /**
      * 生成验证码
      */
+    @LogOperate(module = "验证码", type = OperateType.QUERY, desc = "生成验证码")
     @SaIgnore
     @Operation(summary = "生成验证码", description = "生成验证码")
     @GetMapping("/captcha")

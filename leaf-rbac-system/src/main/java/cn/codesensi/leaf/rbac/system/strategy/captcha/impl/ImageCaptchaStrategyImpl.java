@@ -59,7 +59,7 @@ public class ImageCaptchaStrategyImpl implements CaptchaStrategy {
             captchaOutDTO.setKey(key);
             captchaOutDTO.setResult(captcha.toBase64());
         } catch (Exception e) {
-            log.error("图形验证码类型错误：{}", name);
+            log.error("图形验证码生成失败：", e);
             throw new BusinessException("图形验证码生成失败");
         }
         return captchaOutDTO;

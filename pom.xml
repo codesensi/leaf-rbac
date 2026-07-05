@@ -49,38 +49,44 @@
     <!-- 依赖版本管理（子模块继承） -->
     <dependencyManagement>
         <dependencies>
-            <!-- 内部模块 -->
+            <!-- 内部模块：公共基础模块（工具类、常量、枚举等） -->
             <dependency>
                 <groupId>cn.codesensi.leaf</groupId>
                 <artifactId>leaf-rbac-common</artifactId>
                 <version>${revision}</version>
             </dependency>
+            <!-- 内部模块：框架核心（全局异常处理、过滤器、AOP、配置等） -->
             <dependency>
                 <groupId>cn.codesensi.leaf</groupId>
                 <artifactId>leaf-rbac-framework</artifactId>
                 <version>${revision}</version>
             </dependency>
+            <!-- 内部模块：系统业务（实体类、Service、策略实现等） -->
             <dependency>
                 <groupId>cn.codesensi.leaf</groupId>
                 <artifactId>leaf-rbac-system</artifactId>
                 <version>${revision}</version>
             </dependency>
+            <!-- 内部模块：API 接口层（Controller、DTO 等） -->
             <dependency>
                 <groupId>cn.codesensi.leaf</groupId>
                 <artifactId>leaf-rbac-api</artifactId>
                 <version>${revision}</version>
             </dependency>
+            <!-- 内部模块：启动模块（Application 启动类、yml 配置） -->
             <dependency>
                 <groupId>cn.codesensi.leaf</groupId>
                 <artifactId>leaf-rbac-bootstrap</artifactId>
                 <version>${revision}</version>
             </dependency>
+            <!-- 内部模块：代码生成器 -->
             <dependency>
                 <groupId>cn.codesensi.leaf</groupId>
                 <artifactId>leaf-rbac-codegen</artifactId>
                 <version>${revision}</version>
             </dependency>
 
+            <!-- Spring Boot 依赖管理 BOM（统一管理所有 Spring Boot 相关库的版本） -->
             <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-dependencies -->
             <dependency>
                 <groupId>org.springframework.boot</groupId>
@@ -89,89 +95,104 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+            <!-- Hutool 全能工具库（字符串、集合、文件、加密、JSON 等工具类） -->
             <!-- https://mvnrepository.com/artifact/cn.hutool/hutool-all -->
             <dependency>
                 <groupId>cn.hutool</groupId>
                 <artifactId>hutool-all</artifactId>
                 <version>${hutool-all.version}</version>
             </dependency>
+            <!-- Apache Commons Lang3（字符串、数值、反射等增强工具类） -->
             <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
             <dependency>
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-lang3</artifactId>
                 <version>${commons-lang3.version}</version>
             </dependency>
+            <!-- SpringDoc OpenAPI（生成 Swagger 接口文档，提供 Knife4j UI） -->
             <!-- https://mvnrepository.com/artifact/org.springdoc/springdoc-openapi-starter-webmvc-ui -->
             <dependency>
                 <groupId>org.springdoc</groupId>
                 <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
                 <version>${springdoc.version}</version>
             </dependency>
+            <!-- MyBatis-Flex ORM 框架的 Spring Boot3 启动器 -->
             <!-- https://mvnrepository.com/artifact/com.mybatis-flex/mybatis-flex-spring-boot3-starter -->
             <dependency>
                 <groupId>com.mybatis-flex</groupId>
                 <artifactId>mybatis-flex-spring-boot3-starter</artifactId>
                 <version>${mybatis-flex.version}</version>
             </dependency>
+            <!-- MyBatis-Flex 代码生成器 -->
             <!-- https://mvnrepository.com/artifact/com.mybatis-flex/mybatis-flex-codegen -->
             <dependency>
                 <groupId>com.mybatis-flex</groupId>
                 <artifactId>mybatis-flex-codegen</artifactId>
                 <version>${mybatis-flex.version}</version>
             </dependency>
+            <!-- H2 内存数据库 -->
             <!-- https://mvnrepository.com/artifact/com.h2database/h2 -->
             <dependency>
                 <groupId>com.h2database</groupId>
                 <artifactId>h2</artifactId>
                 <version>${h2.version}</version>
             </dependency>
+            <!-- MySQL JDBC 驱动 -->
             <!-- https://mvnrepository.com/artifact/com.mysql/mysql-connector-j -->
             <dependency>
                 <groupId>com.mysql</groupId>
                 <artifactId>mysql-connector-j</artifactId>
                 <version>${mysql.version}</version>
             </dependency>
+            <!-- PostgreSQL JDBC 驱动 -->
             <!-- https://mvnrepository.com/artifact/org.postgresql/postgresql -->
             <dependency>
                 <groupId>org.postgresql</groupId>
                 <artifactId>postgresql</artifactId>
                 <version>${postgresql.version}</version>
             </dependency>
+            <!-- Sa-Token 认证鉴权框架的 Spring Boot3 启动器 -->
             <!-- https://mvnrepository.com/artifact/cn.dev33/sa-token-spring-boot3-starter -->
             <dependency>
                 <groupId>cn.dev33</groupId>
                 <artifactId>sa-token-spring-boot3-starter</artifactId>
                 <version>${sa-token.version}</version>
             </dependency>
+            <!-- Sa-Token 与 Redis 集成（模板方式，实现集群化 token 存储） -->
             <dependency>
                 <groupId>cn.dev33</groupId>
                 <artifactId>sa-token-redis-template</artifactId>
                 <version>${sa-token.version}</version>
             </dependency>
+            <!-- Sa-Token JWT 支持（使用 JWT 格式生成 token） -->
             <!-- https://mvnrepository.com/artifact/cn.dev33/sa-token-jwt -->
             <dependency>
                 <groupId>cn.dev33</groupId>
                 <artifactId>sa-token-jwt</artifactId>
                 <version>${sa-token.version}</version>
             </dependency>
+            <!-- Ip2region IP 地址定位库（通过 IP 获取地理位置） -->
             <!-- https://mvnrepository.com/artifact/org.lionsoul/ip2region -->
             <dependency>
                 <groupId>org.lionsoul</groupId>
                 <artifactId>ip2region</artifactId>
                 <version>${ip2region.version}</version>
             </dependency>
+            <!-- UserAgent 解析库（从请求头中解析操作系统、浏览器、设备类型） -->
             <!-- https://mvnrepository.com/artifact/eu.bitwalker/UserAgentUtils -->
             <dependency>
                 <groupId>eu.bitwalker</groupId>
                 <artifactId>UserAgentUtils</artifactId>
                 <version>${UserAgentUtils.version}</version>
             </dependency>
+            <!-- EasyCaptcha 图形验证码库（支持算术、中文、GIF 等验证码类型） -->
             <!-- https://mvnrepository.com/artifact/com.github.whvcse/easy-captcha -->
             <dependency>
                 <groupId>com.github.whvcse</groupId>
                 <artifactId>easy-captcha</artifactId>
                 <version>${easy-captcha.version}</version>
             </dependency>
+            <!-- Nashorn JS 引擎（JDK 15+ 已移除内置引擎，EasyCaptcha 算术验证码需要它解析表达式） -->
             <!-- https://mvnrepository.com/artifact/org.openjdk.nashorn/nashorn-core -->
             <dependency>
                 <groupId>org.openjdk.nashorn</groupId>
@@ -183,12 +204,14 @@
 
     <!-- 公共依赖（所有子模块默认继承） -->
     <dependencies>
+        <!-- Lombok（自动生成 getter/setter/toString/构造器等方法，编译期处理，不打入包中） -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>${lombok.version}</version>
             <optional>true</optional>
         </dependency>
+        <!-- Spring Boot 测试启动器（提供 JUnit、Mockito、AssertJ 等测试框架） -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
