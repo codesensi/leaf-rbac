@@ -1,3 +1,7 @@
+# logback日志配置
+logging:
+  level:
+    cn.codesensi.leaf: info
 # 数据库连接配置
 spring:
   datasource:
@@ -37,6 +41,13 @@ spring:
           min-idle: 5
           # 连接池最大阻塞等待时间（使用负值表示没有限制）
           max-wait: 60s
+
+# sa-token配置
+sa-token:
+  # 是否输出操作日志
+  is-log: false
+  # jwt秘钥
+  jwt-secret-key: f3c55ed9e4f54edfa8867f904aef6742
 
 # 线程池配置
 thread:
