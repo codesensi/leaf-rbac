@@ -1,6 +1,5 @@
 package cn.codesensi.leaf.rbac.framework.event;
 
-import cn.codesensi.leaf.rbac.common.enums.OperateType;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
