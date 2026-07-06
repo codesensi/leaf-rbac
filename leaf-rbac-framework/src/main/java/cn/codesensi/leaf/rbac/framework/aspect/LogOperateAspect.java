@@ -105,7 +105,7 @@ public class LogOperateAspect {
         LogOperateEvent.LogOperateEventBuilder builder = LogOperateEvent.builder()
                 .source(signature.toLongString())
                 .module(logOperate.module())
-                .type(logOperate.type())
+                .type(logOperate.type().getCode())
                 .descr(logOperate.desc())
                 .methodName(signature.toLongString());
 

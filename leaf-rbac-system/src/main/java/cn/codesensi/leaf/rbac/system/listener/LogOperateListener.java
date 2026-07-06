@@ -43,8 +43,6 @@ public class LogOperateListener {
         log.info("[logRecord][收到 LogOperateEvent 事件][模块：{}，描述：{}]", event.getModule(), event.getDescr());
         LogOperate logOperate = new LogOperate();
         BeanUtils.copyProperties(event, logOperate);
-        logOperate.setType(event.getType().getCode());
-        logOperate.setCreator(event.getOperator());
         logOperateService.save(logOperate);
     }
 }
