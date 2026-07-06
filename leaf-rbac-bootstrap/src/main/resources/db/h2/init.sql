@@ -1,6 +1,37 @@
 SET
 REFERENTIAL_INTEGRITY FALSE;
 
+-- Table structure for log_login
+-- ----------------------------
+DROP TABLE IF EXISTS `log_login`;
+CREATE TABLE `log_login`
+(
+    `id`              bigint NOT NULL COMMENT '日志ID',
+    `login_type`      tinyint(1)    NULL DEFAULT NULL COMMENT '登录方式:0-未知,1-账号密码,2-手机号',
+    `event_type`      tinyint(1)    NULL DEFAULT NULL COMMENT '事件类型:0-未知,1-登录,2-登出',
+    `login_key`       varchar(64) NULL DEFAULT NULL COMMENT '登录标识:账号/手机号',
+    `user_id`         bigint NULL DEFAULT NULL COMMENT '登录人ID',
+    `username`        varchar(128) NULL DEFAULT NULL COMMENT '登录人账号',
+    `status`          tinyint(1)    NULL DEFAULT NULL COMMENT '登录状态:0-失败,1-成功',
+    `error_msg`       text NULL DEFAULT NULL COMMENT '登录失败原因',
+    `request_ip`      varchar(256) NULL DEFAULT NULL COMMENT '请求来源IP地址',
+    `request_area`    varchar(256) NULL DEFAULT NULL COMMENT '登录地区',
+    `request_os`      varchar(256) NULL DEFAULT NULL COMMENT '登录系统',
+    `request_device`  varchar(64) NULL DEFAULT NULL COMMENT '登录设备',
+    `request_browser` varchar(64) NULL DEFAULT NULL COMMENT '登录浏览器',
+    `duration_ms`     bigint NULL DEFAULT NULL COMMENT '请求执行耗时:单位毫秒',
+    `params`          text NULL DEFAULT NULL COMMENT '请求参数',
+    `creator`         bigint NULL DEFAULT NULL COMMENT '创建人',
+    `create_time`     datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `updater`         bigint NULL DEFAULT NULL COMMENT '更新人',
+    `update_time`     datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
+    `del_flag`        tinyint(1)    NULL DEFAULT 0 COMMENT '是否删除:0-否,1-是',
+    PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB
+  CHARACTER SET = utf8mb4
+  COLLATE = utf8mb4_general_ci COMMENT = '登录日志表'
+  ROW_FORMAT = DYNAMIC;
+
 -- ----------------------------
 -- Table structure for log_operate
 -- ----------------------------
@@ -21,8 +52,8 @@ CREATE TABLE `log_operate`
     `request_browser` varchar(64) NULL DEFAULT NULL COMMENT '请求浏览器',
     `method_name`     varchar(1024) NULL DEFAULT NULL COMMENT '被调用方法的全限定名（包名.类名.方法名）',
     `duration_ms`     bigint NULL DEFAULT NULL COMMENT '请求执行耗时(毫秒)',
-    `params`          text NULL COMMENT '请求参数',
-    `result`          text NULL COMMENT '响应结果',
+    `params`          text NULL DEFAULT NULL COMMENT '请求参数',
+    `result`          text NULL DEFAULT NULL COMMENT '响应结果',
     `creator`         bigint NULL DEFAULT NULL COMMENT '创建人',
     `create_time`     datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `updater`         bigint NULL DEFAULT NULL COMMENT '更新人',

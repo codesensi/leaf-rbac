@@ -1,3 +1,73 @@
+-- Table structure for log_login
+-- ----------------------------
+DROP TABLE IF EXISTS log_login;
+CREATE TABLE log_login
+(
+    id              BIGSERIAL NOT NULL,
+    login_type      SMALLINT     DEFAULT NULL,
+    event_type      SMALLINT     DEFAULT NULL,
+    login_key       VARCHAR(64)  DEFAULT NULL,
+    user_id         BIGINT       DEFAULT NULL,
+    username        VARCHAR(128) DEFAULT NULL,
+    status          SMALLINT     DEFAULT NULL,
+    error_msg       TEXT         DEFAULT NULL,
+    request_ip      VARCHAR(256) DEFAULT NULL,
+    request_area    VARCHAR(256) DEFAULT NULL,
+    request_os      VARCHAR(256) DEFAULT NULL,
+    request_device  VARCHAR(64)  DEFAULT NULL,
+    request_browser VARCHAR(64)  DEFAULT NULL,
+    duration_ms     BIGINT       DEFAULT NULL,
+    params          TEXT         DEFAULT NULL,
+    creator         BIGINT       DEFAULT NULL,
+    create_time     TIMESTAMP    DEFAULT CURRENT_TIMESTAMP,
+    updater         BIGINT       DEFAULT NULL,
+    update_time     TIMESTAMP    DEFAULT CURRENT_TIMESTAMP,
+    del_flag        SMALLINT     DEFAULT 0,
+    PRIMARY KEY (id)
+);
+
+COMMENT
+ON TABLE log_login IS '登录日志表';
+COMMENT
+ON COLUMN log_login.id IS '日志ID';
+COMMENT
+ON COLUMN log_login.login_type IS '登录方式:0-未知,1-账号密码,2-手机号';
+COMMENT
+ON COLUMN log_login.event_type IS '事件类型:0-未知,1-登录,2-登出';
+COMMENT
+ON COLUMN log_login.login_key IS '登录标识:账号/手机号';
+COMMENT
+ON COLUMN log_login.user_id IS '登录人ID';
+COMMENT
+ON COLUMN log_login.username IS '登录人账号';
+COMMENT
+ON COLUMN log_login.status IS '登录状态:0-失败,1-成功';
+COMMENT
+ON COLUMN log_login.error_msg IS '登录失败原因';
+COMMENT
+ON COLUMN log_login.request_ip IS '请求来源IP地址';
+COMMENT
+ON COLUMN log_login.request_area IS '登录地区';
+COMMENT
+ON COLUMN log_login.request_os IS '登录系统';
+COMMENT
+ON COLUMN log_login.request_device IS '登录设备';
+COMMENT
+ON COLUMN log_login.request_browser IS '登录浏览器';
+COMMENT
+ON COLUMN log_login.duration_ms IS '请求执行耗时:单位毫秒';
+COMMENT
+ON COLUMN log_login.params IS '请求参数';
+COMMENT
+ON COLUMN log_login.creator IS '创建人';
+COMMENT
+ON COLUMN log_login.create_time IS '创建时间';
+COMMENT
+ON COLUMN log_login.updater IS '更新人';
+COMMENT
+ON COLUMN log_login.update_time IS '更新时间';
+COMMENT
+ON COLUMN log_login.del_flag IS '是否删除:0-否,1-是';
 -- ----------------------------
 -- Table structure for log_operate
 -- ----------------------------
@@ -18,12 +88,12 @@ CREATE TABLE log_operate
     request_browser varchar(64) NULL DEFAULT NULL,
     method_name     varchar(1024) NULL DEFAULT NULL,
     duration_ms     bigint NULL DEFAULT NULL,
-    params          text NULL,
-    result          text NULL,
+    params          text NULL DEFAULT NULL,
+    result          text NULL DEFAULT NULL,
     creator         bigint NULL DEFAULT NULL,
-    create_time     timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+    create_time     TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
     updater         bigint NULL DEFAULT NULL,
-    update_time     timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+    update_time     TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
     del_flag        smallint NULL DEFAULT 0,
     PRIMARY KEY (id)
 );
@@ -98,9 +168,9 @@ CREATE TABLE sys_menu
     status         smallint NULL DEFAULT 0,
     remark         varchar(512) NULL DEFAULT NULL,
     creator        bigint NULL DEFAULT NULL,
-    create_time    timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+    create_time    TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
     updater        bigint NULL DEFAULT NULL,
-    update_time    timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+    update_time    TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
     del_flag       smallint NULL DEFAULT 0,
     PRIMARY KEY (id)
 );
@@ -210,9 +280,9 @@ CREATE TABLE sys_role
     status      smallint NULL DEFAULT 0,
     remark      varchar(512) NULL DEFAULT NULL,
     creator     bigint NULL DEFAULT NULL,
-    create_time timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+    create_time TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
     updater     bigint NULL DEFAULT NULL,
-    update_time timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+    update_time TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
     del_flag    smallint NULL DEFAULT 0,
     PRIMARY KEY (id)
 );
@@ -263,9 +333,9 @@ CREATE TABLE sys_role_menu
     role_id     bigint NOT NULL,
     menu_id     bigint NOT NULL,
     creator     bigint NULL DEFAULT NULL,
-    create_time timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+    create_time TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
     updater     bigint NULL DEFAULT NULL,
-    update_time timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+    update_time TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
     del_flag    smallint NULL DEFAULT 0,
     PRIMARY KEY (id)
 );
@@ -333,9 +403,9 @@ CREATE TABLE sys_user
     status      smallint NULL DEFAULT 0,
     remark      varchar(512) NULL DEFAULT NULL,
     creator     bigint NULL DEFAULT NULL,
-    create_time timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+    create_time TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
     updater     bigint NULL DEFAULT NULL,
-    update_time timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+    update_time TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
     del_flag    smallint NULL DEFAULT 0,
     PRIMARY KEY (id)
 );
@@ -398,9 +468,9 @@ CREATE TABLE sys_user_role
     user_id     bigint NOT NULL,
     role_id     bigint NOT NULL,
     creator     bigint NULL DEFAULT NULL,
-    create_time timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+    create_time TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
     updater     bigint NULL DEFAULT NULL,
-    update_time timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+    update_time TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
     del_flag    smallint NULL DEFAULT 0,
     PRIMARY KEY (id)
 );
