@@ -6,6 +6,7 @@ import cn.codesensi.leaf.rbac.framework.event.LogOperateEvent;
 import cn.codesensi.leaf.rbac.framework.util.Ip2regionUtil;
 import cn.codesensi.leaf.rbac.framework.util.IpUtil;
 import cn.codesensi.leaf.rbac.framework.util.ServletUtil;
+import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.json.JSONUtil;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -136,10 +137,10 @@ public class LogOperateAspect {
             String paramsStr = JSONUtil.toJsonStr(argumentDetails);
             builder.params(paramsStr);
         }
-        // TODO 操作人
-        // if (StpUtil.isLogin()) {
-        //     builder.operateUser(StpUtil.getLoginIdAsLong());
-        // }
+        // 操作人
+        if (StpUtil.isLogin()) {
+            builder.operator(StpUtil.getLoginIdAsLong());
+        }
 
         try {
             Object result = joinPoint.proceed();

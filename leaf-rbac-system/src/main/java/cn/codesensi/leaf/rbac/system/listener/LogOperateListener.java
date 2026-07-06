@@ -44,7 +44,7 @@ public class LogOperateListener {
         LogOperate logOperate = new LogOperate();
         BeanUtils.copyProperties(event, logOperate);
         logOperate.setType(event.getType().getCode());
-        logOperate.setCreator(event.getUserId());
+        logOperate.setCreator(event.getOperator());
         logOperateService.save(logOperate);
     }
 }

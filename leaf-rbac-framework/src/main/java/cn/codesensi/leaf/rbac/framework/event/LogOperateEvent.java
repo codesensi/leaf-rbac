@@ -21,6 +21,11 @@ public class LogOperateEvent extends ApplicationEvent {
     private OperateType type;
 
     /**
+     * 操作人（当前登录用户id）
+     */
+    private Long operator;
+
+    /**
      * 操作描述（如：新增用户、修改角色权限）
      */
     private String descr;
@@ -34,11 +39,6 @@ public class LogOperateEvent extends ApplicationEvent {
      * 错误信息（当 status=0 时记录异常消息）
      */
     private String errorMsg;
-
-    /**
-     * 操作人
-     */
-    private Long userId;
 
     /**
      * 请求来源IP地址
@@ -91,8 +91,8 @@ public class LogOperateEvent extends ApplicationEvent {
     private String result;
 
     @Builder
-    public LogOperateEvent(Object source, String module, OperateType type, String descr,
-                           Integer status, String errorMsg, Long userId, String requestIp,
+    public LogOperateEvent(Object source, String module, OperateType type, Long operator,
+                           String descr, Integer status, String errorMsg, String requestIp,
                            String requestUrl, String requestArea, String requestOs,
                            String requestDevice, String requestBrowser,
                            String methodName, Long durationMs, String params, String result) {
@@ -100,10 +100,10 @@ public class LogOperateEvent extends ApplicationEvent {
         super(source);
         this.module = module;
         this.type = type;
+        this.operator = operator;
         this.descr = descr;
         this.status = status;
         this.errorMsg = errorMsg;
-        this.userId = userId;
         this.requestIp = requestIp;
         this.requestUrl = requestUrl;
         this.requestArea = requestArea;

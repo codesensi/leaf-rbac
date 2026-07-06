@@ -52,6 +52,11 @@ public class LogOperate extends BaseEntity implements Serializable {
     private Integer type;
 
     /**
+     * 操作人（当前登录用户id）
+     */
+    private Long operator;
+
+    /**
      * 操作描述
      */
     @Schema(description = "操作描述")
