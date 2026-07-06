@@ -36,7 +36,7 @@ public class LogOperateController {
      */
     @Operation(summary = "获取操作日志详情", description = "根据主键获取操作日志详情")
     @GetMapping("/detail/{id}")
-    public LogOperate detail(@Parameter(description = "用户主键ID", required = true) @PathVariable Long id) {
+    public LogOperate detail(@Parameter(description = "日志主键ID", required = true) @PathVariable Long id) {
         return logOperateService.getById(id);
     }
 
