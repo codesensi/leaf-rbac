@@ -51,7 +51,6 @@ public class Codegen {
                 .setWithLombok(true)
                 .setJdkVersion(21)
                 .setSuperClass(BaseEntity.class)
-                .setWithSwagger(true)
                 .setLombokAllArgsConstructorEnable(false)
                 .setLombokNoArgsConstructorEnable(false);
 
