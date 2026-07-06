@@ -31,7 +31,7 @@ public class LogOperateEvent extends ApplicationEvent {
     private Integer status;
 
     /**
-     * 错误信息（当 success=false 时记录异常消息）
+     * 错误信息（当 status=0 时记录异常消息）
      */
     private String errorMsg;
 
