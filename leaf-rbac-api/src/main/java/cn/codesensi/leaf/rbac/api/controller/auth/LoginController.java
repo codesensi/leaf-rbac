@@ -1,12 +1,10 @@
 package cn.codesensi.leaf.rbac.api.controller.auth;
 
 import cn.codesensi.leaf.rbac.api.request.LoginAccountRequest;
-import cn.codesensi.leaf.rbac.api.request.LogoutRequest;
 import cn.codesensi.leaf.rbac.api.response.LoginResponse;
 import cn.codesensi.leaf.rbac.framework.annotation.ApiResponseBody;
 import cn.codesensi.leaf.rbac.system.dto.LoginAccountInDTO;
 import cn.codesensi.leaf.rbac.system.dto.LoginOutDTO;
-import cn.codesensi.leaf.rbac.system.dto.LogoutInDTO;
 import cn.codesensi.leaf.rbac.system.service.LoginService;
 import cn.dev33.satoken.annotation.SaIgnore;
 import cn.hutool.core.bean.BeanUtil;
@@ -28,7 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 @ApiResponseBody
 @RequiredArgsConstructor
 @RestController
-@RequestMapping()
+@RequestMapping("/auth")
 @Tag(name = "登录接口", description = "登录接口")
 public class LoginController {
 
@@ -49,12 +47,10 @@ public class LoginController {
     /**
      * 退出登录
      */
-    @SaIgnore
     @Operation(summary = "退出登录")
     @PostMapping("/logout")
-    public void logout(@RequestBody LogoutRequest request) {
-        LogoutInDTO logoutInDTO = BeanUtil.copyProperties(request, LogoutInDTO.class);
-        loginService.logout(logoutInDTO);
+    public void logout() {
+        loginService.logout();
     }
 
 }

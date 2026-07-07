@@ -1,5 +1,6 @@
 package cn.codesensi.leaf.rbac.system.service.impl;
 
+import cn.codesensi.leaf.rbac.common.constants.AppConst;
 import cn.codesensi.leaf.rbac.common.enums.EventType;
 import cn.codesensi.leaf.rbac.common.enums.LoginType;
 import cn.codesensi.leaf.rbac.common.enums.YesNoEnum;
@@ -10,13 +11,14 @@ import cn.codesensi.leaf.rbac.common.util.CacheUtil;
 import cn.codesensi.leaf.rbac.framework.event.LogLoginEvent;
 import cn.codesensi.leaf.rbac.framework.util.Ip2regionUtil;
 import cn.codesensi.leaf.rbac.framework.util.IpUtil;
+import cn.codesensi.leaf.rbac.framework.util.RequestUtil;
 import cn.codesensi.leaf.rbac.framework.util.ServletUtil;
 import cn.codesensi.leaf.rbac.system.dto.LoginAccountInDTO;
 import cn.codesensi.leaf.rbac.system.dto.LoginOutDTO;
-import cn.codesensi.leaf.rbac.system.dto.LogoutInDTO;
 import cn.codesensi.leaf.rbac.system.entity.SysUser;
 import cn.codesensi.leaf.rbac.system.service.LoginService;
 import cn.codesensi.leaf.rbac.system.service.SysUserService;
+import cn.dev33.satoken.SaManager;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.date.LocalDateTimeUtil;
 import cn.hutool.core.util.ObjUtil;
@@ -24,6 +26,7 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.digest.BCrypt;
 import cn.hutool.json.JSONUtil;
 import eu.bitwalker.useragentutils.UserAgent;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
@@ -143,20 +146,11 @@ public class LoginServiceImpl implements LoginService {
      * 退出登录
      */
     @Override
-    public void logout(LogoutInDTO logoutInDTO) {
+    public void logout() {
         long start = System.currentTimeMillis();
-        String accessToken = logoutInDTO.getAccessToken();
-        if (StrUtil.isBlank(accessToken)) {
-            log.warn("退出登录，访问令牌为空");
-            return;
-        }
-        Object userId = StpUtil.getLoginIdByToken(accessToken);
-        if (ObjUtil.isNull(userId)) {
-            log.warn("退出登录，根据访问令牌未解析到用户");
-            return;
-        }
-        StpUtil.logout(userId);
-
+        Long userId = StpUtil.getLoginIdAsLong();
+        // 执行退出登录
+        StpUtil.logout();
         // 发布退出登录日志记录事件
         try {
             SysUser sysUser = sysUserService.queryChain()
@@ -170,9 +164,8 @@ public class LoginServiceImpl implements LoginService {
             LogLoginEvent.LogLoginEventBuilder builder = LogLoginEvent.builder();
             builder.source(username);
             builder.eventType(EventType.LOGOUT.getCode());
-            builder.userId(Long.valueOf(String.valueOf(userId)));
+            builder.userId(userId);
             builder.username(username);
-            builder.params(JSONUtil.toJsonStr(logoutInDTO));
             builder.status(YesNoEnum.YES.getCode());
             String ipAddr = IpUtil.getIpAddr();
             builder.requestIp(ipAddr);

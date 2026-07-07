@@ -19,5 +19,5 @@ public interface LoginService {
     /**
      * 退出登录
      */
-    void logout(LogoutInDTO logoutInDTO);
+    void logout();
 }
