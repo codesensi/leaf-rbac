@@ -1,6 +1,8 @@
 package cn.codesensi.leaf.rbac.api.controller.system;
 
+import cn.codesensi.leaf.rbac.common.enums.OperateType;
 import cn.codesensi.leaf.rbac.framework.annotation.ApiResponseBody;
+import cn.codesensi.leaf.rbac.framework.annotation.LogOperate;
 import cn.codesensi.leaf.rbac.system.entity.SysUser;
 import cn.codesensi.leaf.rbac.system.service.SysUserService;
 import com.mybatisflex.core.paginate.Page;
@@ -36,6 +38,7 @@ public class SysUserController {
      * @param sysUser 用户信息表
      * @return {@code true} 保存成功，{@code false} 保存失败
      */
+    @LogOperate(module = "用户管理", type = OperateType.INSERT, desc = "保存用户", ignoreFields = {"password"})
     @Operation(summary = "保存用户", description = "保存用户信息表")
     @PostMapping("/save")
     public boolean save(@RequestBody SysUser sysUser) {
