@@ -39,7 +39,7 @@ public class SysUserController {
      * @return {@code true} 保存成功，{@code false} 保存失败
      */
     @LogOperate(module = "用户管理", type = OperateType.INSERT, desc = "保存用户", ignoreFields = {"password"})
-    @Operation(summary = "保存用户", description = "保存用户信息表")
+    @Operation(summary = "保存用户", description = "保存用户信息")
     @PostMapping("/save")
     public boolean save(@RequestBody SysUser sysUser) {
         return sysUserService.save(sysUser);
