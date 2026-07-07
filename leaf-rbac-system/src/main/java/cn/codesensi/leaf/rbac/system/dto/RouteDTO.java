@@ -16,7 +16,7 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Data
 @Accessors(chain = true)
-@Schema(name = "RouteDTO", description = "路由菜单树")
+@Schema(description = "路由菜单树")
 public class RouteDTO implements Serializable {
 
     @Serial

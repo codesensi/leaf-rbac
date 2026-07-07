@@ -9,7 +9,7 @@ import java.io.Serial;
 import java.io.Serializable;
 
 /**
- * 获取验证码参数
+ * 生成验证码请求参数
  */
 @Data
 @Accessors(chain = true)

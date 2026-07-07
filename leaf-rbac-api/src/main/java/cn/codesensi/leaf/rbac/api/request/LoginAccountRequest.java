@@ -8,7 +8,7 @@ import lombok.ToString;
 import lombok.experimental.Accessors;
 
 /**
- * 账号密码登录参数
+ * 账号密码登录请求参数
  *
  * @author codesensi
  * @since 2024-07-21 11:09:56
@@ -17,7 +17,7 @@ import lombok.experimental.Accessors;
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 @Accessors(chain = true)
-@Schema(name = "账号密码登录参数", description = "账号密码登录参数")
+@Schema(description = "账号密码登录请求参数")
 public class LoginAccountRequest extends LoginAccountInDTO {
 
 }

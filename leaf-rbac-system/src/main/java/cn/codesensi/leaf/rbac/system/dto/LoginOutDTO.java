@@ -9,7 +9,7 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * 登录结果
+ * 登录响应结果
  *
  * @author codesensi
  * @since 2024/1/21 15:39

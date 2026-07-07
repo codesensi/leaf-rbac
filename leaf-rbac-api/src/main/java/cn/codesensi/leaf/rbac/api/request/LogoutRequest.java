@@ -8,7 +8,7 @@ import lombok.ToString;
 import lombok.experimental.Accessors;
 
 /**
- * 退出登录参数
+ * 退出登录请求参数
  *
  * @author codesensi
  * @since 2024/1/21 15:39
@@ -17,7 +17,7 @@ import lombok.experimental.Accessors;
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 @Accessors(chain = true)
-@Schema(name = "退出登录参数", description = "退出登录参数")
+@Schema(description = "退出登录请求参数")
 public class LogoutRequest extends LogoutInDTO {
 
 }

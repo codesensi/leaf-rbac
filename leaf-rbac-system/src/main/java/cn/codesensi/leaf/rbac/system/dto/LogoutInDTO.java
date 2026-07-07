@@ -8,7 +8,7 @@ import java.io.Serial;
 import java.io.Serializable;
 
 /**
- * 退出登录参数
+ * 退出登录请求参数
  *
  * @author codesensi
  * @since 2024/1/21 15:39

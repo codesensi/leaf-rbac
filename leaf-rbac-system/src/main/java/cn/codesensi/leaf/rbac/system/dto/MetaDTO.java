@@ -15,7 +15,7 @@ import java.io.Serializable;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Data
 @Accessors(chain = true)
-@Schema(name = "MetaDTO", description = "路由元信息")
+@Schema(description = "路由元信息")
 public class MetaDTO implements Serializable {
 
     @Serial

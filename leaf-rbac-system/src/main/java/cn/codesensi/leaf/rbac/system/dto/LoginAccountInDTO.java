@@ -9,7 +9,7 @@ import java.io.Serial;
 import java.io.Serializable;
 
 /**
- * 账号密码登录参数
+ * 账号密码登录请求参数
  *
  * @author codesensi
  * @since 2024-07-21 11:09:56

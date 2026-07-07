@@ -7,10 +7,16 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
+/**
+ * 生成验证码响应结果
+ *
+ * @author codesensi
+ * @since 2024-07-21 11:09:56
+ */
 @Data
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 @Accessors(chain = true)
-@Schema(name = "验证码生成结果", description = "验证码生成结果")
+@Schema(description = "生成验证码响应结果")
 public class CaptchaResponse extends CaptchaOutDTO {
 }

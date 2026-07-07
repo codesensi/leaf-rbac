@@ -24,7 +24,7 @@ import java.io.Serializable;
 @Accessors(chain = true)
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-@Schema(description = "操作日志表")
+@Schema(description = "操作日志表实体类")
 @Table("log_operate")
 public class LogOperate extends BaseEntity implements Serializable {
 

@@ -24,7 +24,7 @@ import java.io.Serializable;
 @Accessors(chain = true)
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-@Schema(description = "用户信息表")
+@Schema(description = "用户信息表实体类")
 @Table("sys_user")
 public class SysUser extends BaseEntity implements Serializable {
 

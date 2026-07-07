@@ -7,11 +7,16 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
-
+/**
+ * 生成验证码请求参数
+ *
+ * @author codesensi
+ * @since 2024-07-21 11:09:56
+ */
 @Data
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 @Accessors(chain = true)
-@Schema(name = "获取验证码请求参数", description = "获取验证码请求参数对象")
+@Schema(description = "生成验证码请求参数")
 public class CaptchaRequest extends CaptchaInDTO {
 }

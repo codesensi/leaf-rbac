@@ -24,7 +24,7 @@ import java.io.Serializable;
 @Accessors(chain = true)
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-@Schema(description = "角色菜单关联表")
+@Schema(description = "角色菜单关联表实体类")
 @Table("sys_role_menu")
 public class SysRoleMenu extends BaseEntity implements Serializable {
 
