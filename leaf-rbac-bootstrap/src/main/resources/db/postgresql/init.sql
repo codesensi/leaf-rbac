@@ -458,7 +458,7 @@ ON COLUMN sys_user.del_flag IS '逻辑删除标识:0-未删除,1-已删除';
 -- ----------------------------
 INSERT INTO sys_user (id, username, password, nickname, id_no, email, phone, gender, avatar, type, status, remark,
                       creator, updater, del_flag)
-VALUES (1, 'admin', '$2a$10$dw6y693PtRDktZluumVcH.XPQyHxWVZf35dszMFk3GLrASVdGJeNG', '超级管理员', '110101200001010001',
+VALUES (1, 'admin', '$2a$10$U.k0b43Pwg./Jg2QQl4bMOukItbYg4aYhKsciMamtHWvp3JEF2ism', '超级管理员', '110101200001010001',
         'admin@leaf.com', '18900000000', 0, 'https://file.codesensi.cn:1443/s/wKjLnQ', 0, 0, '超级管理员', 1, NULL, 0);
 
 -- ----------------------------
