@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
  * @since 1.17.0
  */
 @Component
-public class LogSaTokenListener implements SaTokenListener {
+public class AppSaTokenListener implements SaTokenListener {
     /**
      * 每次登录时触发
      *
