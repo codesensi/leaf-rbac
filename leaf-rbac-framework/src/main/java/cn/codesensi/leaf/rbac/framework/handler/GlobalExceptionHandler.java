@@ -5,6 +5,10 @@ import cn.codesensi.leaf.rbac.common.exception.AuthorizationException;
 import cn.codesensi.leaf.rbac.common.exception.BusinessException;
 import cn.codesensi.leaf.rbac.common.exception.SystemException;
 import cn.codesensi.leaf.rbac.common.exception.ValidationException;
+import cn.dev33.satoken.exception.NotLoginException;
+import cn.dev33.satoken.exception.NotPermissionException;
+import cn.dev33.satoken.exception.NotRoleException;
+import cn.dev33.satoken.exception.SaTokenException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -42,6 +46,28 @@ public class GlobalExceptionHandler {
     public Result<Void> handleSystemException(SystemException e) {
         log.error("系统异常：", e);
         return Result.error(e.getCode(), e.getMsg());
+    }
+
+    @ExceptionHandler(SaTokenException.class)
+    public Result<Void> handleSaTokenException(SaTokenException e) {
+        log.error("授权异常：", e);
+        switch (e) {
+            case NotLoginException notLoginException -> {
+                if (NotLoginException.TOKEN_FREEZE.equals(notLoginException.getType())) {
+                    return Result.forbidden("账号已被冻结");
+                }
+                return Result.unauthorized("未登录或登录已过期");
+            }
+            case NotRoleException ignored1 -> {
+                return Result.forbidden("角色认证校验未通过");
+            }
+            case NotPermissionException ignored2 -> {
+                return Result.forbidden("权限认证校验未通过");
+            }
+            default -> {
+                return Result.forbidden(e.getMessage());
+            }
+        }
     }
 
     @ExceptionHandler(NoResourceFoundException.class)

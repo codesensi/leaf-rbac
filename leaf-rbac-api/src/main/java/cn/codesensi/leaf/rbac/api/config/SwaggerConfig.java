@@ -9,11 +9,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * Knife4j配置
+ * Swagger 配置
  */
 @RequiredArgsConstructor
 @Configuration
-public class Knife4jConfig {
+public class SwaggerConfig {
 
     private final AppProperties appProperties;
 

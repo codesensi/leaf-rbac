@@ -86,14 +86,14 @@ public class Result<T> implements Serializable {
     }
 
     /**
-     * 快速失败：未授权
+     * 快速失败：未认证
      */
     public static <T> Result<T> unauthorized(String msg) {
         return error(ResultCode.UNAUTHORIZED, msg);
     }
 
     /**
-     * 快速失败：禁止访问
+     * 快速失败：无权限
      */
     public static <T> Result<T> forbidden(String msg) {
         return error(ResultCode.FORBIDDEN, msg);
