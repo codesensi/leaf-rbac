@@ -77,6 +77,7 @@ CREATE TABLE log_operate
     id              bigint NOT NULL,
     module          varchar(256) NULL DEFAULT NULL,
     type            smallint NULL DEFAULT NULL,
+    operator        bigint NULL DEFAULT NULL,
     descr           varchar(256) NULL DEFAULT NULL,
     status          smallint NULL DEFAULT NULL,
     error_msg       text NULL DEFAULT NULL,
@@ -106,6 +107,8 @@ COMMENT
 ON COLUMN log_operate.module IS '操作所属模块';
 COMMENT
 ON COLUMN log_operate.type IS '操作类型:0-未知,1-新增,2-更新,3-查询,4-删除';
+COMMENT
+ON COLUMN log_operate.operator IS '操作人';
 COMMENT
 ON COLUMN log_operate.descr IS '操作描述';
 COMMENT

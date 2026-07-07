@@ -41,6 +41,7 @@ CREATE TABLE `log_operate`
     `id`              bigint NOT NULL COMMENT '日志ID',
     `module`          varchar(256) NULL DEFAULT NULL COMMENT '操作所属模块',
     `type`            tinyint(1)    NULL DEFAULT NULL COMMENT '操作类型:0-未知,1-新增,2-更新,3-查询,4-删除',
+    `operator`        bigint NULL DEFAULT NULL COMMENT '操作人',
     `descr`           varchar(256) NULL DEFAULT NULL COMMENT '操作描述',
     `status`          tinyint(1)    NULL DEFAULT NULL COMMENT '操作状态:0-失败,1-成功',
     `error_msg`       text NULL DEFAULT NULL COMMENT '错误信息',
