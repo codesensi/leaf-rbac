@@ -1,13 +1,13 @@
 package cn.codesensi.leaf.rbac.common.enums;
 
-import cn.codesensi.leaf.rbac.common.constants.Const;
+import cn.codesensi.leaf.rbac.common.constants.AppConst;
 import lombok.Getter;
 
 @Getter
 public enum YesNoEnum implements BaseEnum {
 
-    YES(Const.ONE_INT, "是"),
-    NO(Const.ZERO_INT, "否");
+    YES(AppConst.ONE_INT, "是"),
+    NO(AppConst.ZERO_INT, "否");
 
     private final int code;
 

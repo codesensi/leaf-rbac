@@ -1,6 +1,6 @@
 package cn.codesensi.leaf.rbac.framework.filter;
 
-import cn.codesensi.leaf.rbac.common.constants.Const;
+import cn.codesensi.leaf.rbac.common.constants.AppConst;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
 import jakarta.servlet.*;
@@ -66,11 +66,11 @@ public class TraceIdFilter implements Filter {
         try {
             // 生成或获取 traceId（优先从请求头获取，支持跨服务传递）
             String traceId = generateTraceId(request);
-            MDC.put(Const.TRACE_ID, traceId);
+            MDC.put(AppConst.TRACE_ID, traceId);
             chain.doFilter(request, response);
         } finally {
             // 确保清理，避免线程复用导致上下文污染
-            MDC.remove(Const.TRACE_ID);
+            MDC.remove(AppConst.TRACE_ID);
         }
     }
 

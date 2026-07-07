@@ -1,13 +1,13 @@
 package cn.codesensi.leaf.rbac.common.enums;
 
-import cn.codesensi.leaf.rbac.common.constants.Const;
+import cn.codesensi.leaf.rbac.common.constants.AppConst;
 import lombok.Getter;
 
 @Getter
 public enum SuccessFailEnum implements BaseEnum {
 
-    SUCCESS(Const.ONE_INT, "成功"),
-    FAIL(Const.ZERO_INT, "失败");
+    SUCCESS(AppConst.ONE_INT, "成功"),
+    FAIL(AppConst.ZERO_INT, "失败");
 
     private final int code;
     private final String desc;

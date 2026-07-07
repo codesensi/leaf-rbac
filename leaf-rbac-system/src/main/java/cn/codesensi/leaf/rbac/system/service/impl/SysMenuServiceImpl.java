@@ -1,6 +1,6 @@
 package cn.codesensi.leaf.rbac.system.service.impl;
 
-import cn.codesensi.leaf.rbac.common.constants.Const;
+import cn.codesensi.leaf.rbac.common.constants.AppConst;
 import cn.codesensi.leaf.rbac.common.constants.RbacConst;
 import cn.codesensi.leaf.rbac.common.enums.YesNoEnum;
 import cn.codesensi.leaf.rbac.system.dto.MetaDTO;
@@ -116,7 +116,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
                 .collect(Collectors.groupingBy(SysMenu::getPid));
 
         // 获取根节点（pid = 0）
-        List<SysMenu> rootMenus = menuGroupByPid.getOrDefault(Const.ZERO_LONG, List.of());
+        List<SysMenu> rootMenus = menuGroupByPid.getOrDefault(AppConst.ZERO_LONG, List.of());
 
         // 构建树结构,按 sort 排序
         return rootMenus.stream()

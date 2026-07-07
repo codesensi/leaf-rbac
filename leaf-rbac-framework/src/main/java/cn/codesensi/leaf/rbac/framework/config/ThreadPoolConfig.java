@@ -1,6 +1,6 @@
 package cn.codesensi.leaf.rbac.framework.config;
 
-import cn.codesensi.leaf.rbac.common.constants.Const;
+import cn.codesensi.leaf.rbac.common.constants.AppConst;
 import cn.codesensi.leaf.rbac.common.constants.ThreadConst;
 import cn.codesensi.leaf.rbac.common.properties.ThreadPoolProperties;
 import cn.hutool.core.util.IdUtil;
@@ -129,14 +129,14 @@ public class ThreadPoolConfig {
             public void beforeExecute(Thread thread, Runnable runnable) {
                 super.beforeExecute(thread, runnable);
                 // 为当前定时任务生成一个全新的 traceId 并放入 MDC
-                MDC.put(Const.TRACE_ID, IdUtil.fastSimpleUUID());
+                MDC.put(AppConst.TRACE_ID, IdUtil.fastSimpleUUID());
             }
 
             @Override
             public void afterExecute(Runnable runnable, Throwable throwable) {
                 super.afterExecute(runnable, throwable);
                 // 任务结束后清理 MDC，防止内存泄漏
-                MDC.remove(Const.TRACE_ID);
+                MDC.remove(AppConst.TRACE_ID);
             }
         };
     }

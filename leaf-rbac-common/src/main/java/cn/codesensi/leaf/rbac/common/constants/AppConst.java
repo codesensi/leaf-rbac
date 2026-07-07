@@ -3,7 +3,7 @@ package cn.codesensi.leaf.rbac.common.constants;
 /**
  * 通用常量
  */
-public class Const {
+public class AppConst {
 
     /**
      * Integer数字0
