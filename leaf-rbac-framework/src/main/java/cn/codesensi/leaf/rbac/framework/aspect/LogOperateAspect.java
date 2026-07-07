@@ -149,7 +149,10 @@ public class LogOperateAspect {
                 }
                 paramsArray.add(paramNode);
             }
-            builder.params(paramsArray.toString());
+            // 无入参时不记录请求参数
+            if (!paramsArray.isEmpty()) {
+                builder.params(paramsArray.toString());
+            }
         }
         // 操作人
         if (StpUtil.isLogin()) {
