@@ -12,7 +12,6 @@ import com.mybatisflex.spring.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.List;
 
 import static cn.codesensi.leaf.rbac.system.entity.table.SysRoleTableDef.SYS_ROLE;
@@ -46,6 +45,9 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
                 .map(SysRole::getCode)
                 .filter(StrUtil::isNotBlank)
                 .toList();
+        if (CollUtil.isEmpty(roleCodeList)) {
+            return List.of();
+        }
         // 超级管理员角色编码
         if (roleCodeList.contains(RbacConst.ROLE_ADMIN_CODE)) {
             return List.of(RbacConst.ROLE_ADMIN_CODE);
@@ -69,7 +71,7 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
 
         // 显式判空：无关联角色时直接返回空集合，跳过 Step 2
         if (CollUtil.isEmpty(roleIds)) {
-            return Collections.emptyList();
+            return List.of();
         }
 
         // Step 2: 主键批量查询（走索引，无需去重）
