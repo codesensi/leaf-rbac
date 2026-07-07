@@ -2,6 +2,7 @@
 logging:
   level:
     cn.codesensi.leaf: info
+
 # 数据库连接配置
 spring:
   datasource:

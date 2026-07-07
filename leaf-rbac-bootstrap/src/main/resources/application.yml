@@ -6,12 +6,12 @@ spring:
     timeout-per-shutdown-phase: 60s
   profiles:
     active: dev
-  jackson:
-    date-format: yyyy-MM-dd HH:mm:ss
+
 server:
   port: 9098
   # 开启优雅停机
   shutdown: graceful
+
 # logback日志配置
 logging:
   pattern:
