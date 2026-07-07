@@ -8,7 +8,7 @@ import cn.codesensi.leaf.rbac.framework.util.IpUtil;
 import cn.codesensi.leaf.rbac.framework.util.ServletUtil;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.util.ObjUtil;
-import cn.hutool.json.JSONUtil;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -28,7 +28,6 @@ import org.springframework.core.ParameterNameDiscoverer;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.*;
 
@@ -62,6 +61,12 @@ public class LogOperateAspect {
      * 以便递归剔除 {@code ignoreFields} 中指定的敏感字段。
      */
     private static final ObjectMapper objectMapper = new ObjectMapper();
+
+    /**
+     * 参数序列化专用的 ObjectMapper —— 自动跳过值为 null 的字段，
+     * 避免入参中大量 null 字段污染操作日志。
+     */
+    private static final ObjectMapper paramsObjectMapper = new ObjectMapper().setDefaultPropertyInclusion(JsonInclude.Include.NON_NULL);
 
     /**
      * Spring 应用事件发布器，用于发布 {@link LogOperateEvent} 事件，
@@ -130,12 +135,21 @@ public class LogOperateAspect {
         if (logOperate.recordParams()) {
             ArgumentContext argumentContext = argumentResolve(joinPoint);
             List<ArgumentDetail> argumentDetails = argumentContext.getDetails();
-            // 过滤敏感字段
-            argumentDetails = argumentDetails.stream()
-                    .filter(d -> !ignoreSet.contains(d.getName()))
-                    .toList();
-            String paramsStr = JSONUtil.toJsonStr(argumentDetails);
-            builder.params(paramsStr);
+            // 将参数列表序列化为 JsonNode，对 value 中的字段进行脱敏
+            ArrayNode paramsArray = objectMapper.createArrayNode();
+            for (ArgumentDetail detail : argumentDetails) {
+                ObjectNode paramNode = objectMapper.createObjectNode();
+                paramNode.put("index", detail.getIndex());
+                paramNode.put("name", detail.getName());
+                // 对 value 做字段级脱敏（跳过 null 字段）
+                if (detail.getValue() != null) {
+                    JsonNode valueNode = paramsObjectMapper.valueToTree(detail.getValue());
+                    JsonNode filteredValue = removeFields(valueNode, ignoreSet);
+                    paramNode.set("value", filteredValue);
+                }
+                paramsArray.add(paramNode);
+            }
+            builder.params(paramsArray.toString());
         }
         // 操作人
         if (StpUtil.isLogin()) {
@@ -177,14 +191,12 @@ public class LogOperateAspect {
         Method method = signature.getMethod();
         Object[] rawArgs = joinPoint.getArgs();
         String[] paramNames = parameterNameDiscoverer.getParameterNames(method);
-        Annotation[][] annotations = method.getParameterAnnotations();
         List<ArgumentDetail> details = new ArrayList<>();
         for (int i = 0; i < rawArgs.length; i++) {
             details.add(new ArgumentDetail(
                     i,
                     paramNames != null ? paramNames[i] : "arg" + i,
-                    rawArgs[i],
-                    annotations[i]
+                    rawArgs[i]
             ));
         }
         return new ArgumentContext(method, details, joinPoint);
@@ -250,16 +262,11 @@ public class LogOperateAspect {
          * 参数的实际值，即方法调用时传入的对象
          */
         private Object value;
-        /**
-         * 参数上的注解数组（如 @PathVariable、@RequestBody、@RequestParam）
-         */
-        private Annotation[] annotations;
 
-        public ArgumentDetail(int index, String name, Object value, Annotation[] annotations) {
+        public ArgumentDetail(int index, String name, Object value) {
             this.index = index;
             this.name = name;
             this.value = value;
-            this.annotations = annotations;
         }
     }
 
