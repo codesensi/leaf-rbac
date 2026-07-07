@@ -1,5 +1,7 @@
 package cn.codesensi.leaf.rbac.system.base;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.mybatisflex.annotation.Column;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
@@ -24,6 +26,7 @@ public class BaseEntity implements Serializable {
      * 创建人
      */
     @Schema(description = "创建人")
+    @JsonSerialize(using = ToStringSerializer.class) // 序列化为字符串避免前端精度丢失
     private Long creator;
 
     /**
@@ -36,6 +39,7 @@ public class BaseEntity implements Serializable {
      * 更新人
      */
     @Schema(description = "更新人")
+    @JsonSerialize(using = ToStringSerializer.class) // 序列化为字符串避免前端精度丢失
     private Long updater;
 
     /**
