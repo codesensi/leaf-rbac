@@ -107,6 +107,17 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
         if (CollUtil.isEmpty(roleCodeList)) {
             return List.of();
         }
+
+        // 超级管理员角色可查看所有菜单（包含已禁用的目录和菜单、不包含按钮级别）
+        if (roleCodeList.contains(RbacConst.ROLE_ADMIN_CODE)) {
+            List<SysMenu> allMenu = new QueryChain<>(sysMenuMapper)
+                    .select(SYS_MENU.ALL_COLUMNS)
+                    .where(SYS_MENU.TYPE.ne(3)) // 排除按钮类型
+                    .orderBy(SYS_MENU.SORT, true) // 排序
+                    .list();
+            return buildRoutesTree(allMenu);
+        }
+
         // 获取角色拥有的路由菜单列表（不包含按钮级别）
         // Step 1: 根据角色CODE查出有效角色ID（命中 SYS_ROLE(CODE, STATUS) 索引）
         List<Long> roleIds = sysRoleService.queryChain()
