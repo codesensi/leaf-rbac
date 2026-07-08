@@ -94,7 +94,7 @@ app:
   demo-mode: false
   # 验证码配置
   captcha:
-    enabled: true
+    enabled: false
     # 验证码类型
     type: image
     # 图形验证码类型，验证码类型为图形时需配置
