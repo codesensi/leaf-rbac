@@ -168,7 +168,7 @@ CREATE TABLE `log_login`
     `updater`         bigint NULL DEFAULT NULL COMMENT '更新人',
     `update_time`     datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
     `del_flag`        tinyint(1)    NULL DEFAULT 0 COMMENT '是否删除:0-否,1-是',
-    PRIMARY KEY (`id`) USING BTREE
+    PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
   CHARACTER SET = utf8mb4
   COLLATE = utf8mb4_general_ci COMMENT = '登录日志表'
