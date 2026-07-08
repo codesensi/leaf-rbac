@@ -8,12 +8,12 @@ public class RbacConst {
     /**
      * 超级管理员名称
      */
-    public static final String USER_ADMIN_NAME = "admin";
+    public static final String USER_ADMIN_NAME = "sadmin";
 
     /**
      * 超级管理员角色标识
      */
-    public static final String ROLE_ADMIN_CODE = "admin";
+    public static final String ROLE_ADMIN_CODE = "sadmin";
 
     /**
      * 超级管理员权限码
