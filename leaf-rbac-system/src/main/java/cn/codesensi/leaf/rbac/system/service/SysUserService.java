@@ -1,6 +1,7 @@
 package cn.codesensi.leaf.rbac.system.service;
 
 import cn.codesensi.leaf.rbac.system.dto.RouteDTO;
+import cn.codesensi.leaf.rbac.system.dto.SysUserSaveDTO;
 import cn.codesensi.leaf.rbac.system.entity.SysUser;
 import com.mybatisflex.core.service.IService;
 
@@ -28,4 +29,11 @@ public interface SysUserService extends IService<SysUser> {
      */
     SysUser getUserInfo();
 
+    /**
+     * 保存用户信息
+     *
+     * @param sysUserSaveDTO 用户信息
+     * @return 保存结果
+     */
+    boolean saveUser(SysUserSaveDTO sysUserSaveDTO);
 }

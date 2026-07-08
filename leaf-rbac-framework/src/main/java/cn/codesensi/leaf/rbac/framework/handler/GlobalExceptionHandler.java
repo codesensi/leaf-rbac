@@ -9,7 +9,10 @@ import cn.dev33.satoken.exception.NotLoginException;
 import cn.dev33.satoken.exception.NotPermissionException;
 import cn.dev33.satoken.exception.NotRoleException;
 import cn.dev33.satoken.exception.SaTokenException;
+import cn.hutool.core.util.ObjUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.validation.BindException;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
@@ -32,7 +35,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ValidationException.class)
     public Result<Void> handleValidationException(ValidationException e) {
-        log.error("参数验证异常：", e);
+        log.error("参数异常：", e);
         return Result.badRequest(e.getMsg());
     }
 
@@ -70,10 +73,21 @@ public class GlobalExceptionHandler {
         }
     }
 
+    @ExceptionHandler(BindException.class)
+    public Result<Void> handleBindException(BindException e) {
+        log.error("参数异常：", e);
+        FieldError fieldError = e.getBindingResult().getFieldError();
+        String message = "参数校验未通过";
+        if (ObjUtil.isNotNull(fieldError)) {
+            message = fieldError.getDefaultMessage();
+        }
+        return Result.badRequest(message);
+    }
+
     @ExceptionHandler(NoResourceFoundException.class)
     public Result<Void> handleNoResourceFoundException(NoResourceFoundException e) {
         String path = e.getResourcePath();
-        log.warn("资源不存在：{}", path);
+        log.warn("资源异常：", e);
         return Result.notFound("[" + path + "]不存在");
     }
 

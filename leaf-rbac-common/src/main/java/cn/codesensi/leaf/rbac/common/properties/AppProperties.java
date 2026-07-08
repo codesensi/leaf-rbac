@@ -55,4 +55,9 @@ public class AppProperties {
      */
     private Boolean demoMode;
 
+    /**
+     * 用户随机头像服务地址
+     */
+    private String avatar;
+
 }

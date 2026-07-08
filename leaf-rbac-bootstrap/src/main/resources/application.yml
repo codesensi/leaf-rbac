@@ -82,3 +82,5 @@ app:
   author: codesensi
   # 版权
   copyright: 2026
+  # 用户随机头像服务地址
+  avatar: "https://api.dicebear.com/7.x/bottts/svg?seed=%s"

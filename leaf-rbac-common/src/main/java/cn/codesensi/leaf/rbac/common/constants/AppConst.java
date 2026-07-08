@@ -40,4 +40,9 @@ public class AppConst {
      */
     public static final String TRACE_ID = "traceId";
 
+    /**
+     * 默认密码
+     */
+    public static final String DEFAULT_PASSWORD = "123456";
+
 }

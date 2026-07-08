@@ -1,15 +1,19 @@
 package cn.codesensi.leaf.rbac.api.controller.system;
 
+import cn.codesensi.leaf.rbac.api.request.SysUserSaveRequest;
 import cn.codesensi.leaf.rbac.common.enums.OperateType;
 import cn.codesensi.leaf.rbac.framework.annotation.ApiResponseBody;
 import cn.codesensi.leaf.rbac.framework.annotation.LogOperate;
 import cn.codesensi.leaf.rbac.system.dto.RouteDTO;
+import cn.codesensi.leaf.rbac.system.dto.SysUserSaveDTO;
 import cn.codesensi.leaf.rbac.system.entity.SysUser;
 import cn.codesensi.leaf.rbac.system.service.SysUserService;
+import cn.hutool.core.bean.BeanUtil;
 import com.mybatisflex.core.paginate.Page;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.web.bind.annotation.*;
@@ -34,16 +38,17 @@ public class SysUserController {
     private final SysUserService sysUserService;
 
     /**
-     * 保存用户信息表。
+     * 保存用户信息
      *
-     * @param sysUser 用户信息表
+     * @param request 保存用户请求参数
      * @return {@code true} 保存成功，{@code false} 保存失败
      */
-    @LogOperate(module = "用户管理", type = OperateType.INSERT, desc = "保存用户", ignoreFields = {"password"})
+    @LogOperate(module = "用户管理", type = OperateType.INSERT, desc = "保存用户")
     @Operation(summary = "保存用户", description = "保存用户信息")
-    @PostMapping("/save")
-    public boolean save(@RequestBody SysUser sysUser) {
-        return sysUserService.save(sysUser);
+    @PostMapping("/saveUser")
+    public boolean saveUser(@Valid @RequestBody SysUserSaveRequest request) {
+        SysUserSaveDTO sysUserSaveDTO = BeanUtil.copyProperties(request, SysUserSaveDTO.class);
+        return sysUserService.saveUser(sysUserSaveDTO);
     }
 
     /**
