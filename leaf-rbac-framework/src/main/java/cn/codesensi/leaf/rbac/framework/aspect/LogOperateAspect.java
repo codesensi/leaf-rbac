@@ -156,7 +156,7 @@ public class LogOperateAspect {
         }
         // 操作人
         if (StpUtil.isLogin()) {
-            builder.operator(StpUtil.getLoginIdAsLong());
+            builder.userId(StpUtil.getLoginIdAsLong());
         }
 
         try {

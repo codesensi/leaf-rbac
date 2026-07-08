@@ -52,10 +52,11 @@ public class LogOperate extends BaseEntity implements Serializable {
     private Integer type;
 
     /**
-     * 操作人（当前登录用户id）
+     * 操作人ID
      */
     @JsonSerialize(using = ToStringSerializer.class) // 序列化为字符串避免前端精度丢失
-    private Long operator;
+    @Schema(description = "操作人ID")
+    private Long userId;
 
     /**
      * 操作描述

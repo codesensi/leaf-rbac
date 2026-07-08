@@ -20,9 +20,9 @@ public class LogOperateEvent extends ApplicationEvent {
     private Integer type;
 
     /**
-     * 操作人（当前登录用户id）
+     * 操作人ID
      */
-    private Long operator;
+    private Long userId;
 
     /**
      * 操作描述（如：新增用户、修改角色权限）
@@ -90,7 +90,7 @@ public class LogOperateEvent extends ApplicationEvent {
     private String result;
 
     @Builder
-    public LogOperateEvent(Object source, String module, Integer type, Long operator,
+    public LogOperateEvent(Object source, String module, Integer type, Long userId,
                            String descr, Integer status, String errorMsg, String requestIp,
                            String requestUrl, String requestArea, String requestOs,
                            String requestDevice, String requestBrowser,
@@ -99,7 +99,7 @@ public class LogOperateEvent extends ApplicationEvent {
         super(source);
         this.module = module;
         this.type = type;
-        this.operator = operator;
+        this.userId = userId;
         this.descr = descr;
         this.status = status;
         this.errorMsg = errorMsg;
