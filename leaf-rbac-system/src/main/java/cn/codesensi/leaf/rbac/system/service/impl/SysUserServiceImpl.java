@@ -43,7 +43,8 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
      */
     @Override
     public List<RouteDTO> getRoutes() {
-        return sysMenuService.getRoutesByUserId(StpUtil.getLoginIdAsLong());
+        long userId = StpUtil.getLoginIdAsLong();
+        return sysMenuService.getRoutesByUserId(userId);
     }
 
     /**
