@@ -105,4 +105,10 @@ public class SysUser extends BaseEntity implements Serializable {
     @Schema(description = "备注")
     private String remark;
 
+    /**
+     * 系统内置标识:0-自定义,1-内置
+     */
+    @Schema(description = "系统内置标识:0-自定义,1-内置")
+    private Integer sysFlag;
+
 }
