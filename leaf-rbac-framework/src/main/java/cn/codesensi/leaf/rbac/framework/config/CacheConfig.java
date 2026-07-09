@@ -5,8 +5,9 @@ import cn.codesensi.leaf.rbac.common.util.CacheUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.data.redis.cache.*;
-import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
@@ -27,14 +28,15 @@ public class CacheConfig {
     /**
      * 缓存管理器
      *
-     * @param connectionFactory Redis 连接工厂
+     * @param lettuceConnectionFactory Redis 连接工厂
      * @return 缓存管理器
      */
+    @Primary
     @Bean
-    public RedisCacheManager cacheManager(RedisConnectionFactory connectionFactory) {
+    public RedisCacheManager redisCacheManager(LettuceConnectionFactory lettuceConnectionFactory) {
 
         // 1. 获取默认的 Writer（负责底层 Redis 读写）
-        RedisCacheWriter defaultWriter = RedisCacheWriter.nonLockingRedisCacheWriter(connectionFactory);
+        RedisCacheWriter defaultWriter = RedisCacheWriter.nonLockingRedisCacheWriter(lettuceConnectionFactory);
 
         // 2. 装饰 Writer：重写 put 方法，在写入时动态生成随机 TTL
         RedisCacheWriter randomTtlWriter = new RedisCacheWriter() {
@@ -252,8 +254,7 @@ public class CacheConfig {
         RedisCacheConfiguration defaultConfig = RedisCacheConfiguration.defaultCacheConfig()
                 .computePrefixWith(cacheKeyPrefix)
                 .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer()))
-                .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(new GenericJackson2JsonRedisSerializer()))
-                .disableCachingNullValues();
+                .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(new GenericJackson2JsonRedisSerializer()));
 
         return RedisCacheManager.builder(randomTtlWriter)
                 .cacheDefaults(defaultConfig)
