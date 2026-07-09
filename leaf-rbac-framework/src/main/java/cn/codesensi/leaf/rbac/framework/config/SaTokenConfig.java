@@ -36,7 +36,10 @@ public class SaTokenConfig implements WebMvcConfigurer {
                 StpUtil.checkDisable(StpUtil.getLoginIdAsLong());
             });
             // 系统功能：超级管理员角色
-            SaRouter.match(RbacConst.SYS_PATH, RbacConst.LOG_PATH).check(r -> StpUtil.checkRole(RbacConst.ROLE_ADMIN_CODE));
+            SaRouter.match(RbacConst.SYS_PATH, RbacConst.LOG_PATH)
+                    // 忽略用户信息接口
+                    .notMatch(RbacConst.SYS_USER_INFO_PATH)
+                    .check(r -> StpUtil.checkRole(RbacConst.ROLE_ADMIN_CODE));
         })).addPathPatterns(RbacConst.ROOT_PATH);
     }
 

@@ -103,7 +103,6 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
      * @param userId 用户id
      * @return 路由菜单树
      */
-    @Cacheable(value = CacheConst.USER_ROUTE, key = "#userId")
     @Override
     public List<RouteDTO> getRoutesByUserId(Long userId) {
         // 获取用户的角色编码列表

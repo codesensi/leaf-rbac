@@ -1,13 +1,15 @@
 package cn.codesensi.leaf.rbac.api.controller.system;
 
 import cn.codesensi.leaf.rbac.api.request.SysUserSaveRequest;
+import cn.codesensi.leaf.rbac.api.response.UserInfoResponse;
 import cn.codesensi.leaf.rbac.common.enums.OperateType;
 import cn.codesensi.leaf.rbac.framework.annotation.ApiResponseBody;
 import cn.codesensi.leaf.rbac.framework.annotation.LogOperate;
-import cn.codesensi.leaf.rbac.system.dto.RouteDTO;
 import cn.codesensi.leaf.rbac.system.dto.SysUserSaveDTO;
+import cn.codesensi.leaf.rbac.system.dto.UserInfoDTO;
 import cn.codesensi.leaf.rbac.system.entity.SysUser;
 import cn.codesensi.leaf.rbac.system.service.SysUserService;
+import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.bean.BeanUtil;
 import com.mybatisflex.core.paginate.Page;
 import io.swagger.v3.oas.annotations.Operation;
@@ -120,27 +122,17 @@ public class SysUserController {
     }
 
     /**
-     * 获取当前用户的路由菜单树
-     *
-     * @return List<RouteDTO> 路由菜单树
-     */
-    @LogOperate(module = "用户管理", type = OperateType.QUERY, desc = "获取当前用户路由菜单树", recordResult = true)
-    @Operation(summary = "获取当前用户的路由菜单树")
-    @GetMapping("/getRoutes")
-    public List<RouteDTO> getRoutes() {
-        return sysUserService.getRoutes();
-    }
-
-    /**
      * 获取当前用户信息
      *
      * @return SysUser 用户信息
      */
     @LogOperate(module = "用户管理", type = OperateType.QUERY, desc = "获取当前用户信息")
     @Operation(summary = "获取当前用户信息")
-    @GetMapping("/getUserInfo")
-    public SysUser getUserInfo() {
-        return sysUserService.getUserInfo();
+    @GetMapping("/getInfo")
+    public UserInfoResponse getInfo() {
+        long userId = StpUtil.getLoginIdAsLong();
+        UserInfoDTO userInfoDTO = sysUserService.getInfo(userId);
+        return BeanUtil.copyProperties(userInfoDTO, UserInfoResponse.class);
     }
 
 }

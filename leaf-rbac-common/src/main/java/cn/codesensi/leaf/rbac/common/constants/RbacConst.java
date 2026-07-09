@@ -36,6 +36,11 @@ public class RbacConst {
     public static final String SYS_PATH = "/sys/**";
 
     /**
+     * 获取用户信息接口路径
+     */
+    public static final String SYS_USER_INFO_PATH = "/sys/user/getInfo";
+
+    /**
      * 日志管理接口路径
      */
     public static final String LOG_PATH = "/log/**";

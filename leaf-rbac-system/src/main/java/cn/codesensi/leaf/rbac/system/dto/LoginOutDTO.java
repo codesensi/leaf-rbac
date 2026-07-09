@@ -6,7 +6,6 @@ import lombok.experimental.Accessors;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.List;
 
 /**
  * 登录响应结果
@@ -34,32 +33,15 @@ public class LoginOutDTO implements Serializable {
     private Long expires;
 
     /**
-     * 用户名
+     * 访问令牌名称
      */
-    @Schema(description = "用户名")
-    private String username;
+    @Schema(description = "访问令牌名称")
+    private String tokenName;
 
     /**
-     * 昵称
+     * 访问令牌前缀
      */
-    @Schema(description = "昵称")
-    private String nickname;
+    @Schema(description = "访问令牌前缀")
+    private String tokenPrefix;
 
-    /**
-     * 头像
-     */
-    @Schema(description = "头像")
-    private String avatar;
-
-    /**
-     * 角色
-     */
-    @Schema(description = "角色")
-    private List<String> roles;
-
-    /**
-     * 权限
-     */
-    @Schema(description = "权限")
-    private List<String> permissions;
 }

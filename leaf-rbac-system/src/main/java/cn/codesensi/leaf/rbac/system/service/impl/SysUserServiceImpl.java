@@ -1,21 +1,25 @@
 package cn.codesensi.leaf.rbac.system.service.impl;
 
 import cn.codesensi.leaf.rbac.common.constants.AppConst;
+import cn.codesensi.leaf.rbac.common.constants.CacheConst;
 import cn.codesensi.leaf.rbac.common.exception.BusinessException;
 import cn.codesensi.leaf.rbac.common.properties.AppProperties;
 import cn.codesensi.leaf.rbac.system.dto.RouteDTO;
 import cn.codesensi.leaf.rbac.system.dto.SysUserSaveDTO;
+import cn.codesensi.leaf.rbac.system.dto.UserInfoDTO;
 import cn.codesensi.leaf.rbac.system.entity.SysUser;
 import cn.codesensi.leaf.rbac.system.mapper.SysUserMapper;
 import cn.codesensi.leaf.rbac.system.service.SysMenuService;
 import cn.codesensi.leaf.rbac.system.service.SysUserService;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.digest.BCrypt;
 import com.mybatisflex.core.query.QueryChain;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -37,25 +41,31 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     private final AppProperties appProperties;
 
     /**
-     * 获取当前用户的路由菜单树
-     *
-     * @return 路由菜单树
-     */
-    @Override
-    public List<RouteDTO> getRoutes() {
-        long userId = StpUtil.getLoginIdAsLong();
-        return sysMenuService.getRoutesByUserId(userId);
-    }
-
-    /**
      * 获取当前用户信息
      *
      * @return 用户信息
      */
+    @Cacheable(value = CacheConst.USER_INFO, key = "#userId")
     @Override
-    public SysUser getUserInfo() {
-        long userId = StpUtil.getLoginIdAsLong();
-        return sysUserMapper.selectOneById(userId);
+    public UserInfoDTO getInfo(Long userId) {
+        SysUser sysUser = QueryChain.of(sysUserMapper)
+                .select(SYS_USER.ALL_COLUMNS)
+                .where(SYS_USER.ID.eq(userId))
+                .one();
+        if (ObjUtil.isNull(sysUser)) {
+            throw new BusinessException("用户不存在");
+        }
+        UserInfoDTO userInfoDTO = BeanUtil.copyProperties(sysUser, UserInfoDTO.class);
+        // 角色集合
+        List<String> roles = StpUtil.getRoleList();
+        userInfoDTO.setRoles(roles);
+        // 权限码集合
+        List<String> perms = StpUtil.getPermissionList();
+        userInfoDTO.setPermissions(perms);
+        // 拥有的菜单
+        List<RouteDTO> routes = sysMenuService.getRoutesByUserId(userId);
+        userInfoDTO.setRoutes(routes);
+        return userInfoDTO;
     }
 
     /**

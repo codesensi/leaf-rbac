@@ -16,6 +16,7 @@ import cn.codesensi.leaf.rbac.system.dto.LoginOutDTO;
 import cn.codesensi.leaf.rbac.system.entity.SysUser;
 import cn.codesensi.leaf.rbac.system.service.LoginService;
 import cn.codesensi.leaf.rbac.system.service.SysUserService;
+import cn.dev33.satoken.SaManager;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.date.LocalDateTimeUtil;
 import cn.hutool.core.util.ObjUtil;
@@ -30,7 +31,6 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.ZoneOffset;
-import java.util.List;
 
 import static cn.codesensi.leaf.rbac.system.entity.table.SysUserTableDef.SYS_USER;
 
@@ -98,16 +98,9 @@ public class LoginServiceImpl implements LoginService {
             // 访问令牌过期时间
             long accessTokenTimeout = StpUtil.getTokenTimeout();
             loginOutDTO.setExpires(LocalDateTimeUtil.now().plusSeconds(accessTokenTimeout).toInstant(ZoneOffset.of("+8")).toEpochMilli());
-            // 其他信息
-            loginOutDTO.setUsername(username);
-            loginOutDTO.setNickname(sysUser.getNickname());
-            loginOutDTO.setAvatar(sysUser.getAvatar());
-            // 角色集合
-            List<String> roles = StpUtil.getRoleList();
-            loginOutDTO.setRoles(roles);
-            // 权限码集合
-            List<String> perms = StpUtil.getPermissionList();
-            loginOutDTO.setPermissions(perms);
+            loginOutDTO.setTokenName(SaManager.getConfig().getTokenName());
+            loginOutDTO.setTokenPrefix(SaManager.getConfig().getTokenPrefix());
+
             builder.status(YesNoEnum.YES.getCode());
             return loginOutDTO;
         } catch (Exception e) {
