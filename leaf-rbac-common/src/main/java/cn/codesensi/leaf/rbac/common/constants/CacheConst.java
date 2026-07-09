@@ -23,11 +23,11 @@ public class CacheConst {
     /**
      * 权限缓存
      */
-    public static final String USER_PERM = "user:perm:";
+    public static final String USER_PERM = "user:perm";
 
     /**
      * 角色缓存
      */
-    public static final String USER_ROLE = "user:role:";
+    public static final String USER_ROLE = "user:role";
 
 }

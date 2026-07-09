@@ -245,12 +245,10 @@ public class CacheConfig {
             public RedisCacheWriter withStatisticsCollector(CacheStatisticsCollector cacheStatisticsCollector) {
                 return defaultWriter.withStatisticsCollector(cacheStatisticsCollector);
             }
-
-
         };
 
-        // 缓存前缀
-        CacheKeyPrefix cacheKeyPrefix = CacheKeyPrefix.prefixed(CacheUtil.getBasePrefix());
+        // 缓存前缀：格式为 basePrefix + cacheName + ":" + key（去掉 Spring 默认的 :: 分隔符）
+        CacheKeyPrefix cacheKeyPrefix = cacheName -> CacheUtil.getBasePrefix().concat(cacheName).concat(":");
         RedisCacheConfiguration defaultConfig = RedisCacheConfiguration.defaultCacheConfig()
                 .computePrefixWith(cacheKeyPrefix)
                 .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer()))
