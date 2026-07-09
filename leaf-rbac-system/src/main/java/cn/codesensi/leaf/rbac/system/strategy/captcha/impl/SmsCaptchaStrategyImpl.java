@@ -1,7 +1,7 @@
 package cn.codesensi.leaf.rbac.system.strategy.captcha.impl;
 
-import cn.codesensi.leaf.rbac.common.constants.CacheConst;
 import cn.codesensi.leaf.rbac.common.exception.ValidationException;
+import cn.codesensi.leaf.rbac.common.properties.AppCaptchaProperties;
 import cn.codesensi.leaf.rbac.common.util.CacheUtil;
 import cn.codesensi.leaf.rbac.system.dto.CaptchaInDTO;
 import cn.codesensi.leaf.rbac.system.dto.CaptchaOutDTO;
@@ -23,6 +23,7 @@ import java.util.concurrent.TimeUnit;
 @Service("smsCaptchaStrategy")
 public class SmsCaptchaStrategyImpl implements CaptchaStrategy {
 
+    private final AppCaptchaProperties appCaptchaProperties;
     private final StringRedisTemplate stringRedisTemplate;
 
     /**
@@ -41,7 +42,7 @@ public class SmsCaptchaStrategyImpl implements CaptchaStrategy {
         // TODO 发短信
 
         // 放入缓存
-        stringRedisTemplate.opsForValue().set(CacheUtil.getCaptchaSmsPrefix().concat(phone), result, CacheConst.EXPIRE_5_MINUTES, TimeUnit.MINUTES);
+        stringRedisTemplate.opsForValue().set(CacheUtil.getCaptchaSmsPrefix().concat(phone), result, appCaptchaProperties.getSmsExpire(), TimeUnit.SECONDS);
         // 返回结果
         CaptchaOutDTO captchaOutDTO = new CaptchaOutDTO();
         captchaOutDTO.setCaptchaKey(phone);

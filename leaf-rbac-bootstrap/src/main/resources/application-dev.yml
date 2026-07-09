@@ -25,6 +25,9 @@ spring:
       initialization-fail-timeout: -1
   cache:
     type: redis
+    redis:
+      # 缓存空值，防缓存穿透
+      cache-null-values: true
   # redis配置
   data:
     redis:
@@ -99,7 +102,17 @@ app:
     type: image
     # 图形验证码类型，验证码类型为图形时需配置
     image-type: arithmetic
+    # 图形验证码过期时间，单位秒。5分钟
+    image-expire: 300
+    # 短信验证码过期时间，单位秒。15 分钟
+    sms-expire: 900
   # 安全配置
   security:
     # 请求缓存限制 5M
     request-cache-limit: 5242880
+  # 缓存配置
+  cache:
+    # 默认基准时间，单位秒。7 天
+    base-ttl: 604800
+    # 缓存随机偏移上限，单位秒。1 天
+    max-extra: 86400

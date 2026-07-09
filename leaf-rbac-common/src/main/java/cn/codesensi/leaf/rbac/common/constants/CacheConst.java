@@ -21,12 +21,13 @@ public class CacheConst {
     public static final String IMAGE_PREFIX = "image:";
 
     /**
-     * 用户缓存
+     * 权限缓存
      */
-    public static final String CACHE_USER = "user";
+    public static final String USER_PERM = "user:perm:";
 
     /**
-     * 过期时间：5分钟
+     * 角色缓存
      */
-    public static final Long EXPIRE_5_MINUTES = 5L;
+    public static final String USER_ROLE = "user:role:";
+
 }

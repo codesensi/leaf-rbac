@@ -54,7 +54,7 @@ public class ImageCaptchaStrategyImpl implements CaptchaStrategy {
             String text = captcha.text();
             log.info("图形验证码唯一标识：{}，验证码内容：{}", keyUuid, text);
             // 放入缓存
-            stringRedisTemplate.opsForValue().set(CacheUtil.getCaptchaImagePrefix().concat(keyUuid), text, CacheConst.EXPIRE_5_MINUTES, TimeUnit.MINUTES);
+            stringRedisTemplate.opsForValue().set(CacheUtil.getCaptchaImagePrefix().concat(keyUuid), text, appCaptchaProperties.getImageExpire(), TimeUnit.SECONDS);
             // 返回结果
             captchaOutDTO.setCaptchaKey(keyUuid);
             captchaOutDTO.setCaptchaValue(captcha.toBase64());

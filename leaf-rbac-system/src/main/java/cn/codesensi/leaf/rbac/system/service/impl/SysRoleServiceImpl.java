@@ -1,5 +1,6 @@
 package cn.codesensi.leaf.rbac.system.service.impl;
 
+import cn.codesensi.leaf.rbac.common.constants.CacheConst;
 import cn.codesensi.leaf.rbac.common.constants.RbacConst;
 import cn.codesensi.leaf.rbac.system.entity.SysRole;
 import cn.codesensi.leaf.rbac.system.mapper.SysRoleMapper;
@@ -10,6 +11,7 @@ import cn.hutool.core.util.StrUtil;
 import com.mybatisflex.core.query.QueryChain;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -36,6 +38,7 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
      * @param userId 用户ID
      * @return 角色编码列表
      */
+    @Cacheable(value = CacheConst.USER_ROLE, key = "#userId")
     @Override
     public List<String> listRoleCodeByUserId(Long userId) {
         // 获取去重后的角色列表

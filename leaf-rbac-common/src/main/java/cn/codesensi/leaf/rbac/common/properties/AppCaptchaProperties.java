@@ -25,6 +25,16 @@ public class AppCaptchaProperties {
     private ImageType imageType;
 
     /**
+     * 图形验证码过期时间，单位秒。5分钟
+     */
+    private Long imageExpire = 5L * 60;
+
+    /**
+     * 短信验证码过期时间，单位秒。15分钟
+     */
+    private Long smsExpire = 15L * 60;
+
+    /**
      * 验证码类型
      */
     public enum Type {

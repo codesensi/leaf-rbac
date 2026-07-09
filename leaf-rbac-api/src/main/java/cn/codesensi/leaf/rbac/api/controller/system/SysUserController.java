@@ -124,7 +124,7 @@ public class SysUserController {
      *
      * @return List<RouteDTO> 路由菜单树
      */
-    @LogOperate(module = "用户管理", type = OperateType.QUERY, desc = "获取当前用户路由菜单树")
+    @LogOperate(module = "用户管理", type = OperateType.QUERY, desc = "获取当前用户路由菜单树", recordResult = true)
     @Operation(summary = "获取当前用户的路由菜单树")
     @GetMapping("/getRoutes")
     public List<RouteDTO> getRoutes() {
