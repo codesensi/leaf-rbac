@@ -2,13 +2,17 @@ package cn.codesensi.leaf.rbac.framework.config;
 
 import cn.codesensi.leaf.rbac.common.properties.AppCacheProperties;
 import cn.codesensi.leaf.rbac.common.util.CacheUtil;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.CacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.redis.cache.*;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
-import org.springframework.data.redis.serializer.*;
+import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
+import org.springframework.data.redis.serializer.RedisSerializationContext;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
@@ -31,7 +35,7 @@ public class CacheConfig {
      */
     @Primary
     @Bean
-    public RedisCacheManager redisCacheManager(LettuceConnectionFactory lettuceConnectionFactory) {
+    public CacheManager cacheManager(LettuceConnectionFactory lettuceConnectionFactory) {
 
         // 1. 获取默认的 Writer（负责底层 Redis 读写）
         RedisCacheWriter defaultWriter = RedisCacheWriter.nonLockingRedisCacheWriter(lettuceConnectionFactory);
@@ -252,7 +256,7 @@ public class CacheConfig {
         RedisCacheConfiguration defaultConfig = RedisCacheConfiguration.defaultCacheConfig()
                 .computePrefixWith(cacheKeyPrefix)
                 .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer()))
-                .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(new JdkSerializationRedisSerializer()));
+                .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(new GenericJackson2JsonRedisSerializer(new ObjectMapper())));
 
         return RedisCacheManager.builder(randomTtlWriter)
                 .cacheDefaults(defaultConfig)
