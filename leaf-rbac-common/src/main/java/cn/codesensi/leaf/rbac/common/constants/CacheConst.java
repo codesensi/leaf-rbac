@@ -30,4 +30,14 @@ public class CacheConst {
      */
     public static final String USER_ROLE = "user:role";
 
+    /**
+     * 用户路由菜单缓存
+     */
+    public static final String USER_ROUTE = "user:route";
+
+    /**
+     * 用户信息缓存
+     */
+    public static final String USER_INFO = "user:info";
+
 }
