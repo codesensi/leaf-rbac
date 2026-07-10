@@ -126,7 +126,7 @@ public class SysUserController {
      *
      * @return SysUser 用户信息
      */
-    @LogOperate(module = "用户管理", type = OperateType.QUERY, desc = "获取当前用户信息")
+    @LogOperate(module = "用户管理", type = OperateType.QUERY, desc = "获取当前用户信息", recordResult = true)
     @Operation(summary = "获取当前用户信息")
     @GetMapping("/getInfo")
     public UserInfoResponse getInfo() {
