@@ -4,9 +4,10 @@ import cn.codesensi.leaf.rbac.common.constants.AppConst;
 import cn.codesensi.leaf.rbac.common.constants.CacheConst;
 import cn.codesensi.leaf.rbac.common.exception.BusinessException;
 import cn.codesensi.leaf.rbac.common.properties.AppProperties;
-import cn.codesensi.leaf.rbac.system.dto.RouteDTO;
-import cn.codesensi.leaf.rbac.system.dto.SysUserSaveDTO;
-import cn.codesensi.leaf.rbac.system.dto.UserInfoDTO;
+import cn.codesensi.leaf.rbac.system.dto.MenuOutDTO;
+import cn.codesensi.leaf.rbac.system.dto.UserInfoOutDTO;
+import cn.codesensi.leaf.rbac.system.dto.UserSaveInDTO;
+import cn.codesensi.leaf.rbac.system.entity.SysMenu;
 import cn.codesensi.leaf.rbac.system.entity.SysUser;
 import cn.codesensi.leaf.rbac.system.mapper.SysUserMapper;
 import cn.codesensi.leaf.rbac.system.service.SysMenuService;
@@ -47,7 +48,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
      */
     @Cacheable(value = CacheConst.USER_INFO, key = "#userId")
     @Override
-    public UserInfoDTO getInfo(Long userId) {
+    public UserInfoOutDTO getInfo(Long userId) {
         SysUser sysUser = QueryChain.of(sysUserMapper)
                 .select(SYS_USER.ALL_COLUMNS)
                 .where(SYS_USER.ID.eq(userId))
@@ -55,28 +56,29 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         if (ObjUtil.isNull(sysUser)) {
             throw new BusinessException("用户不存在");
         }
-        UserInfoDTO userInfoDTO = BeanUtil.copyProperties(sysUser, UserInfoDTO.class);
+        UserInfoOutDTO userInfoOutDTO = BeanUtil.copyProperties(sysUser, UserInfoOutDTO.class);
         // 角色集合
         List<String> roles = StpUtil.getRoleList();
-        userInfoDTO.setRoles(roles);
+        userInfoOutDTO.setRoles(roles);
         // 权限码集合
         List<String> perms = StpUtil.getPermissionList();
-        userInfoDTO.setPermissions(perms);
+        userInfoOutDTO.setPermissions(perms);
         // 拥有的菜单
-        List<RouteDTO> routes = sysMenuService.getRoutesByUserId(userId);
-        userInfoDTO.setRoutes(routes);
-        return userInfoDTO;
+        List<SysMenu> menus = sysMenuService.getMenusByUserId(userId);
+        List<MenuOutDTO> menuOutDTOS = BeanUtil.copyToList(menus, MenuOutDTO.class);
+        userInfoOutDTO.setMenus(menuOutDTOS);
+        return userInfoOutDTO;
     }
 
     /**
      * 保存用户信息
      *
-     * @param sysUserSaveDTO 用户信息
+     * @param userSaveInDTO 用户信息
      * @return 保存结果
      */
     @Override
-    public boolean saveUser(SysUserSaveDTO sysUserSaveDTO) {
-        String username = sysUserSaveDTO.getUsername();
+    public boolean saveUser(UserSaveInDTO userSaveInDTO) {
+        String username = userSaveInDTO.getUsername();
         // 校验用户名是否存在
         long count = QueryChain.of(sysUserMapper)
                 .where(SYS_USER.USERNAME.eq(username))
@@ -85,14 +87,14 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
             throw new BusinessException("用户名已存在");
         }
 
-        SysUser sysUser = BeanUtil.copyProperties(sysUserSaveDTO, SysUser.class);
+        SysUser sysUser = BeanUtil.copyProperties(userSaveInDTO, SysUser.class);
         // 若未输入昵称则保持昵称和用户名相同
-        if (StrUtil.isBlank(sysUserSaveDTO.getNickname())) {
+        if (StrUtil.isBlank(userSaveInDTO.getNickname())) {
             sysUser.setNickname(username);
         }
 
         // 默认随机头像
-        if (StrUtil.isBlank(sysUserSaveDTO.getAvatar())) {
+        if (StrUtil.isBlank(userSaveInDTO.getAvatar())) {
             String avatar = String.format(appProperties.getAvatar(), username);
             sysUser.setAvatar(avatar);
         }

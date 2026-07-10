@@ -67,7 +67,7 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
     @Override
     public List<SysRole> listRoleByUserId(Long userId) {
         // Step 1: 查角色ID（天然无重复）
-        List<Long> roleIds = new QueryChain<>(sysUserRoleMapper)
+        List<Long> roleIds = QueryChain.of(sysUserRoleMapper)
                 .select(SYS_USER_ROLE.ROLE_ID)
                 .where(SYS_USER_ROLE.USER_ID.eq(userId))
                 .listAs(Long.class);
@@ -78,7 +78,7 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
         }
 
         // Step 2: 主键批量查询（走索引，无需去重）
-        return new QueryChain<>(sysRoleMapper)
+        return QueryChain.of(sysRoleMapper)
                 .select(SYS_ROLE.ALL_COLUMNS)
                 .where(SYS_ROLE.ID.in(roleIds))
                 .list();

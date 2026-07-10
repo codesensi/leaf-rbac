@@ -1,12 +1,12 @@
 package cn.codesensi.leaf.rbac.api.controller.system;
 
-import cn.codesensi.leaf.rbac.api.request.SysUserSaveRequest;
+import cn.codesensi.leaf.rbac.api.request.UserSaveRequest;
 import cn.codesensi.leaf.rbac.api.response.UserInfoResponse;
 import cn.codesensi.leaf.rbac.common.enums.OperateType;
 import cn.codesensi.leaf.rbac.framework.annotation.ApiResponseBody;
 import cn.codesensi.leaf.rbac.framework.annotation.LogOperate;
-import cn.codesensi.leaf.rbac.system.dto.SysUserSaveDTO;
-import cn.codesensi.leaf.rbac.system.dto.UserInfoDTO;
+import cn.codesensi.leaf.rbac.system.dto.UserSaveInDTO;
+import cn.codesensi.leaf.rbac.system.dto.UserInfoOutDTO;
 import cn.codesensi.leaf.rbac.system.entity.SysUser;
 import cn.codesensi.leaf.rbac.system.service.SysUserService;
 import cn.dev33.satoken.stp.StpUtil;
@@ -48,9 +48,9 @@ public class SysUserController {
     @LogOperate(module = "用户管理", type = OperateType.INSERT, desc = "保存用户")
     @Operation(summary = "保存用户", description = "保存用户信息")
     @PostMapping("/saveUser")
-    public boolean saveUser(@Valid @RequestBody SysUserSaveRequest request) {
-        SysUserSaveDTO sysUserSaveDTO = BeanUtil.copyProperties(request, SysUserSaveDTO.class);
-        return sysUserService.saveUser(sysUserSaveDTO);
+    public boolean saveUser(@Valid @RequestBody UserSaveRequest request) {
+        UserSaveInDTO userSaveInDTO = BeanUtil.copyProperties(request, UserSaveInDTO.class);
+        return sysUserService.saveUser(userSaveInDTO);
     }
 
     /**
@@ -131,8 +131,8 @@ public class SysUserController {
     @GetMapping("/getInfo")
     public UserInfoResponse getInfo() {
         long userId = StpUtil.getLoginIdAsLong();
-        UserInfoDTO userInfoDTO = sysUserService.getInfo(userId);
-        return BeanUtil.copyProperties(userInfoDTO, UserInfoResponse.class);
+        UserInfoOutDTO userInfoOutDTO = sysUserService.getInfo(userId);
+        return BeanUtil.copyProperties(userInfoOutDTO, UserInfoResponse.class);
     }
 
 }

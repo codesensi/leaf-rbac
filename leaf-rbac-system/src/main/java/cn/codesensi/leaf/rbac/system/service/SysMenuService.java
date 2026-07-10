@@ -1,6 +1,5 @@
 package cn.codesensi.leaf.rbac.system.service;
 
-import cn.codesensi.leaf.rbac.system.dto.RouteDTO;
 import cn.codesensi.leaf.rbac.system.entity.SysMenu;
 import com.mybatisflex.core.service.IService;
 
@@ -28,6 +27,6 @@ public interface SysMenuService extends IService<SysMenu> {
      * @param userId 用户id
      * @return 路由菜单树
      */
-    List<RouteDTO> getRoutesByUserId(Long userId);
+    List<SysMenu> getMenusByUserId(Long userId);
 
 }

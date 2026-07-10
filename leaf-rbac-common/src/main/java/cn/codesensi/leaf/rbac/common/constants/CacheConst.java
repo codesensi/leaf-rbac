@@ -33,7 +33,7 @@ public class CacheConst {
     /**
      * 用户菜单缓存
      */
-    public static final String USER_ROUTE = "user:route";
+    public static final String USER_MENU = "user:menu";
 
     /**
      * 用户信息缓存

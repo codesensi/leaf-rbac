@@ -16,7 +16,7 @@ import java.util.List;
  */
 @Data
 @Accessors(chain = true)
-public class UserInfoDTO implements Serializable {
+public class UserInfoOutDTO implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
@@ -70,6 +70,12 @@ public class UserInfoDTO implements Serializable {
     private String remark;
 
     /**
+     * 系统内置标识:0-自定义,1-内置
+     */
+    @Schema(description = "系统内置标识:0-自定义,1-内置")
+    private Integer sysFlag;
+
+    /**
      * 角色
      */
     @Schema(description = "角色")
@@ -82,8 +88,8 @@ public class UserInfoDTO implements Serializable {
     private List<String> permissions;
 
     /**
-     * 路由
+     * 菜单
      */
-    @Schema(description = "路由")
-    private List<RouteDTO> routes;
+    @Schema(description = "菜单")
+    private List<MenuOutDTO> menus;
 }

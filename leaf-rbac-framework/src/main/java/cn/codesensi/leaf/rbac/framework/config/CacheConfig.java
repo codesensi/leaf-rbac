@@ -6,6 +6,7 @@ import cn.hutool.core.util.ObjUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.CacheManager;
 import org.springframework.context.annotation.Bean;
@@ -248,7 +249,7 @@ public class CacheConfig {
         /**
          * 集合类型：纯 ObjectMapper，手工构造 {@code ["类型名", 值]} 二维数组
          */
-        private final ObjectMapper cleanMapper = new ObjectMapper();
+        private final ObjectMapper collectionMapper = new ObjectMapper();
 
         /**
          * 序列化：按运行时类型分派到不同序列化策略。
@@ -266,6 +267,8 @@ public class CacheConfig {
                 return new byte[0];
             }
             if (value instanceof Collection) {
+                // 兼容 Java 8 时间类型
+                collectionMapper.registerModule(new JavaTimeModule());
                 return serializeAsWrapperArray(value);
             }
             return objectSerializer.serialize(value);
@@ -284,7 +287,8 @@ public class CacheConfig {
                 List<Object> wrapper = new ArrayList<>();
                 wrapper.add(normalizeCollectionType(value));
                 wrapper.add(value);
-                return cleanMapper.writeValueAsBytes(wrapper);
+
+                return collectionMapper.writeValueAsBytes(wrapper);
             } catch (JsonProcessingException e) {
                 throw new SerializationException("Failed to serialize " + value.getClass(), e);
             }
@@ -308,7 +312,7 @@ public class CacheConfig {
             }
             JsonNode node;
             try {
-                node = cleanMapper.readTree(bytes);
+                node = collectionMapper.readTree(bytes);
             } catch (IOException e) {
                 throw new SerializationException("Failed to deserialize", e);
             }
@@ -329,9 +333,8 @@ public class CacheConfig {
          */
         private Object deserializeWrapperArray(byte[] bytes) {
             try {
-                List<Object> wrapper = cleanMapper.readValue(bytes,
-                        cleanMapper.getTypeFactory().constructCollectionType(List.class, Object.class));
-                return cleanMapper.convertValue(wrapper.get(1), Class.forName((String) wrapper.get(0)));
+                List<Object> wrapper = collectionMapper.readValue(bytes, collectionMapper.getTypeFactory().constructCollectionType(List.class, Object.class));
+                return collectionMapper.convertValue(wrapper.get(1), Class.forName((String) wrapper.get(0)));
             } catch (Exception e) {
                 throw new SerializationException("Failed to deserialize wrapper array", e);
             }
