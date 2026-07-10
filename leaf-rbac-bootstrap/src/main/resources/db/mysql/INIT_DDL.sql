@@ -223,7 +223,7 @@ CREATE TABLE `conf_region`
     `pcode`       VARCHAR(16) NULL DEFAULT NULL COMMENT '父级代码',
     `code`        VARCHAR(16) NULL DEFAULT NULL COMMENT '行政区划代码',
     `name`        VARCHAR(128) NULL DEFAULT NULL COMMENT '行政区划名称',
-    `level`       TINYINT(1) NULL DEFAULT NULL COMMENT '层级:1-省;2-市;3-县（区）',
+    `level`       tinyint(1) NULL DEFAULT NULL COMMENT '层级:1-省;2-市;3-县（区）',
     `full_path`   VARCHAR(512) NULL DEFAULT NULL COMMENT '物化路径: /110000/110100/110101/',
     `sort`        int NULL DEFAULT 0 COMMENT '菜单排序:数字越小越靠前',
     `creator`     bigint NULL DEFAULT NULL COMMENT '创建人',

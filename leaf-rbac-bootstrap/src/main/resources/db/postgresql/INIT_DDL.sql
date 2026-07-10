@@ -319,3 +319,41 @@ COMMENT ON COLUMN log_operate.create_time IS '创建时间';
 COMMENT ON COLUMN log_operate.updater IS '更新人';
 COMMENT ON COLUMN log_operate.update_time IS '更新时间';
 COMMENT ON COLUMN log_operate.del_flag IS '逻辑删除标识:0-未删除,1-已删除';
+
+
+-- ----------------------------
+-- Table structure for conf_region
+-- ----------------------------
+DROP TABLE IF EXISTS conf_region;
+CREATE TABLE conf_region
+(
+    id          bigint NOT NULL,
+    pcode       VARCHAR(16) NULL DEFAULT NULL,
+    code        VARCHAR(16) NULL DEFAULT NULL,
+    name        VARCHAR(128) NULL DEFAULT NULL,
+    level       smallint NULL DEFAULT NULL,
+    full_path   VARCHAR(512) NULL DEFAULT NULL,
+    sort        int NULL DEFAULT 0,
+    creator     bigint NULL DEFAULT NULL,
+    create_time TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+    updater     bigint NULL DEFAULT NULL,
+    update_time TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+    del_flag    smallint NULL DEFAULT 0,
+    PRIMARY KEY (`id`)
+);
+
+CREATE INDEX idx_cr_code ON conf_region (code);
+
+COMMENT ON TABLE conf_region IS '行政区划配置表';
+COMMENT ON COLUMN conf_region.id IS '行政区划ID';
+COMMENT ON COLUMN conf_region.pcode IS '父级代码';
+COMMENT ON COLUMN conf_region.code IS '行政区划代码';
+COMMENT ON COLUMN conf_region.name IS '行政区划名称';
+COMMENT ON COLUMN conf_region.level IS '层级:1-省;2-市;3-县（区）';
+COMMENT ON COLUMN conf_region.full_path IS '物化路径: /110000/110100/110101/';
+COMMENT ON COLUMN conf_region.sort IS '菜单排序:数字越小越靠前';
+COMMENT ON COLUMN conf_region.creator IS '创建人';
+COMMENT ON COLUMN conf_region.create_time IS '创建时间';
+COMMENT ON COLUMN conf_region.updater IS '更新人';
+COMMENT ON COLUMN conf_region.update_time IS '更新时间';
+COMMENT ON COLUMN conf_region.del_flag IS '逻辑删除标识:0-未删除,1-已删除';
