@@ -44,7 +44,7 @@ public class Codegen {
 
         // 设置哪些字段不生成
         globalConfig.getStrategyConfig()
-                .setIgnoreColumns("creator", "create_time", "updater", "update_time", "is_delete");
+                .setIgnoreColumns("creator", "create_time", "updater", "update_time", "del_flag");
 
         // 设置生成 entity
         globalConfig.enableEntity()

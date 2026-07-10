@@ -211,3 +211,29 @@ CREATE TABLE `log_operate`
   CHARACTER SET = utf8mb4
   COLLATE = utf8mb4_general_ci COMMENT = '操作日志表'
   ROW_FORMAT = DYNAMIC;
+
+
+-- ----------------------------
+-- Table structure for conf_region
+-- ----------------------------
+DROP TABLE IF EXISTS `conf_region`;
+CREATE TABLE `conf_region`
+(
+    `id`          bigint NOT NULL COMMENT '行政区划ID',
+    `pcode`       VARCHAR(16) NULL DEFAULT NULL COMMENT '父级代码',
+    `code`        VARCHAR(16) NULL DEFAULT NULL COMMENT '行政区划代码',
+    `name`        VARCHAR(128) NULL DEFAULT NULL COMMENT '行政区划名称',
+    `level`       TINYINT(1) NULL DEFAULT NULL COMMENT '层级:1-省;2-市;3-县（区）',
+    `full_path`   VARCHAR(512) NULL DEFAULT NULL COMMENT '物化路径: /110000/110100/110101/',
+    `sort`        int NULL DEFAULT 0 COMMENT '菜单排序:数字越小越靠前',
+    `creator`     bigint NULL DEFAULT NULL COMMENT '创建人',
+    `create_time` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `updater`     bigint NULL DEFAULT NULL COMMENT '更新人',
+    `update_time` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
+    `del_flag`    tinyint(1)    NULL DEFAULT 0 COMMENT '逻辑删除标识:0-未删除,1-已删除',
+    PRIMARY KEY (`id`) USING BTREE,
+    INDEX         `idx_code` (`code` ASC) USING BTREE
+)ENGINE = InnoDB
+  CHARACTER SET = utf8mb4
+  COLLATE = utf8mb4_general_ci COMMENT = '行政区划配置表'
+  ROW_FORMAT = DYNAMIC;
