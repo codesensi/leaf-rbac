@@ -1,24 +1,33 @@
 package cn.codesensi.leaf.rbac.system.service.impl;
 
+import cn.codesensi.leaf.rbac.common.constants.CacheConst;
 import cn.codesensi.leaf.rbac.common.exception.SystemException;
 import cn.codesensi.leaf.rbac.common.properties.AppProperties;
+import cn.codesensi.leaf.rbac.framework.event.CacheRegionEvent;
 import cn.codesensi.leaf.rbac.system.dto.RegionApiResponse;
+import cn.codesensi.leaf.rbac.system.dto.RegionDTO;
 import cn.codesensi.leaf.rbac.system.entity.ConfRegion;
 import cn.codesensi.leaf.rbac.system.mapper.ConfRegionMapper;
 import cn.codesensi.leaf.rbac.system.service.ConfRegionService;
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONUtil;
+import com.mybatisflex.core.query.QueryChain;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+
+import static cn.codesensi.leaf.rbac.system.entity.table.ConfRegionTableDef.CONF_REGION;
 
 /**
  * 行政区划配置表 服务层实现。
@@ -33,6 +42,7 @@ public class ConfRegionServiceImpl extends ServiceImpl<ConfRegionMapper, ConfReg
 
     private final ConfRegionMapper confRegionMapper;
     private final AppProperties appProperties;
+    private final ApplicationEventPublisher eventPublisher;
 
     /**
      * 从民政部导入行政区划
@@ -70,9 +80,27 @@ public class ConfRegionServiceImpl extends ServiceImpl<ConfRegionMapper, ConfReg
         if (!entities.isEmpty()) {
             int inserted = confRegionMapper.insertBatchSelective(entities);
             log.info("行政区划数据导入完成，共导入 {} 条记录", inserted);
+
+            // 发布缓存刷新事件，触发缓存清空
+            eventPublisher.publishEvent(new CacheRegionEvent(inserted, inserted));
             return inserted;
         }
         return null;
+    }
+
+    /**
+     * 根据行政区划代码查询行政区划下属节点
+     *
+     * @param code
+     */
+    @Cacheable(value = CacheConst.REGION_PCODE, key = "#code")
+    @Override
+    public List<RegionDTO> listChildrenByCode(String code) {
+        List<ConfRegion> confRegions = QueryChain.of(confRegionMapper)
+                .select(CONF_REGION.CODE, CONF_REGION.NAME)
+                .where(CONF_REGION.PCODE.eq(code))
+                .list();
+        return BeanUtil.copyToList(confRegions, RegionDTO.class);
     }
 
     /**

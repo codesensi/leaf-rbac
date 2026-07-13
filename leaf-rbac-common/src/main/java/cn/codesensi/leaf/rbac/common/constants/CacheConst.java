@@ -40,4 +40,9 @@ public class CacheConst {
      */
     public static final String USER_INFO = "user:info";
 
+    /**
+     * 行政区划缓存
+     */
+    public static final String REGION_PCODE = "region:pcode";
+
 }
