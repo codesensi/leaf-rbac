@@ -333,7 +333,6 @@ CREATE TABLE conf_region
     name        VARCHAR(128) NULL DEFAULT NULL,
     level       smallint NULL DEFAULT NULL,
     full_path   VARCHAR(512) NULL DEFAULT NULL,
-    sort        int NULL DEFAULT 0,
     creator     bigint NULL DEFAULT NULL,
     create_time TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
     updater     bigint NULL DEFAULT NULL,
@@ -351,7 +350,6 @@ COMMENT ON COLUMN conf_region.code IS '行政区划代码';
 COMMENT ON COLUMN conf_region.name IS '行政区划名称';
 COMMENT ON COLUMN conf_region.level IS '层级:1-省;2-市;3-县（区）';
 COMMENT ON COLUMN conf_region.full_path IS '物化路径: /110000/110100/110101/';
-COMMENT ON COLUMN conf_region.sort IS '菜单排序:数字越小越靠前';
 COMMENT ON COLUMN conf_region.creator IS '创建人';
 COMMENT ON COLUMN conf_region.create_time IS '创建时间';
 COMMENT ON COLUMN conf_region.updater IS '更新人';

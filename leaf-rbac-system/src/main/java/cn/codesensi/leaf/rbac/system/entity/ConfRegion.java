@@ -3,9 +3,10 @@ package cn.codesensi.leaf.rbac.system.entity;
 import cn.codesensi.leaf.rbac.system.base.BaseEntity;
 import com.mybatisflex.annotation.Id;
 import com.mybatisflex.annotation.Table;
-import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
+import lombok.experimental.Accessors;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -17,7 +18,8 @@ import java.io.Serializable;
  * @since 2026-07-10
  */
 @Data
-@Builder
+@Accessors(chain = true)
+@ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @Table("conf_region")
 public class ConfRegion extends BaseEntity implements Serializable {
@@ -55,10 +57,5 @@ public class ConfRegion extends BaseEntity implements Serializable {
      * 物化路径: /110000/110100/110101/
      */
     private String fullPath;
-
-    /**
-     * 菜单排序:数字越小越靠前
-     */
-    private Integer sort;
 
 }
