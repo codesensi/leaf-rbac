@@ -14,5 +14,5 @@ public interface ConfRegionService extends IService<ConfRegion> {
     /**
      * 从民政部导入行政区划
      */
-    void importFromMCA();
+    Integer importFromMCA();
 }

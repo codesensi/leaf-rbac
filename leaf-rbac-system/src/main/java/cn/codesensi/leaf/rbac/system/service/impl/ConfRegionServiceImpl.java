@@ -38,7 +38,7 @@ public class ConfRegionServiceImpl extends ServiceImpl<ConfRegionMapper, ConfReg
      * 从民政部导入行政区划
      */
     @Override
-    public void importFromMCA() {
+    public Integer importFromMCA() {
 
         // 1. 调用 API 获取数据
         String result = HttpUtil.get(appProperties.getMcaDmfwApi());
@@ -68,9 +68,11 @@ public class ConfRegionServiceImpl extends ServiceImpl<ConfRegionMapper, ConfReg
 
         // 5. 批量插入
         if (!entities.isEmpty()) {
-            int count = confRegionMapper.insertBatchSelective(entities);
-            log.info("行政区划数据导入完成，共导入 {} 条记录", count);
+            int inserted = confRegionMapper.insertBatchSelective(entities);
+            log.info("行政区划数据导入完成，共导入 {} 条记录", inserted);
+            return inserted;
         }
+        return null;
     }
 
     /**
