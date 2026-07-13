@@ -44,4 +44,9 @@ public class RbacConst {
      * 日志管理接口路径
      */
     public static final String LOG_PATH = "/log/**";
+
+    /**
+     * 配置管理接口路径
+     */
+    public static final String CONF_PATH = "/conf/**";
 }
