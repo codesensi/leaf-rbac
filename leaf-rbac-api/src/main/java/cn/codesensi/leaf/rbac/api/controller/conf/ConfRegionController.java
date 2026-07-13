@@ -15,7 +15,7 @@ import java.util.List;
  * @since 2026-07-10
  */
 @RestController
-@RequestMapping("/confRegion")
+@RequestMapping("/conf/region")
 public class ConfRegionController {
 
     @Autowired
@@ -84,6 +84,14 @@ public class ConfRegionController {
     @GetMapping("page")
     public Page<ConfRegion> page(Page<ConfRegion> page) {
         return confRegionService.page(page);
+    }
+
+    /**
+     * 从民政部导入行政区划
+     */
+    @PostMapping("/importFromMCA")
+    public void importFromMCA() {
+        confRegionService.importFromMCA();
     }
 
 }

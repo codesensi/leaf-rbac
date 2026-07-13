@@ -97,6 +97,8 @@ app:
       password: ${POSTGRESQL_PASSWORD}
       driver-class-name: org.postgresql.Driver
   demo-mode: false
+  # 民政部地名服务
+  mca-dmfw-api: https://dmfw.mca.gov.cn/9095/xzqh/getList?maxLevel=3
   # 验证码配置
   captcha:
     enabled: true

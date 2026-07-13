@@ -60,4 +60,10 @@ public class AppProperties {
      */
     private String avatar;
 
+    /**
+     * 中国·国家地名信息库 API 地址
+     * https://dmfw.mca.gov.cn/interface.html
+     */
+    private String mcaDmfwApi;
+
 }
