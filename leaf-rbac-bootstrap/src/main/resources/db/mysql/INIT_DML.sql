@@ -36,7 +36,17 @@ INSERT INTO `sys_menu` (`id`, `pid`, `name`, `path`, `param`, `component`, `titl
            (100200010004, 10020001, NULL, NULL, NULL, NULL, '获取用户详情', 3, 0, NULL, 'sys:user:detail', 0, 0, NULL, 1, 1, 0, '获取用户详情', 1, NULL, NULL, 0),
            (100200010005, 10020001, NULL, NULL, NULL, NULL, '删除用户信息', 3, 0, NULL, 'sys:user:delete', 0, 0, NULL, 1, 1, 0, '删除用户信息', 1, NULL, NULL, 0),
            (10020002, 1002, 'SystemRole', '/system/role/index', NULL, NULL, '角色管理', 2, 12, 'ri:role', NULL, 0, 0, NULL, 1, 1, 0, '角色管理菜单', 1, NULL, NULL, 0),
-           (10020003, 1002, 'SystemMenu', '/system/menu/index', NULL, NULL, '菜单管理', 2, 13, 'ri:menu', NULL, 0, 0, NULL, 1, 1, 0, '菜单管理菜单', 1, NULL, NULL, 0);
+           (100200020001, 10020002, NULL, NULL, NULL, NULL, '查询角色分页列表', 3, 0, NULL, 'sys:role:page', 0, 0, NULL, 1, 1, 0, '查询角色分页列表', 1, NULL, NULL, 0),
+           (100200020002, 10020002, NULL, NULL, NULL, NULL, '保存角色信息', 3, 0, NULL, 'sys:role:save', 0, 0, NULL, 1, 1, 0, '新增角色', 1, NULL, NULL, 0),
+           (100200020003, 10020002, NULL, NULL, NULL, NULL, '更新角色信息', 3, 0, NULL, 'sys:role:update', 0, 0, NULL, 1, 1, 0, '更新角色信息', 1, NULL, NULL, 0),
+           (100200020004, 10020002, NULL, NULL, NULL, NULL, '获取角色详情', 3, 0, NULL, 'sys:role:detail', 0, 0, NULL, 1, 1, 0, '获取角色详情', 1, NULL, NULL, 0),
+           (100200020005, 10020002, NULL, NULL, NULL, NULL, '删除角色信息', 3, 0, NULL, 'sys:role:delete', 0, 0, NULL, 1, 1, 0, '删除角色信息', 1, NULL, NULL, 0),
+           (10020003, 1002, 'SystemMenu', '/system/menu/index', NULL, NULL, '菜单管理', 2, 13, 'ri:menu', NULL, 0, 0, NULL, 1, 1, 0, '菜单管理菜单', 1, NULL, NULL, 0),
+           (100200030001, 10020003, NULL, NULL, NULL, NULL, '查询菜单分页列表', 3, 0, NULL, 'sys:menu:page', 0, 0, NULL, 1, 1, 0, '查询菜单分页列表', 1, NULL, NULL, 0),
+           (100200030002, 10020003, NULL, NULL, NULL, NULL, '保存菜单信息', 3, 0, NULL, 'sys:menu:save', 0, 0, NULL, 1, 1, 0, '新增菜单', 1, NULL, NULL, 0),
+           (100200030003, 10020003, NULL, NULL, NULL, NULL, '更新菜单信息', 3, 0, NULL, 'sys:menu:update', 0, 0, NULL, 1, 1, 0, '更新菜单信息', 1, NULL, NULL, 0),
+           (100200030004, 10020003, NULL, NULL, NULL, NULL, '获取菜单详情', 3, 0, NULL, 'sys:menu:detail', 0, 0, NULL, 1, 1, 0, '获取菜单详情', 1, NULL, NULL, 0),
+           (100200030005, 10020003, NULL, NULL, NULL, NULL, '删除菜单信息', 3, 0, NULL, 'sys:menu:delete', 0, 0, NULL, 1, 1, 0, '删除菜单信息', 1, NULL, NULL, 0);
 
 
 -- ----------------------------
