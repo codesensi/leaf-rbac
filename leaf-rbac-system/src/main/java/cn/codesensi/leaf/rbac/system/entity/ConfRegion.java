@@ -34,38 +34,38 @@ public class ConfRegion extends BaseEntity implements Serializable {
      * 行政区划ID
      */
     @Id
-    @Schema(description = "行政区划ID")
+    @Schema(description = "行政区划ID", example = "1")
     @JsonSerialize(using = ToStringSerializer.class) // 序列化为字符串避免前端精度丢失
     private Long id;
 
     /**
      * 父级代码
      */
-    @Schema(description = "父级代码")
+    @Schema(description = "父级代码", example = "0")
     private String pcode;
 
     /**
      * 行政区划代码
      */
-    @Schema(description = "行政区划代码")
+    @Schema(description = "行政区划代码", example = "110000")
     private String code;
 
     /**
      * 行政区划名称
      */
-    @Schema(description = "行政区划名称")
+    @Schema(description = "行政区划名称", example = "北京市")
     private String name;
 
     /**
      * 层级:1-省;2-市;3-县（区）
      */
-    @Schema(description = "层级")
+    @Schema(description = "层级:1-省;2-市;3-县（区）", example = "1")
     private Integer level;
 
     /**
      * 物化路径: /110000/110100/110101/
      */
-    @Schema(description = "物化路径")
+    @Schema(description = "物化路径", example = "/110000/110100/110101/")
     private String fullPath;
 
 }

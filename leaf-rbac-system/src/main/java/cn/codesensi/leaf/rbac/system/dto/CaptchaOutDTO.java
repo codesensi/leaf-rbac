@@ -20,12 +20,12 @@ public class CaptchaOutDTO implements Serializable {
     /**
      * 验证码唯一标识
      */
-    @Schema(description = "验证码唯一标识")
+    @Schema(description = "验证码唯一标识", example = "7c6c8b6e8b6e4b6e8b6e7c6c8b6e8b6e")
     private String captchaKey;
 
     /**
      * 验证码内容
      */
-    @Schema(description = "验证码内容")
+    @Schema(description = "验证码内容", example = "123456")
     private String captchaValue;
 }

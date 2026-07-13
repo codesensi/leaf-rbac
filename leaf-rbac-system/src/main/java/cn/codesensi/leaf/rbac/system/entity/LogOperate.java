@@ -35,105 +35,105 @@ public class LogOperate extends BaseEntity implements Serializable {
      * 日志ID
      */
     @Id
-    @Schema(description = "日志ID")
+    @Schema(description = "日志ID", example = "1")
     @JsonSerialize(using = ToStringSerializer.class) // 序列化为字符串避免前端精度丢失
     private Long id;
 
     /**
      * 操作所属模块（如：用户管理、角色管理）
      */
-    @Schema(description = "操作所属模块")
+    @Schema(description = "操作所属模块", example = "用户管理")
     private String module;
 
     /**
      * 操作类型:0-未知,1-新增,2-更新,3-查询,4-删除
      */
-    @Schema(description = "操作类型:0-未知,1-新增,2-更新,3-查询,4-删除")
+    @Schema(description = "操作类型:0-未知,1-新增,2-更新,3-查询,4-删除", example = "1")
     private Integer type;
 
     /**
      * 操作人ID
      */
     @JsonSerialize(using = ToStringSerializer.class) // 序列化为字符串避免前端精度丢失
-    @Schema(description = "操作人ID")
+    @Schema(description = "操作人ID", example = "1")
     private Long userId;
 
     /**
      * 操作描述
      */
-    @Schema(description = "操作描述")
+    @Schema(description = "操作描述", example = "新增用户")
     private String descr;
 
     /**
      * 操作状态:0-失败,1-成功
      */
-    @Schema(description = "操作状态:0-失败,1-成功")
+    @Schema(description = "操作状态:0-失败,1-成功", example = "1")
     private Integer status;
 
     /**
      * 错误信息:当 status=0 时记录异常消息
      */
-    @Schema(description = "错误信息")
+    @Schema(description = "错误信息", example = "参数校验失败")
     private String errorMsg;
 
     /**
      * 请求来源IP地址
      */
-    @Schema(description = "请求来源IP地址")
+    @Schema(description = "请求来源IP地址", example = "192.168.1.1")
     private String requestIp;
 
     /**
      * 请求的URL地址
      */
-    @Schema(description = "请求的URL地址")
+    @Schema(description = "请求的URL地址", example = "/api/user/save")
     private String requestUrl;
 
     /**
      * 请求地区
      */
-    @Schema(description = "请求地区")
+    @Schema(description = "请求地区", example = "中国-北京-北京")
     private String requestArea;
 
     /**
      * 请求系统
      */
-    @Schema(description = "请求系统")
+    @Schema(description = "请求系统", example = "Windows 10")
     private String requestOs;
 
     /**
      * 请求设备
      */
-    @Schema(description = "请求设备")
+    @Schema(description = "请求设备", example = "PC")
     private String requestDevice;
 
     /**
      * 请求浏览器
      */
-    @Schema(description = "请求浏览器")
+    @Schema(description = "请求浏览器", example = "Chrome 120")
     private String requestBrowser;
 
     /**
      * 被调用方法的全限定名（包名.类名.方法名）
      */
-    @Schema(description = "被调用方法的全限定名")
+    @Schema(description = "被调用方法的全限定名", example = "cn.codesensi.leaf.rbac.system.service.impl.SysUserServiceImpl.save")
     private String methodName;
 
     /**
      * 请求执行耗时（毫秒）
      */
-    @Schema(description = "请求执行耗时（毫秒）")
+    @Schema(description = "请求执行耗时（毫秒）", example = "200")
     private Long durationMs;
 
     /**
      * 请求参数（JSON字符串格式，按配置记录）
      */
-    @Schema(description = "请求参数")
+    @Schema(description = "请求参数", example = "{\"username\":\"admin\"}")
     private String params;
 
     /**
      * 响应结果（JSON字符串格式，按配置记录）
      */
-    @Schema(description = "响应结果")
+    @Schema(description = "响应结果", example = "{\"code\":200,\"msg\":\"成功\"}")
     private String result;
 
 }

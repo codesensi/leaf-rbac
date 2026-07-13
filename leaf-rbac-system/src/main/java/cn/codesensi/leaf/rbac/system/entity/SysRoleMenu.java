@@ -35,21 +35,21 @@ public class SysRoleMenu extends BaseEntity implements Serializable {
      * 主键ID
      */
     @Id
-    @Schema(description = "主键ID")
+    @Schema(description = "主键ID", example = "1")
     @JsonSerialize(using = ToStringSerializer.class) // 序列化为字符串避免前端精度丢失
     private Long id;
 
     /**
      * 角色ID
      */
-    @Schema(description = "角色ID")
+    @Schema(description = "角色ID", example = "1")
     @JsonSerialize(using = ToStringSerializer.class) // 序列化为字符串避免前端精度丢失
     private Long roleId;
 
     /**
      * 菜单ID
      */
-    @Schema(description = "菜单ID")
+    @Schema(description = "菜单ID", example = "1")
     @JsonSerialize(using = ToStringSerializer.class) // 序列化为字符串避免前端精度丢失
     private Long menuId;
 

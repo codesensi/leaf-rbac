@@ -38,25 +38,25 @@ public class RegionApiResponse implements Serializable {
         /**
          * 行政区划编码（12位或13位，只取前6位使用）
          */
-        @Schema(description = "行政区划编码")
+        @Schema(description = "行政区划编码", example = "110000000000")
         private String code;
 
         /**
          * 行政区划名称
          */
-        @Schema(description = "行政区划名称")
+        @Schema(description = "行政区划名称", example = "北京市")
         private String name;
 
         /**
          * 层级: 1-省, 2-市, 3-县（区）
          */
-        @Schema(description = "层级")
+        @Schema(description = "层级", example = "1")
         private Integer level;
 
         /**
          * 类型（如：省、市、区）
          */
-        @Schema(description = "类型")
+        @Schema(description = "类型", example = "省")
         private String type;
 
         /**

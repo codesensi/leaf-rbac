@@ -25,26 +25,26 @@ public class LoginAccountInDTO implements Serializable {
      * 用户账号
      */
     @NotBlank(message = "登录账号不能为空")
-    @Schema(description = "登录账号")
+    @Schema(description = "登录账号", example = "admin")
     private String username;
 
     /**
      * 用户密码
      */
     @NotBlank(message = "登录密码不能为空")
-    @Schema(description = "登录密码")
+    @Schema(description = "登录密码", example = "123456")
     private String password;
 
     /**
      * 验证码唯一标识
      */
-    @Schema(description = "验证码唯一标识")
+    @Schema(description = "验证码唯一标识", example = "7c6c8b6e8b6e4b6e8b6e7c6c8b6e8b6e")
     private String captchaKey;
 
     /**
      * 验证码内容
      */
-    @Schema(description = "验证码内容")
+    @Schema(description = "验证码内容", example = "123456")
     private String captchaValue;
 
 }
