@@ -1,5 +1,7 @@
 package cn.codesensi.leaf.rbac.common.exception;
 
+import cn.codesensi.leaf.rbac.common.core.ResultCode;
+
 /**
  * 系统异常 —— 表示不可预料的系统级错误。
  * <p>
@@ -20,6 +22,10 @@ package cn.codesensi.leaf.rbac.common.exception;
  * @since 1.0
  */
 public class SystemException extends BaseException {
+
+    public SystemException(String msg) {
+        super(ResultCode.INTERNAL_SERVER_ERROR.getCode(), msg);
+    }
 
     public SystemException(int code, String msg) {
         super(code, msg);
