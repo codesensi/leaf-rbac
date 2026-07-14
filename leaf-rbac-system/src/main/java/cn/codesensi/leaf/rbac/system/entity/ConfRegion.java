@@ -1,6 +1,7 @@
 package cn.codesensi.leaf.rbac.system.entity;
 
-import cn.codesensi.leaf.rbac.system.base.BaseEntity;
+import cn.codesensi.leaf.rbac.framework.base.BaseEntity;
+import cn.codesensi.leaf.rbac.framework.listener.MybatisFlexListener;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.mybatisflex.annotation.Id;
@@ -24,7 +25,7 @@ import java.io.Serializable;
 @Accessors(chain = true)
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-@Table("conf_region")
+@Table(value = "conf_region", onInsert = MybatisFlexListener.class, onUpdate = MybatisFlexListener.class)
 public class ConfRegion extends BaseEntity implements Serializable {
 
     @Serial

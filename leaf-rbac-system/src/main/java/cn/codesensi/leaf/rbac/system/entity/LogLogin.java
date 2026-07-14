@@ -1,6 +1,7 @@
 package cn.codesensi.leaf.rbac.system.entity;
 
-import cn.codesensi.leaf.rbac.system.base.BaseEntity;
+import cn.codesensi.leaf.rbac.framework.base.BaseEntity;
+import cn.codesensi.leaf.rbac.framework.listener.MybatisFlexListener;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.mybatisflex.annotation.Id;
@@ -25,7 +26,7 @@ import java.io.Serializable;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @Schema(description = "登录日志表实体类")
-@Table("log_login")
+@Table(value = "log_login", onInsert = MybatisFlexListener.class, onUpdate = MybatisFlexListener.class)
 public class LogLogin extends BaseEntity implements Serializable {
 
     @Serial

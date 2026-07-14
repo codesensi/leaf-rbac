@@ -1,6 +1,7 @@
 package cn.codesensi.leaf.rbac.system.entity;
 
-import cn.codesensi.leaf.rbac.system.base.BaseEntity;
+import cn.codesensi.leaf.rbac.framework.base.BaseEntity;
+import cn.codesensi.leaf.rbac.framework.listener.MybatisFlexListener;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.mybatisflex.annotation.Id;
@@ -25,7 +26,7 @@ import java.io.Serializable;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @Schema(description = "用户角色关联表实体类")
-@Table("sys_user_role")
+@Table(value = "sys_user_role", onInsert = MybatisFlexListener.class, onUpdate = MybatisFlexListener.class)
 public class SysUserRole extends BaseEntity implements Serializable {
 
     @Serial

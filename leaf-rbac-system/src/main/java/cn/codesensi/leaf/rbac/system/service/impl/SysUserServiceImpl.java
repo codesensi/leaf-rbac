@@ -101,9 +101,6 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         // 默认密码
         String password = BCrypt.hashpw(AppConst.DEFAULT_PASSWORD, BCrypt.gensalt());
         sysUser.setPassword(password);
-
-        // 创建人
-        sysUser.setCreator(StpUtil.getLoginIdAsLong());
         sysUserMapper.insert(sysUser, true);
     }
 

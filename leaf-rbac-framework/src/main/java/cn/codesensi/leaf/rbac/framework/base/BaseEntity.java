@@ -1,4 +1,4 @@
-package cn.codesensi.leaf.rbac.system.base;
+package cn.codesensi.leaf.rbac.framework.base;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;

@@ -114,9 +114,6 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
         }
 
         SysRole sysRole = BeanUtil.copyProperties(roleSaveInDTO, SysRole.class);
-
-        // 创建人
-        sysRole.setCreator(StpUtil.getLoginIdAsLong());
         sysRoleMapper.insert(sysRole, true);
     }
 
@@ -164,7 +161,6 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
                         SysRoleMenu sysRoleMenu = new SysRoleMenu();
                         sysRoleMenu.setRoleId(roleId);
                         sysRoleMenu.setMenuId(menuId);
-                        sysRoleMenu.setCreator(StpUtil.getLoginIdAsLong());
                         return sysRoleMenu;
                     }).toList();
             // 批量插入
