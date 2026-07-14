@@ -1,6 +1,5 @@
 package cn.codesensi.leaf.rbac.bootstrap;
 
-import cn.codesensi.leaf.rbac.framework.util.IpUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
@@ -38,10 +37,9 @@ public class LeafRbacBootstrapApplication {
         Environment environment = event.getApplicationContext().getEnvironment();
         String activeProfile = String.join(",", environment.getActiveProfiles());
         String port = environment.getProperty("server.port");
-        String localIp = IpUtil.getLocalIp();
         log.info("    Application is running");
         log.info("    Profile:  {}", activeProfile);
-        log.info("    Doc URL:  http://{}:{}/swagger-ui.html", localIp, port);
+        log.info("    Doc URL:  http://127.0.0.1:{}/swagger-ui.html", port);
     }
 
 }
