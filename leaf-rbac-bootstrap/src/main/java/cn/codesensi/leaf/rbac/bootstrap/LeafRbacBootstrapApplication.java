@@ -1,11 +1,14 @@
 package cn.codesensi.leaf.rbac.bootstrap;
 
+import cn.codesensi.leaf.rbac.framework.event.CacheRegionEvent;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
 import org.springframework.core.env.Environment;
 import org.springframework.scheduling.annotation.EnableAsync;
@@ -18,12 +21,15 @@ import org.springframework.scheduling.annotation.EnableAsync;
  * @author codesensi
  * @since 1.0
  */
+@RequiredArgsConstructor
 @Slf4j
 @EnableCaching
 @EnableAsync
 @MapperScan("cn.codesensi.leaf.rbac.**.mapper")
 @SpringBootApplication(scanBasePackages = "cn.codesensi.leaf.rbac")
 public class LeafRbacBootstrapApplication {
+
+    private final ApplicationEventPublisher eventPublisher;
 
     public static void main(String[] args) {
         SpringApplication.run(LeafRbacBootstrapApplication.class, args);
@@ -40,6 +46,9 @@ public class LeafRbacBootstrapApplication {
         log.info("    Application is running");
         log.info("    Profile:  {}", activeProfile);
         log.info("    Doc URL:  http://127.0.0.1:{}/swagger-ui.html", port);
+
+        // 发布行政区划缓存事件
+        eventPublisher.publishEvent(new CacheRegionEvent(this, "应用启动"));
     }
 
 }
