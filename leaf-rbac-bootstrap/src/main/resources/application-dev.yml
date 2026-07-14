@@ -85,7 +85,7 @@ app:
       password:
       driver-class-name: org.h2.Driver
     mysql:
-      url: jdbc:mysql://192.168.2.3:3306/leaf_rbac_dev?useSSL=false&characterEncoding=utf8&serverTimezone=Asia/Shanghai
+      url: jdbc:mysql://192.168.2.3:3306/leaf_rbac_dev?useSSL=false&characterEncoding=utf8&serverTimezone=Asia/Shanghai&tinyInt1isBit=false
       username: root
       password: mysql_GzxMw2
       driver-class-name: com.mysql.cj.jdbc.Driver
