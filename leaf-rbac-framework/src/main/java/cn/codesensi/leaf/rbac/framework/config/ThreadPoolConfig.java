@@ -3,6 +3,11 @@ package cn.codesensi.leaf.rbac.framework.config;
 import cn.codesensi.leaf.rbac.common.constants.AppConst;
 import cn.codesensi.leaf.rbac.common.constants.ThreadConst;
 import cn.codesensi.leaf.rbac.common.properties.ThreadPoolProperties;
+import cn.dev33.satoken.context.SaHolder;
+import cn.dev33.satoken.context.SaTokenContextForThreadLocalStaff;
+import cn.dev33.satoken.context.model.SaRequest;
+import cn.dev33.satoken.context.model.SaResponse;
+import cn.dev33.satoken.context.model.SaStorage;
 import cn.hutool.core.util.IdUtil;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.concurrent.BasicThreadFactory;
@@ -86,23 +91,40 @@ public class ThreadPoolConfig {
         // 链路追踪：通过装饰器传递上下文
         executor.setTaskDecorator(runnable -> {
             // 获取主线程的上下文（启动阶段等非 web 请求场景可能为 null）
-            RequestAttributes context = RequestContextHolder.getRequestAttributes();
+            RequestAttributes attributes = RequestContextHolder.getRequestAttributes();
             // 获取主线程的 MDC 上下文（包含 TraceId）
             Map<String, String> mdcContext = MDC.getCopyOfContextMap();
+            // 获取主线程的 SaToken 上下文
+            SaRequest saRequest = null;
+            SaResponse saResponse = null;
+            SaStorage saStorage = null;
+            try {
+                saRequest = SaHolder.getRequest();
+                saResponse = SaHolder.getResponse();
+                saStorage = SaHolder.getStorage();
+            } catch (Exception ignored) {
+            }
+            final SaRequest finalSaRequest = saRequest;
+            final SaResponse finalSaResponse = saResponse;
+            final SaStorage finalSaStorage = saStorage;
             return () -> {
                 try {
                     // 在子线程中恢复上下文
-                    if (context != null) {
-                        RequestContextHolder.setRequestAttributes(context);
+                    if (attributes != null) {
+                        RequestContextHolder.setRequestAttributes(attributes);
                     }
                     if (mdcContext != null) {
                         MDC.setContextMap(mdcContext);
+                    }
+                    if (finalSaRequest != null && finalSaResponse != null && finalSaStorage != null) {
+                        SaTokenContextForThreadLocalStaff.setModelBox(finalSaRequest, finalSaResponse, finalSaStorage);
                     }
                     runnable.run();
                 } finally {
                     // 任务执行完毕后清理，防止内存泄漏
                     RequestContextHolder.resetRequestAttributes();
                     MDC.clear();
+                    SaTokenContextForThreadLocalStaff.clearModelBox();
                 }
             };
         });
