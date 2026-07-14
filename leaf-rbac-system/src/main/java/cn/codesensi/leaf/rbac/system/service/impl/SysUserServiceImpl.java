@@ -77,7 +77,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
      * @return 保存结果
      */
     @Override
-    public boolean saveUser(UserSaveInDTO userSaveInDTO) {
+    public void saveUser(UserSaveInDTO userSaveInDTO) {
         String username = userSaveInDTO.getUsername();
         // 校验用户名是否存在
         long count = QueryChain.of(sysUserMapper)
@@ -105,8 +105,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 
         // 创建人
         sysUser.setCreator(StpUtil.getLoginIdAsLong());
-        int insert = sysUserMapper.insert(sysUser, true);
-        return insert > 0;
+        sysUserMapper.insert(sysUser, true);
     }
 
 }

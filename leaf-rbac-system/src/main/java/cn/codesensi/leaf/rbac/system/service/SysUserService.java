@@ -24,7 +24,6 @@ public interface SysUserService extends IService<SysUser> {
      * 保存用户信息
      *
      * @param userSaveInDTO 用户信息
-     * @return 保存结果
      */
-    boolean saveUser(UserSaveInDTO userSaveInDTO);
+    void saveUser(UserSaveInDTO userSaveInDTO);
 }
