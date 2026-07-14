@@ -1,9 +1,11 @@
 package cn.codesensi.leaf.rbac.api.controller.system;
 
+import cn.codesensi.leaf.rbac.api.request.AssignMenusRequest;
 import cn.codesensi.leaf.rbac.api.request.RoleSaveRequest;
 import cn.codesensi.leaf.rbac.common.enums.OperateType;
 import cn.codesensi.leaf.rbac.framework.annotation.ApiResponseBody;
 import cn.codesensi.leaf.rbac.framework.annotation.LogOperate;
+import cn.codesensi.leaf.rbac.system.dto.AssignMenusInDTO;
 import cn.codesensi.leaf.rbac.system.dto.RoleSaveInDTO;
 import cn.codesensi.leaf.rbac.system.entity.SysRole;
 import cn.codesensi.leaf.rbac.system.service.SysRoleService;
@@ -116,6 +118,14 @@ public class SysRoleController {
                 // TODO 查询条件
                 // .where(SYS_ROLE.ID.eq(sysRole.getId()))
                 .page(page);
+    }
+
+    @LogOperate(module = "角色管理", desc = "分配角色菜单权限")
+    @Operation(summary = "分配角色菜单权限", description = "为角色分配菜单权限")
+    @PutMapping("/assignMenus")
+    public void assignMenus(@Valid @RequestBody AssignMenusRequest request) {
+        AssignMenusInDTO assignMenusInDTO = BeanUtil.copyProperties(request, AssignMenusInDTO.class);
+        sysRoleService.assignMenus(assignMenusInDTO);
     }
 
 }

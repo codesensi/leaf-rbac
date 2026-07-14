@@ -1,5 +1,6 @@
 package cn.codesensi.leaf.rbac.system.listener;
 
+import cn.codesensi.leaf.rbac.framework.cache.CacheEvictService;
 import cn.codesensi.leaf.rbac.framework.event.CacheRegionEvent;
 import cn.codesensi.leaf.rbac.system.entity.ConfRegion;
 import cn.codesensi.leaf.rbac.system.service.ConfRegionService;
@@ -28,6 +29,7 @@ import static cn.codesensi.leaf.rbac.system.entity.table.ConfRegionTableDef.CONF
 public class CacheRegionListener {
 
     private final ConfRegionService confRegionService;
+    private final CacheEvictService cacheEvictService;
 
     /**
      * 逐级遍历省（level=1）、市（level=2）、县（level=3），
@@ -41,7 +43,7 @@ public class CacheRegionListener {
     public void cacheRegion(CacheRegionEvent event) {
         log.info("[cacheRegion][收到 CacheRegionEvent 事件]，事件来源：{}", event.getCacheSource());
         // 1.清除缓存
-        confRegionService.clearRegionCache();
+        cacheEvictService.clearRegionPcodeCache();
         log.info("[cacheRegion]清除缓存完成");
         // 查询行政区划全部层级
         List<Integer> levels = confRegionService.queryChain()

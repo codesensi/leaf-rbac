@@ -18,7 +18,6 @@ import com.mybatisflex.core.query.QueryChain;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
@@ -102,15 +101,6 @@ public class ConfRegionServiceImpl extends ServiceImpl<ConfRegionMapper, ConfReg
                 .where(CONF_REGION.PCODE.eq(code))
                 .list();
         return BeanUtil.copyToList(confRegions, RegionDTO.class);
-    }
-
-    /**
-     * 清空行政区划缓存
-     */
-    @CacheEvict(value = CacheConst.REGION_PCODE, allEntries = true)
-    @Override
-    public void clearRegionCache() {
-        // 空方法，只用于清除缓存
     }
 
     /**

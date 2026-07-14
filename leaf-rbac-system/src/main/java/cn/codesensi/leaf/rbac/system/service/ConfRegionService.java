@@ -24,8 +24,4 @@ public interface ConfRegionService extends IService<ConfRegion> {
      */
     List<RegionDTO> listChildrenByCode(String code);
 
-    /**
-     * 清空行政区划缓存
-     */
-    void clearRegionCache();
 }
