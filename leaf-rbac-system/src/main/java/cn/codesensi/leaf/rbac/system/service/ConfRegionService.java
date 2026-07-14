@@ -27,5 +27,5 @@ public interface ConfRegionService extends IService<ConfRegion> {
     /**
      * 清空行政区划缓存
      */
-    void clearCache();
+    void clearRegionCache();
 }

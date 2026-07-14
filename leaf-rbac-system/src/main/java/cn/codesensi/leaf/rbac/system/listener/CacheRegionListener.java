@@ -41,7 +41,7 @@ public class CacheRegionListener {
     public void cacheRegion(CacheRegionEvent event) {
         log.info("[cacheRegion][收到 CacheRegionEvent 事件]，事件来源：{}", event.getCacheSource());
         // 1.清除缓存
-        confRegionService.clearCache();
+        confRegionService.clearRegionCache();
         log.info("[cacheRegion]清除缓存完成");
         // 查询行政区划全部层级
         List<Integer> levels = confRegionService.queryChain()

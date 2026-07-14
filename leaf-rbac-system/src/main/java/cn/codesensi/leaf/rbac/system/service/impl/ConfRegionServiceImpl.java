@@ -109,7 +109,7 @@ public class ConfRegionServiceImpl extends ServiceImpl<ConfRegionMapper, ConfReg
      */
     @CacheEvict(value = CacheConst.REGION_PCODE, allEntries = true)
     @Override
-    public void clearCache() {
+    public void clearRegionCache() {
         // 空方法，只用于清除缓存
     }
 
