@@ -23,4 +23,9 @@ public interface ConfRegionService extends IService<ConfRegion> {
      * 根据行政区划代码查询行政区划下属节点
      */
     List<RegionDTO> listChildrenByCode(String code);
+
+    /**
+     * 清空行政区划缓存
+     */
+    void clearCache();
 }

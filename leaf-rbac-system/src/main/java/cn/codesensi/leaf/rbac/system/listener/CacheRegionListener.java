@@ -40,15 +40,24 @@ public class CacheRegionListener {
     @EventListener
     public void cacheRegion(CacheRegionEvent event) {
         log.info("[cacheRegion][收到 CacheRegionEvent 事件]，事件来源：{}", event.getCacheSource());
-        for (int i = 1; i <= 3; i++) {
+        // 1.清除缓存
+        confRegionService.clearCache();
+        log.info("[cacheRegion]清除缓存完成");
+        // 查询行政区划全部层级
+        List<Integer> levels = confRegionService.queryChain()
+                .select(CONF_REGION.LEVEL)
+                .groupBy(CONF_REGION.LEVEL)
+                .listAs(Integer.class);
+        // 2.重新加载缓存
+        log.info("[cacheRegion]开始预热缓存：逐级遍历省、市、区（县）三级行政区划");
+        for (Integer level : levels) {
             List<ConfRegion> confRegions = confRegionService.queryChain()
                     .select(CONF_REGION.PCODE)
-                    .where(CONF_REGION.LEVEL.eq(i))
+                    .where(CONF_REGION.LEVEL.eq(level))
                     .list();
             for (ConfRegion confRegion : confRegions) {
                 confRegionService.listChildrenByCode(confRegion.getPcode());
             }
         }
     }
-
 }
