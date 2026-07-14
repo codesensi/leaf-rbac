@@ -3,6 +3,7 @@ package cn.codesensi.leaf.rbac.framework.config;
 import cn.codesensi.leaf.rbac.common.constants.AppConst;
 import cn.codesensi.leaf.rbac.common.constants.ThreadConst;
 import cn.codesensi.leaf.rbac.common.properties.ThreadPoolProperties;
+import cn.codesensi.leaf.rbac.common.util.ExceptionUtil;
 import cn.dev33.satoken.context.SaHolder;
 import cn.dev33.satoken.context.SaTokenContextForThreadLocalStaff;
 import cn.dev33.satoken.context.model.SaRequest;
@@ -90,41 +91,13 @@ public class ThreadPoolConfig {
         executor.setRejectedExecutionHandler(handler);
         // 链路追踪：通过装饰器传递上下文
         executor.setTaskDecorator(runnable -> {
-            // 获取主线程的上下文（启动阶段等非 web 请求场景可能为 null）
-            RequestAttributes attributes = RequestContextHolder.getRequestAttributes();
-            // 获取主线程的 MDC 上下文（包含 TraceId）
-            Map<String, String> mdcContext = MDC.getCopyOfContextMap();
-            // 获取主线程的 SaToken 上下文
-            SaRequest saRequest = null;
-            SaResponse saResponse = null;
-            SaStorage saStorage = null;
-            try {
-                saRequest = SaHolder.getRequest();
-                saResponse = SaHolder.getResponse();
-                saStorage = SaHolder.getStorage();
-            } catch (Exception ignored) {
-            }
-            final SaRequest finalSaRequest = saRequest;
-            final SaResponse finalSaResponse = saResponse;
-            final SaStorage finalSaStorage = saStorage;
+            AsyncContext ctx = AsyncContext.capture();
             return () -> {
                 try {
-                    // 在子线程中恢复上下文
-                    if (attributes != null) {
-                        RequestContextHolder.setRequestAttributes(attributes);
-                    }
-                    if (mdcContext != null) {
-                        MDC.setContextMap(mdcContext);
-                    }
-                    if (finalSaRequest != null && finalSaResponse != null && finalSaStorage != null) {
-                        SaTokenContextForThreadLocalStaff.setModelBox(finalSaRequest, finalSaResponse, finalSaStorage);
-                    }
+                    ctx.restore();
                     runnable.run();
                 } finally {
-                    // 任务执行完毕后清理，防止内存泄漏
-                    RequestContextHolder.resetRequestAttributes();
-                    MDC.clear();
-                    SaTokenContextForThreadLocalStaff.clearModelBox();
+                    ctx.clear();
                 }
             };
         });
@@ -165,4 +138,46 @@ public class ThreadPoolConfig {
         };
     }
 
+    /**
+     * 异步线程上下文快照，用于将主线程的三个上下文传递到子线程。
+     */
+    private record AsyncContext(RequestAttributes attributes, Map<String, String> mdc,
+                                SaRequest saRequest, SaResponse saResponse, SaStorage saStorage) {
+
+        /**
+         * 捕获主线程的 RequestAttributes、MDC、SaToken 上下文快照
+         */
+        static AsyncContext capture() {
+            RequestAttributes attributes = RequestContextHolder.getRequestAttributes();
+            Map<String, String> mdc = MDC.getCopyOfContextMap();
+            SaRequest saRequest = ExceptionUtil.tryGet(SaHolder::getRequest);
+            SaResponse saResponse = ExceptionUtil.tryGet(SaHolder::getResponse);
+            SaStorage saStorage = ExceptionUtil.tryGet(SaHolder::getStorage);
+            return new AsyncContext(attributes, mdc, saRequest, saResponse, saStorage);
+        }
+
+        /**
+         * 在子线程中恢复捕获的上下文
+         */
+        void restore() {
+            if (attributes != null) {
+                RequestContextHolder.setRequestAttributes(attributes);
+            }
+            if (mdc != null) {
+                MDC.setContextMap(mdc);
+            }
+            if (saRequest != null && saResponse != null && saStorage != null) {
+                SaTokenContextForThreadLocalStaff.setModelBox(saRequest, saResponse, saStorage);
+            }
+        }
+
+        /**
+         * 任务执行完毕后清理子线程的上下文，防止内存泄漏
+         */
+        void clear() {
+            RequestContextHolder.resetRequestAttributes();
+            MDC.clear();
+            SaTokenContextForThreadLocalStaff.clearModelBox();
+        }
+    }
 }
