@@ -82,7 +82,7 @@ public class ConfRegionServiceImpl extends ServiceImpl<ConfRegionMapper, ConfReg
             log.info("行政区划数据导入完成，共导入 {} 条记录", inserted);
 
             // 发布缓存刷新事件，触发缓存清空
-            eventPublisher.publishEvent(new CacheRegionEvent(inserted, inserted));
+            eventPublisher.publishEvent(new CacheRegionEvent(inserted, "民政部导入"));
             return inserted;
         }
         return null;

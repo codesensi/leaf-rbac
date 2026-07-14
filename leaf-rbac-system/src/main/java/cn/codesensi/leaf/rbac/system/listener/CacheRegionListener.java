@@ -39,7 +39,7 @@ public class CacheRegionListener {
     @Async
     @EventListener
     public void cacheRegion(CacheRegionEvent event) {
-        log.info("[cacheRegion][收到 CacheRegionEvent 事件]，导入数据总量：{}", event.getCacheSize());
+        log.info("[cacheRegion][收到 CacheRegionEvent 事件]，事件来源：{}", event.getCacheSource());
         for (int i = 1; i <= 3; i++) {
             List<ConfRegion> confRegions = confRegionService.queryChain()
                     .select(CONF_REGION.PCODE)

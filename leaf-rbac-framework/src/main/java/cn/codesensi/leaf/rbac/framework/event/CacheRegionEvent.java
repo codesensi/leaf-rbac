@@ -19,13 +19,13 @@ import org.springframework.context.ApplicationEvent;
 public class CacheRegionEvent extends ApplicationEvent {
 
     /**
-     * 本次导入的数据总量（仅用于日志记录）
+     * 事件来源
      */
-    private Integer cacheSize;
+    private String cacheSource;
 
     @Builder
-    public CacheRegionEvent(Object source, Integer cacheSize) {
+    public CacheRegionEvent(Object source, String cacheSource) {
         super(source);
-        this.cacheSize = cacheSize;
+        this.cacheSource = cacheSource;
     }
 }
