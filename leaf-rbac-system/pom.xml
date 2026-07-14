@@ -15,16 +15,6 @@
             <groupId>cn.codesensi.leaf</groupId>
             <artifactId>leaf-rbac-framework</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.springdoc</groupId>
-            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.apache.commons</groupId>
-                    <artifactId>commons-lang3</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
         <!-- 数据库驱动 (runtime) -->
         <dependency>
             <groupId>com.h2database</groupId>
