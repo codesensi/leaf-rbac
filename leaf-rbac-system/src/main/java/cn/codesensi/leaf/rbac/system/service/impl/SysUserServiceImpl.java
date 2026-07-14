@@ -74,7 +74,6 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
      * 保存用户信息
      *
      * @param userSaveInDTO 用户信息
-     * @return 保存结果
      */
     @Override
     public void saveUser(UserSaveInDTO userSaveInDTO) {
