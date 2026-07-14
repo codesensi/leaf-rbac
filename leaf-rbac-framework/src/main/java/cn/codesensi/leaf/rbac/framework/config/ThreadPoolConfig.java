@@ -85,14 +85,16 @@ public class ThreadPoolConfig {
         executor.setRejectedExecutionHandler(handler);
         // 链路追踪：通过装饰器传递上下文
         executor.setTaskDecorator(runnable -> {
-            // 获取主线程的上下文
-            RequestAttributes context = RequestContextHolder.currentRequestAttributes();
+            // 获取主线程的上下文（启动阶段等非 web 请求场景可能为 null）
+            RequestAttributes context = RequestContextHolder.getRequestAttributes();
             // 获取主线程的 MDC 上下文（包含 TraceId）
             Map<String, String> mdcContext = MDC.getCopyOfContextMap();
             return () -> {
                 try {
                     // 在子线程中恢复上下文
-                    RequestContextHolder.setRequestAttributes(context);
+                    if (context != null) {
+                        RequestContextHolder.setRequestAttributes(context);
+                    }
                     if (mdcContext != null) {
                         MDC.setContextMap(mdcContext);
                     }
