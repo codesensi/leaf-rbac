@@ -1,15 +1,20 @@
 package cn.codesensi.leaf.rbac.api.controller.system;
 
+import cn.codesensi.leaf.rbac.api.request.RoleSaveRequest;
+import cn.codesensi.leaf.rbac.common.enums.OperateType;
 import cn.codesensi.leaf.rbac.framework.annotation.ApiResponseBody;
+import cn.codesensi.leaf.rbac.framework.annotation.LogOperate;
+import cn.codesensi.leaf.rbac.system.dto.RoleSaveInDTO;
 import cn.codesensi.leaf.rbac.system.entity.SysRole;
 import cn.codesensi.leaf.rbac.system.service.SysRoleService;
+import cn.hutool.core.bean.BeanUtil;
 import com.mybatisflex.core.paginate.Page;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.core.annotations.ParameterObject;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,19 +34,19 @@ import static cn.codesensi.leaf.rbac.system.entity.table.SysRoleTableDef.SYS_ROL
 @RequestMapping("/sys/role")
 public class SysRoleController {
 
-    @Autowired
-    private SysRoleService sysRoleService;
+    private final SysRoleService sysRoleService;
 
     /**
-     * 保存角色信息表。
+     * 保存角色信息
      *
-     * @param sysRole 角色信息表
-     * @return {@code true} 保存成功，{@code false} 保存失败
+     * @param request 角色信息
      */
-    @Operation(summary = "保存角色", description = "保存角色信息表")
-    @PostMapping("save")
-    public boolean save(@RequestBody SysRole sysRole) {
-        return sysRoleService.save(sysRole);
+    @LogOperate(module = "角色管理", type = OperateType.INSERT, desc = "保存角色")
+    @Operation(summary = "保存角色", description = "保存角色信息")
+    @PostMapping("/saveRole")
+    public void saveRole(@Valid @RequestBody RoleSaveRequest request) {
+        RoleSaveInDTO roleSaveInDTO = BeanUtil.copyProperties(request, RoleSaveInDTO.class);
+        sysRoleService.saveRole(roleSaveInDTO);
     }
 
     /**

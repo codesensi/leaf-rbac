@@ -1,5 +1,6 @@
 package cn.codesensi.leaf.rbac.system.service;
 
+import cn.codesensi.leaf.rbac.system.dto.RoleSaveInDTO;
 import cn.codesensi.leaf.rbac.system.entity.SysRole;
 import com.mybatisflex.core.service.IService;
 
@@ -29,4 +30,10 @@ public interface SysRoleService extends IService<SysRole> {
      */
     List<SysRole> listRoleByUserId(Long userId);
 
+    /**
+     * 保存角色信息
+     *
+     * @param roleSaveInDTO 角色信息
+     */
+    void saveRole(RoleSaveInDTO roleSaveInDTO);
 }

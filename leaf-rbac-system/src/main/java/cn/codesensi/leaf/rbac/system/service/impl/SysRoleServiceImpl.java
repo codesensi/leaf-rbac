@@ -2,10 +2,14 @@ package cn.codesensi.leaf.rbac.system.service.impl;
 
 import cn.codesensi.leaf.rbac.common.constants.CacheConst;
 import cn.codesensi.leaf.rbac.common.constants.RbacConst;
+import cn.codesensi.leaf.rbac.common.exception.BusinessException;
+import cn.codesensi.leaf.rbac.system.dto.RoleSaveInDTO;
 import cn.codesensi.leaf.rbac.system.entity.SysRole;
 import cn.codesensi.leaf.rbac.system.mapper.SysRoleMapper;
 import cn.codesensi.leaf.rbac.system.mapper.SysUserRoleMapper;
 import cn.codesensi.leaf.rbac.system.service.SysRoleService;
+import cn.dev33.satoken.stp.StpUtil;
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import com.mybatisflex.core.query.QueryChain;
@@ -82,6 +86,29 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
                 .select(SYS_ROLE.ALL_COLUMNS)
                 .where(SYS_ROLE.ID.in(roleIds))
                 .list();
+    }
+
+    /**
+     * 保存角色信息
+     *
+     * @param roleSaveInDTO 角色信息
+     */
+    @Override
+    public void saveRole(RoleSaveInDTO roleSaveInDTO) {
+        String code = roleSaveInDTO.getCode();
+        // 校验角色编码是否存在
+        long count = QueryChain.of(sysRoleMapper)
+                .where(SYS_ROLE.CODE.eq(code))
+                .count();
+        if (count > 0) {
+            throw new BusinessException("角色编码已存在");
+        }
+
+        SysRole sysRole = BeanUtil.copyProperties(roleSaveInDTO, SysRole.class);
+
+        // 创建人
+        sysRole.setCreator(StpUtil.getLoginIdAsLong());
+        sysRoleMapper.insert(sysRole, true);
     }
 
 }
