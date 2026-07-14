@@ -164,6 +164,7 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
                         SysRoleMenu sysRoleMenu = new SysRoleMenu();
                         sysRoleMenu.setRoleId(roleId);
                         sysRoleMenu.setMenuId(menuId);
+                        sysRoleMenu.setCreator(StpUtil.getLoginIdAsLong());
                         return sysRoleMenu;
                     }).toList();
             // 批量插入
