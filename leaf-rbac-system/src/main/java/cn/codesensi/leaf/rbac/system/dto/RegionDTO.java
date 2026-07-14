@@ -15,7 +15,6 @@ import java.io.Serializable;
  */
 @Data
 @Accessors(chain = true)
-@Schema(description = "行政区划缓存数据")
 public class RegionDTO implements Serializable {
 
     @Serial
