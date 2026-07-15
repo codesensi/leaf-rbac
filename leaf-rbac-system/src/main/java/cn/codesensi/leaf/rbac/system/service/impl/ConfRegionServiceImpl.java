@@ -4,12 +4,12 @@ import cn.codesensi.leaf.rbac.common.constants.CacheConst;
 import cn.codesensi.leaf.rbac.common.exception.SystemException;
 import cn.codesensi.leaf.rbac.common.properties.AppProperties;
 import cn.codesensi.leaf.rbac.framework.event.CacheRegionEvent;
+import cn.codesensi.leaf.rbac.system.converter.ConfRegionConverter;
 import cn.codesensi.leaf.rbac.system.dto.RegionApiResponse;
 import cn.codesensi.leaf.rbac.system.dto.RegionDTO;
 import cn.codesensi.leaf.rbac.system.entity.ConfRegion;
 import cn.codesensi.leaf.rbac.system.mapper.ConfRegionMapper;
 import cn.codesensi.leaf.rbac.system.service.ConfRegionService;
-import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpUtil;
@@ -41,6 +41,7 @@ import static cn.codesensi.leaf.rbac.system.entity.table.ConfRegionTableDef.CONF
 public class ConfRegionServiceImpl extends ServiceImpl<ConfRegionMapper, ConfRegion> implements ConfRegionService {
 
     private final ConfRegionMapper confRegionMapper;
+    private final ConfRegionConverter confRegionConverter;
     private final AppProperties appProperties;
     private final ApplicationEventPublisher eventPublisher;
 
@@ -100,7 +101,7 @@ public class ConfRegionServiceImpl extends ServiceImpl<ConfRegionMapper, ConfReg
                 .select(CONF_REGION.CODE, CONF_REGION.NAME)
                 .where(CONF_REGION.PCODE.eq(code))
                 .list();
-        return BeanUtil.copyToList(confRegions, RegionDTO.class);
+        return confRegionConverter.toRegionDTOList(confRegions);
     }
 
     /**

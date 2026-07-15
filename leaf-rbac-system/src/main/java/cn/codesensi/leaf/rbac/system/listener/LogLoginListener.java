@@ -1,9 +1,9 @@
 package cn.codesensi.leaf.rbac.system.listener;
 
 import cn.codesensi.leaf.rbac.framework.event.LogLoginEvent;
+import cn.codesensi.leaf.rbac.system.converter.LogLoginConverter;
 import cn.codesensi.leaf.rbac.system.entity.LogLogin;
 import cn.codesensi.leaf.rbac.system.service.LogLoginService;
-import cn.hutool.core.bean.BeanUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
@@ -25,12 +25,13 @@ import org.springframework.stereotype.Component;
 public class LogLoginListener {
 
     private final LogLoginService logLoginService;
+    private final LogLoginConverter logLoginConverter;
 
     /**
      * 异步处理登录日志记录。
      * <p>
      * 监听 {@link LogLoginEvent} 事件，将事件中的登录信息（用户名、登录类型、IP、
-     * 登录时间等）通过 {@link BeanUtil#copyProperties} 转换为 {@link LogLogin} 实体，
+     * 登录时间等）通过 MapStruct 转换为 {@link LogLogin} 实体，
      * 调用 {@link LogLoginService#save} 持久化到数据库。
      * 使用 {@link Async} 异步执行，不阻塞登录主流程。
      *
@@ -40,7 +41,7 @@ public class LogLoginListener {
     @EventListener
     public void logLoginRecord(LogLoginEvent event) {
         log.info("[logLoginRecord][收到 LogLoginEvent 事件][事件类型：{}，用户名：{}]", event.getEventType(), event.getUsername());
-        LogLogin logLogin = BeanUtil.copyProperties(event, LogLogin.class);
+        LogLogin logLogin = logLoginConverter.toEntity(event);
         logLoginService.save(logLogin);
     }
 }

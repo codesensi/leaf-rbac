@@ -5,6 +5,7 @@ import cn.codesensi.leaf.rbac.common.constants.CacheConst;
 import cn.codesensi.leaf.rbac.common.constants.RbacConst;
 import cn.codesensi.leaf.rbac.common.exception.BusinessException;
 import cn.codesensi.leaf.rbac.framework.cache.CacheEvictService;
+import cn.codesensi.leaf.rbac.system.converter.SysRoleConverter;
 import cn.codesensi.leaf.rbac.system.dto.AssignMenusDTO;
 import cn.codesensi.leaf.rbac.system.dto.RoleSaveDTO;
 import cn.codesensi.leaf.rbac.system.entity.SysRole;
@@ -13,7 +14,6 @@ import cn.codesensi.leaf.rbac.system.mapper.SysRoleMapper;
 import cn.codesensi.leaf.rbac.system.service.SysRoleMenuService;
 import cn.codesensi.leaf.rbac.system.service.SysRoleService;
 import cn.codesensi.leaf.rbac.system.service.SysUserRoleService;
-import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
@@ -40,6 +40,7 @@ import static cn.codesensi.leaf.rbac.system.entity.table.SysUserRoleTableDef.SYS
 public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> implements SysRoleService {
 
     private final SysRoleMapper sysRoleMapper;
+    private final SysRoleConverter sysRoleConverter;
     private final SysUserRoleService sysUserRoleService;
     private final SysRoleMenuService sysRoleMenuService;
     private final CacheEvictService cacheEvictService;
@@ -112,7 +113,7 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
             throw new BusinessException("角色编码已存在");
         }
 
-        SysRole sysRole = BeanUtil.copyProperties(roleSaveDTO, SysRole.class);
+        SysRole sysRole = sysRoleConverter.toEntity(roleSaveDTO);
         sysRoleMapper.insert(sysRole, true);
     }
 

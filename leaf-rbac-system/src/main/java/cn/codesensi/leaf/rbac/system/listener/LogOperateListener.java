@@ -1,9 +1,9 @@
 package cn.codesensi.leaf.rbac.system.listener;
 
 import cn.codesensi.leaf.rbac.framework.event.LogOperateEvent;
+import cn.codesensi.leaf.rbac.system.converter.LogOperateConverter;
 import cn.codesensi.leaf.rbac.system.entity.LogOperate;
 import cn.codesensi.leaf.rbac.system.service.LogOperateService;
-import cn.hutool.core.bean.BeanUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
@@ -26,12 +26,13 @@ import org.springframework.stereotype.Component;
 public class LogOperateListener {
 
     private final LogOperateService logOperateService;
+    private final LogOperateConverter logOperateConverter;
 
     /**
      * 异步消费操作日志事件，将事件数据拷贝为实体并保存到数据库。
      * <p>
-     * 使用 {@link BeanUtil#copyProperties(Object, Class)} 将事件对象
-     * 中的同名字段复制到 {@link LogOperate} 实体，然后调用 Service 持久化。
+     * 使用 MapStruct 将事件对象中的同名字段复制到 {@link LogOperate} 实体，
+     * 然后调用 Service 持久化。
      * <p>
      * 异步执行（{@code @Async}），不阻塞请求线程。
      *
@@ -41,7 +42,7 @@ public class LogOperateListener {
     @EventListener
     public void logOperateRecord(LogOperateEvent event) {
         log.info("[logOperateRecord][收到 LogOperateEvent 事件][模块：{}，描述：{}]", event.getModule(), event.getDescr());
-        LogOperate logOperate = BeanUtil.copyProperties(event, LogOperate.class);
+        LogOperate logOperate = logOperateConverter.toEntity(event);
         logOperateService.save(logOperate);
     }
 }
