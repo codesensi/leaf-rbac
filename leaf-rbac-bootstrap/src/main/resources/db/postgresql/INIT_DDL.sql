@@ -18,9 +18,9 @@ CREATE TABLE sys_user
     remark      varchar(512) NULL DEFAULT NULL,
     sys_flag    smallint NULL DEFAULT 0,
     creator     bigint NULL DEFAULT NULL,
-    create_time TIMESTAMP NULL DEFAULT NULL,
+    create_time TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
     updater     bigint NULL DEFAULT NULL,
-    update_time TIMESTAMP NULL DEFAULT NULL,
+    update_time TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
     del_flag    smallint NULL DEFAULT 0,
     PRIMARY KEY (id)
 );
@@ -83,9 +83,9 @@ CREATE TABLE sys_role
     remark      varchar(512) NULL DEFAULT NULL,
     sys_flag    smallint NULL DEFAULT 0,
     creator     bigint NULL DEFAULT NULL,
-    create_time TIMESTAMP NULL DEFAULT NULL,
+    create_time TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
     updater     bigint NULL DEFAULT NULL,
-    update_time TIMESTAMP NULL DEFAULT NULL,
+    update_time TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
     del_flag    smallint NULL DEFAULT 0,
     PRIMARY KEY (id)
 );
@@ -133,9 +133,9 @@ CREATE TABLE sys_user_role
     user_id     bigint NOT NULL,
     role_id     bigint NOT NULL,
     creator     bigint NULL DEFAULT NULL,
-    create_time TIMESTAMP NULL DEFAULT NULL,
+    create_time TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
     updater     bigint NULL DEFAULT NULL,
-    update_time TIMESTAMP NULL DEFAULT NULL,
+    update_time TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
     del_flag    smallint NULL DEFAULT 0,
     PRIMARY KEY (id)
 );
@@ -189,9 +189,9 @@ CREATE TABLE sys_menu
     remark         varchar(512) NULL DEFAULT NULL,
     sys_flag       smallint NULL DEFAULT 0,
     creator        bigint NULL DEFAULT NULL,
-    create_time    TIMESTAMP NULL DEFAULT NULL,
+    create_time    TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
     updater        bigint NULL DEFAULT NULL,
-    update_time    TIMESTAMP NULL DEFAULT NULL,
+    update_time    TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
     del_flag       smallint NULL DEFAULT 0,
     PRIMARY KEY (id)
 );
@@ -260,9 +260,9 @@ CREATE TABLE sys_role_menu
     role_id     bigint NOT NULL,
     menu_id     bigint NOT NULL,
     creator     bigint NULL DEFAULT NULL,
-    create_time TIMESTAMP NULL DEFAULT NULL,
+    create_time TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
     updater     bigint NULL DEFAULT NULL,
-    update_time TIMESTAMP NULL DEFAULT NULL,
+    update_time TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
     del_flag    smallint NULL DEFAULT 0,
     PRIMARY KEY (id)
 );
@@ -311,9 +311,9 @@ CREATE TABLE log_login
     duration_ms     BIGINT       DEFAULT NULL,
     params          TEXT         DEFAULT NULL,
     creator         BIGINT       DEFAULT NULL,
-    create_time     TIMESTAMP    DEFAULT NULL,
+    create_time     TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
     updater         BIGINT       DEFAULT NULL,
-    update_time     TIMESTAMP    DEFAULT NULL,
+    update_time     TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
     del_flag        SMALLINT     DEFAULT 0,
     PRIMARY KEY (id)
 );
@@ -386,9 +386,9 @@ CREATE TABLE log_operate
     params          text NULL DEFAULT NULL,
     result          text NULL DEFAULT NULL,
     creator         bigint NULL DEFAULT NULL,
-    create_time     TIMESTAMP NULL DEFAULT NULL,
+    create_time     TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
     updater         bigint NULL DEFAULT NULL,
-    update_time     TIMESTAMP NULL DEFAULT NULL,
+    update_time     TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
     del_flag        smallint NULL DEFAULT 0,
     PRIMARY KEY (id)
 );
@@ -454,9 +454,9 @@ CREATE TABLE conf_region
     level       smallint NULL DEFAULT NULL,
     full_path   VARCHAR(512) NULL DEFAULT NULL,
     creator     bigint NULL DEFAULT NULL,
-    create_time TIMESTAMP NULL DEFAULT NULL,
+    create_time TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
     updater     bigint NULL DEFAULT NULL,
-    update_time TIMESTAMP NULL DEFAULT NULL,
+    update_time TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
     del_flag    smallint NULL DEFAULT 0,
     PRIMARY KEY (`id`)
 );
