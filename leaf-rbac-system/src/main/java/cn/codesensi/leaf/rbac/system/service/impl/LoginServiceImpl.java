@@ -65,6 +65,7 @@ public class LoginServiceImpl implements LoginService {
 
         // 校验用户
         SysUser sysUser = sysUserService.queryChain()
+                .select(SYS_USER.ID, SYS_USER.PASSWORD)
                 .where(SYS_USER.USERNAME.eq(loginAccountDTO.getUsername()))
                 .one();
         if (ObjUtil.isNull(sysUser) || !BCrypt.checkpw(loginAccountDTO.getPassword(), sysUser.getPassword())) {
