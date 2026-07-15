@@ -1,8 +1,6 @@
 package cn.codesensi.leaf.rbac.system.dto;
 
-import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
-import lombok.experimental.Accessors;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -13,8 +11,6 @@ import java.util.List;
  * 用于接收 <a href="https://dmfw.mca.gov.cn/9095/xzqh/getList">...</a> 的返回数据
  */
 @Data
-@Accessors(chain = true)
-@Schema(description = "民政部行政区划 API 响应")
 public class RegionApiResponse implements Serializable {
 
     @Serial
@@ -23,7 +19,6 @@ public class RegionApiResponse implements Serializable {
     /**
      * 行政区划节点
      */
-    @Schema(description = "行政区划节点")
     private RegionNode data;
 
     /**
@@ -38,31 +33,26 @@ public class RegionApiResponse implements Serializable {
         /**
          * 行政区划编码（12位或13位，只取前6位使用）
          */
-        @Schema(description = "行政区划编码", example = "110000000000")
         private String code;
 
         /**
          * 行政区划名称
          */
-        @Schema(description = "行政区划名称", example = "北京市")
         private String name;
 
         /**
          * 层级: 1-省, 2-市, 3-县（区）
          */
-        @Schema(description = "层级", example = "1")
         private Integer level;
 
         /**
          * 类型（如：省、市、区）
          */
-        @Schema(description = "类型", example = "省")
         private String type;
 
         /**
          * 子节点列表
          */
-        @Schema(description = "子节点列表")
         private List<RegionNode> children;
     }
 

@@ -9,7 +9,6 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
-import lombok.experimental.Accessors;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -21,7 +20,6 @@ import java.io.Serializable;
  * @since 2026-06-28
  */
 @Data
-@Accessors(chain = true)
 @Schema(description = "保存用户请求参数")
 public class UserSaveRequest implements Serializable {
 

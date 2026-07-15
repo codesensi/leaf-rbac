@@ -3,7 +3,6 @@ package cn.codesensi.leaf.rbac.api.request;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
-import lombok.experimental.Accessors;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -15,7 +14,6 @@ import java.io.Serializable;
  * @since 2024-07-21 11:09:56
  */
 @Data
-@Accessors(chain = true)
 @Schema(description = "账号密码登录请求参数")
 public class LoginAccountRequest implements Serializable {
 

@@ -3,7 +3,6 @@ package cn.codesensi.leaf.rbac.api.request;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
-import lombok.experimental.Accessors;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -16,7 +15,6 @@ import java.util.List;
  * @since 2026-06-28
  */
 @Data
-@Accessors(chain = true)
 @Schema(description = "角色分配菜单请求参数")
 public class AssignMenusRequest implements Serializable {
 

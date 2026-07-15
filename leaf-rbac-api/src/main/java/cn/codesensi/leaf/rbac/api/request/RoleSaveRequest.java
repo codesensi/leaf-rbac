@@ -4,7 +4,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
-import lombok.experimental.Accessors;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -16,7 +15,6 @@ import java.io.Serializable;
  * @since 2026-06-28
  */
 @Data
-@Accessors(chain = true)
 @Schema(description = "保存角色请求参数")
 public class RoleSaveRequest implements Serializable {
 

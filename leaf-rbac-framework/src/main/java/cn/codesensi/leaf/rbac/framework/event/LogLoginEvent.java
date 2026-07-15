@@ -5,6 +5,9 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.context.ApplicationEvent;
 
+/**
+ * 登录日志事件
+ */
 @Getter
 @Setter
 public class LogLoginEvent extends ApplicationEvent {

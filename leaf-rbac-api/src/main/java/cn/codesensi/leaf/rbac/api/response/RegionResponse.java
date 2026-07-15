@@ -3,7 +3,6 @@ package cn.codesensi.leaf.rbac.api.response;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
-import lombok.experimental.Accessors;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -16,7 +15,6 @@ import java.io.Serializable;
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Data
-@Accessors(chain = true)
 @Schema(description = "行政区划缓存数据")
 public class RegionResponse implements Serializable {
 
