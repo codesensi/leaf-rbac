@@ -28,6 +28,7 @@
         <lombok.version>1.18.46</lombok.version>
         <hutool-all.version>5.8.46</hutool-all.version>
         <commons-lang3.version>3.20.0</commons-lang3.version>
+        <mapstruct.version>1.6.3</mapstruct.version>
         <springdoc.version>2.8.17</springdoc.version>
         <h2.version>2.4.240</h2.version>
         <mysql.version>9.7.0</mysql.version>
@@ -108,6 +109,13 @@
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-lang3</artifactId>
                 <version>${commons-lang3.version}</version>
+            </dependency>
+            <!-- MapStruct 编译时映射框架（配合 processor 在编译期生成 Bean 转换实现类） -->
+            <!-- https://mvnrepository.com/artifact/org.mapstruct/mapstruct -->
+            <dependency>
+                <groupId>org.mapstruct</groupId>
+                <artifactId>mapstruct</artifactId>
+                <version>${mapstruct.version}</version>
             </dependency>
             <!-- SpringDoc OpenAPI（生成 Swagger 接口文档，提供 Knife4j UI） -->
             <!-- https://mvnrepository.com/artifact/org.springdoc/springdoc-openapi-starter-webmvc-ui -->
@@ -232,6 +240,12 @@
                     <encoding>${project.build.sourceEncoding}</encoding>
                     <!-- 配置编译时的注解处理器 -->
                     <annotationProcessorPaths>
+                        <!-- MapStruct 编译期注解处理器（必须排在 lombok 之前，确保生成 Mapper 实现类的完整代码） -->
+                        <path>
+                            <groupId>org.mapstruct</groupId>
+                            <artifactId>mapstruct-processor</artifactId>
+                            <version>${mapstruct.version}</version>
+                        </path>
                         <!-- mybatis-flex APT （必须在 lombok 之前）-->
                         <path>
                             <groupId>com.mybatis-flex</groupId>

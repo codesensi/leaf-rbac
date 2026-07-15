@@ -11,8 +11,8 @@ import cn.codesensi.leaf.rbac.framework.event.LogLoginEvent;
 import cn.codesensi.leaf.rbac.framework.util.Ip2regionUtil;
 import cn.codesensi.leaf.rbac.framework.util.IpUtil;
 import cn.codesensi.leaf.rbac.framework.util.ServletUtil;
-import cn.codesensi.leaf.rbac.system.dto.LoginAccountInDTO;
-import cn.codesensi.leaf.rbac.system.dto.LoginOutDTO;
+import cn.codesensi.leaf.rbac.system.dto.LoginAccountDTO;
+import cn.codesensi.leaf.rbac.system.dto.LoginResultDTO;
 import cn.codesensi.leaf.rbac.system.entity.SysUser;
 import cn.codesensi.leaf.rbac.system.service.LoginService;
 import cn.codesensi.leaf.rbac.system.service.SysUserService;
@@ -50,27 +50,27 @@ public class LoginServiceImpl implements LoginService {
     /**
      * 账号密码登录
      *
-     * @param loginAccountInDTO 登录用户信息
+     * @param loginAccountDTO 登录用户信息
      * @return 登录成功后信息
      */
     @Override
-    public LoginOutDTO loginAccount(LoginAccountInDTO loginAccountInDTO) {
+    public LoginResultDTO loginAccount(LoginAccountDTO loginAccountDTO) {
         long start = System.currentTimeMillis();
-        String username = loginAccountInDTO.getUsername();
+        String username = loginAccountDTO.getUsername();
         LogLoginEvent.LogLoginEventBuilder builder = LogLoginEvent.builder();
 
         try {
             // 校验验证码
             if (appCaptchaProperties.getEnabled()) {
-                if (StrUtil.isBlank(loginAccountInDTO.getCaptchaKey())) {
+                if (StrUtil.isBlank(loginAccountDTO.getCaptchaKey())) {
                     throw new ValidationException("验证码唯一标识为空");
                 }
-                String captchaValue = loginAccountInDTO.getCaptchaValue();
+                String captchaValue = loginAccountDTO.getCaptchaValue();
                 if (StrUtil.isBlank(captchaValue)) {
                     throw new ValidationException("验证码为空");
                 }
                 // 与缓存中的值对比
-                String captchaCache = stringRedisTemplate.opsForValue().getAndDelete(CacheUtil.getCaptchaImagePrefix().concat(loginAccountInDTO.getCaptchaKey()));
+                String captchaCache = stringRedisTemplate.opsForValue().getAndDelete(CacheUtil.getCaptchaImagePrefix().concat(loginAccountDTO.getCaptchaKey()));
                 if (StrUtil.isBlank(captchaCache)) {
                     throw new BusinessException("验证码不存在");
                 }
@@ -81,7 +81,7 @@ public class LoginServiceImpl implements LoginService {
             SysUser sysUser = sysUserService.queryChain()
                     .where(SYS_USER.USERNAME.eq(username))
                     .one();
-            if (ObjUtil.isNull(sysUser) || !BCrypt.checkpw(loginAccountInDTO.getPassword(), sysUser.getPassword())) {
+            if (ObjUtil.isNull(sysUser) || !BCrypt.checkpw(loginAccountDTO.getPassword(), sysUser.getPassword())) {
                 throw new BusinessException("账号或密码错误");
             }
 
@@ -93,16 +93,16 @@ public class LoginServiceImpl implements LoginService {
             // 登录
             StpUtil.login(userId);
 
-            LoginOutDTO loginOutDTO = new LoginOutDTO();
-            loginOutDTO.setAccessToken(StpUtil.getTokenValue());
+            LoginResultDTO loginResultDTO = new LoginResultDTO();
+            loginResultDTO.setAccessToken(StpUtil.getTokenValue());
             // 访问令牌过期时间
             long accessTokenTimeout = StpUtil.getTokenTimeout();
-            loginOutDTO.setExpires(LocalDateTimeUtil.now().plusSeconds(accessTokenTimeout).toInstant(ZoneOffset.of("+8")).toEpochMilli());
-            loginOutDTO.setTokenName(SaManager.getConfig().getTokenName());
-            loginOutDTO.setTokenPrefix(SaManager.getConfig().getTokenPrefix());
+            loginResultDTO.setExpires(LocalDateTimeUtil.now().plusSeconds(accessTokenTimeout).toInstant(ZoneOffset.of("+8")).toEpochMilli());
+            loginResultDTO.setTokenName(SaManager.getConfig().getTokenName());
+            loginResultDTO.setTokenPrefix(SaManager.getConfig().getTokenPrefix());
 
             builder.status(YesNoEnum.YES.getCode());
-            return loginOutDTO;
+            return loginResultDTO;
         } catch (Exception e) {
             builder.status(YesNoEnum.NO.getCode());
             builder.errorMsg(e.getMessage());
@@ -115,7 +115,7 @@ public class LoginServiceImpl implements LoginService {
                 builder.eventType(EventType.LOGIN.getCode());
                 builder.loginKey(username);
                 builder.username(username);
-                builder.params(JSONUtil.toJsonStr(loginAccountInDTO));
+                builder.params(JSONUtil.toJsonStr(loginAccountDTO));
                 String ipAddr = IpUtil.getIpAddr();
                 builder.requestIp(ipAddr);
                 builder.requestArea(Ip2regionUtil.search(ipAddr));

@@ -1,7 +1,7 @@
 package cn.codesensi.leaf.rbac.system.service;
 
-import cn.codesensi.leaf.rbac.system.dto.AssignMenusInDTO;
-import cn.codesensi.leaf.rbac.system.dto.RoleSaveInDTO;
+import cn.codesensi.leaf.rbac.system.dto.AssignMenusDTO;
+import cn.codesensi.leaf.rbac.system.dto.RoleSaveDTO;
 import cn.codesensi.leaf.rbac.system.entity.SysRole;
 import com.mybatisflex.core.service.IService;
 
@@ -34,14 +34,14 @@ public interface SysRoleService extends IService<SysRole> {
     /**
      * 保存角色信息
      *
-     * @param roleSaveInDTO 角色信息
+     * @param roleSaveDTO 角色信息
      */
-    void saveRole(RoleSaveInDTO roleSaveInDTO);
+    void saveRole(RoleSaveDTO roleSaveDTO);
 
     /**
      * 分配角色菜单权限
      *
-     * @param assignMenusInDTO 角色菜单权限信息
+     * @param assignMenusDTO 角色菜单权限信息
      */
-    void assignMenus(AssignMenusInDTO assignMenusInDTO);
+    void assignMenus(AssignMenusDTO assignMenusDTO);
 }

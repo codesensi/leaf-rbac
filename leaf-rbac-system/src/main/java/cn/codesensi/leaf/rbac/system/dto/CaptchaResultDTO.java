@@ -12,7 +12,7 @@ import java.io.Serializable;
  */
 @Data
 @Accessors(chain = true)
-public class CaptchaOutDTO implements Serializable {
+public class CaptchaResultDTO implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;

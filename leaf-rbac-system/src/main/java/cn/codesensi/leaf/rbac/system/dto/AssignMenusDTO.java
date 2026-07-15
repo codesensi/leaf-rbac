@@ -19,7 +19,7 @@ import java.util.List;
  */
 @Data
 @Accessors(chain = true)
-public class AssignMenusInDTO implements Serializable {
+public class AssignMenusDTO implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;

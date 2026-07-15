@@ -1,6 +1,6 @@
 package cn.codesensi.leaf.rbac.api.response;
 
-import cn.codesensi.leaf.rbac.system.dto.LoginOutDTO;
+import cn.codesensi.leaf.rbac.system.dto.LoginResultDTO;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
@@ -21,6 +21,6 @@ import lombok.experimental.Accessors;
 @ToString(callSuper = true)
 @Accessors(chain = true)
 @Schema(description = "登录响应结果")
-public class LoginResponse extends LoginOutDTO {
+public class LoginResponse extends LoginResultDTO {
 
 }

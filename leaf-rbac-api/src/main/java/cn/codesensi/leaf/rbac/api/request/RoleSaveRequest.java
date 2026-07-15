@@ -1,6 +1,6 @@
 package cn.codesensi.leaf.rbac.api.request;
 
-import cn.codesensi.leaf.rbac.system.dto.RoleSaveInDTO;
+import cn.codesensi.leaf.rbac.system.dto.RoleSaveDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -20,6 +20,6 @@ import java.io.Serializable;
 @ToString(callSuper = true)
 @Accessors(chain = true)
 @Schema(description = "保存角色请求参数")
-public class RoleSaveRequest extends RoleSaveInDTO implements Serializable {
+public class RoleSaveRequest extends RoleSaveDTO implements Serializable {
 
 }

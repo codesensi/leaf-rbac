@@ -15,7 +15,7 @@ import java.io.Serializable;
  */
 @Data
 @Accessors(chain = true)
-public class LoginOutDTO implements Serializable {
+public class LoginResultDTO implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;

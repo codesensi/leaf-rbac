@@ -5,8 +5,8 @@ import cn.codesensi.leaf.rbac.api.request.RoleSaveRequest;
 import cn.codesensi.leaf.rbac.common.enums.OperateType;
 import cn.codesensi.leaf.rbac.framework.annotation.ApiResponseBody;
 import cn.codesensi.leaf.rbac.framework.annotation.LogOperate;
-import cn.codesensi.leaf.rbac.system.dto.AssignMenusInDTO;
-import cn.codesensi.leaf.rbac.system.dto.RoleSaveInDTO;
+import cn.codesensi.leaf.rbac.system.dto.AssignMenusDTO;
+import cn.codesensi.leaf.rbac.system.dto.RoleSaveDTO;
 import cn.codesensi.leaf.rbac.system.entity.SysRole;
 import cn.codesensi.leaf.rbac.system.service.SysRoleService;
 import cn.hutool.core.bean.BeanUtil;
@@ -47,8 +47,8 @@ public class SysRoleController {
     @Operation(summary = "保存角色", description = "保存角色信息")
     @PostMapping("/saveRole")
     public void saveRole(@Valid @RequestBody RoleSaveRequest request) {
-        RoleSaveInDTO roleSaveInDTO = BeanUtil.copyProperties(request, RoleSaveInDTO.class);
-        sysRoleService.saveRole(roleSaveInDTO);
+        RoleSaveDTO roleSaveDTO = BeanUtil.copyProperties(request, RoleSaveDTO.class);
+        sysRoleService.saveRole(roleSaveDTO);
     }
 
     /**
@@ -124,8 +124,8 @@ public class SysRoleController {
     @Operation(summary = "分配角色菜单权限", description = "为角色分配菜单权限")
     @PutMapping("/assignMenus")
     public void assignMenus(@Valid @RequestBody AssignMenusRequest request) {
-        AssignMenusInDTO assignMenusInDTO = BeanUtil.copyProperties(request, AssignMenusInDTO.class);
-        sysRoleService.assignMenus(assignMenusInDTO);
+        AssignMenusDTO assignMenusDTO = BeanUtil.copyProperties(request, AssignMenusDTO.class);
+        sysRoleService.assignMenus(assignMenusDTO);
     }
 
 }

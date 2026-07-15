@@ -15,7 +15,7 @@ import java.io.Serializable;
 @Data
 @Accessors(chain = true)
 @Schema(description = "菜单信息")
-public class MenuOutDTO implements Serializable {
+public class MenuDTO implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;

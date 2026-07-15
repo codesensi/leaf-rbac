@@ -5,15 +5,14 @@ import cn.codesensi.leaf.rbac.common.constants.CacheConst;
 import cn.codesensi.leaf.rbac.common.constants.RbacConst;
 import cn.codesensi.leaf.rbac.common.exception.BusinessException;
 import cn.codesensi.leaf.rbac.framework.cache.CacheEvictService;
-import cn.codesensi.leaf.rbac.system.dto.AssignMenusInDTO;
-import cn.codesensi.leaf.rbac.system.dto.RoleSaveInDTO;
+import cn.codesensi.leaf.rbac.system.dto.AssignMenusDTO;
+import cn.codesensi.leaf.rbac.system.dto.RoleSaveDTO;
 import cn.codesensi.leaf.rbac.system.entity.SysRole;
 import cn.codesensi.leaf.rbac.system.entity.SysRoleMenu;
 import cn.codesensi.leaf.rbac.system.mapper.SysRoleMapper;
 import cn.codesensi.leaf.rbac.system.service.SysRoleMenuService;
 import cn.codesensi.leaf.rbac.system.service.SysRoleService;
 import cn.codesensi.leaf.rbac.system.service.SysUserRoleService;
-import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjUtil;
@@ -100,11 +99,11 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
     /**
      * 保存角色信息
      *
-     * @param roleSaveInDTO 角色信息
+     * @param roleSaveDTO 角色信息
      */
     @Override
-    public void saveRole(RoleSaveInDTO roleSaveInDTO) {
-        String code = roleSaveInDTO.getCode();
+    public void saveRole(RoleSaveDTO roleSaveDTO) {
+        String code = roleSaveDTO.getCode();
         // 校验角色编码是否存在
         long count = QueryChain.of(sysRoleMapper)
                 .where(SYS_ROLE.CODE.eq(code))
@@ -113,18 +112,18 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
             throw new BusinessException("角色编码已存在");
         }
 
-        SysRole sysRole = BeanUtil.copyProperties(roleSaveInDTO, SysRole.class);
+        SysRole sysRole = BeanUtil.copyProperties(roleSaveDTO, SysRole.class);
         sysRoleMapper.insert(sysRole, true);
     }
 
     /**
      * 分配角色菜单权限
      *
-     * @param assignMenusInDTO 角色菜单权限信息
+     * @param assignMenusDTO 角色菜单权限信息
      */
     @Override
-    public void assignMenus(AssignMenusInDTO assignMenusInDTO) {
-        Long roleId = assignMenusInDTO.getRoleId();
+    public void assignMenus(AssignMenusDTO assignMenusDTO) {
+        Long roleId = assignMenusDTO.getRoleId();
         // 1. 校验角色是否存在
         SysRole sysRole = QueryChain.of(sysRoleMapper)
                 .select(SYS_ROLE.SYS_FLAG)
@@ -150,7 +149,7 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
             cacheEvictService.clearUserPermCache(userId);
         }
 
-        List<Long> menuIds = assignMenusInDTO.getMenuIds();
+        List<Long> menuIds = assignMenusDTO.getMenuIds();
         // 如果菜单列表为空，则仅删除旧关联
         if (CollUtil.isNotEmpty(menuIds)) {
             // 菜单ID去重

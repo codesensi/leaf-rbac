@@ -22,7 +22,7 @@ import java.io.Serializable;
  */
 @Data
 @Accessors(chain = true)
-public class UserSaveInDTO implements Serializable {
+public class UserSaveDTO implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;

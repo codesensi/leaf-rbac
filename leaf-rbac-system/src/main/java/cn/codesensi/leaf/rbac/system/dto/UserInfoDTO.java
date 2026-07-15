@@ -16,7 +16,7 @@ import java.util.List;
  */
 @Data
 @Accessors(chain = true)
-public class UserInfoOutDTO implements Serializable {
+public class UserInfoDTO implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
@@ -91,5 +91,5 @@ public class UserInfoOutDTO implements Serializable {
      * 菜单
      */
     @Schema(description = "菜单")
-    private List<MenuOutDTO> menus;
+    private List<MenuDTO> menus;
 }

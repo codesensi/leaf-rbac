@@ -1,6 +1,6 @@
 package cn.codesensi.leaf.rbac.api.request;
 
-import cn.codesensi.leaf.rbac.system.dto.CaptchaInDTO;
+import cn.codesensi.leaf.rbac.system.dto.CaptchaDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -18,5 +18,5 @@ import lombok.experimental.Accessors;
 @ToString(callSuper = true)
 @Accessors(chain = true)
 @Schema(description = "生成验证码请求参数")
-public class CaptchaRequest extends CaptchaInDTO {
+public class CaptchaRequest extends CaptchaDTO {
 }

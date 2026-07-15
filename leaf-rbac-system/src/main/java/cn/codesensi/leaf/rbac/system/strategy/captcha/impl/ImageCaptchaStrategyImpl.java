@@ -1,11 +1,10 @@
 package cn.codesensi.leaf.rbac.system.strategy.captcha.impl;
 
-import cn.codesensi.leaf.rbac.common.constants.CacheConst;
 import cn.codesensi.leaf.rbac.common.exception.BusinessException;
 import cn.codesensi.leaf.rbac.common.properties.AppCaptchaProperties;
 import cn.codesensi.leaf.rbac.common.util.CacheUtil;
-import cn.codesensi.leaf.rbac.system.dto.CaptchaInDTO;
-import cn.codesensi.leaf.rbac.system.dto.CaptchaOutDTO;
+import cn.codesensi.leaf.rbac.system.dto.CaptchaDTO;
+import cn.codesensi.leaf.rbac.system.dto.CaptchaResultDTO;
 import cn.codesensi.leaf.rbac.system.strategy.captcha.CaptchaStrategy;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
@@ -33,14 +32,14 @@ public class ImageCaptchaStrategyImpl implements CaptchaStrategy {
      * 生成图形验证码
      */
     @Override
-    public CaptchaOutDTO captcha(CaptchaInDTO captchaInDTO) {
+    public CaptchaResultDTO captcha(CaptchaDTO captchaDTO) {
         AppCaptchaProperties.ImageType imageType = appCaptchaProperties.getImageType();
         String name = imageType.name();
         // 构建类名
         name = name.toLowerCase();
         name = StrUtil.upperFirst(name);
         String className = name + "Captcha";
-        CaptchaOutDTO captchaOutDTO = new CaptchaOutDTO();
+        CaptchaResultDTO captchaResultDTO = new CaptchaResultDTO();
         try {
             Class<?> clazz = Class.forName("com.wf.captcha." + className);
             Captcha captcha = (Captcha) clazz.getDeclaredConstructor().newInstance();
@@ -56,13 +55,13 @@ public class ImageCaptchaStrategyImpl implements CaptchaStrategy {
             // 放入缓存
             stringRedisTemplate.opsForValue().set(CacheUtil.getCaptchaImagePrefix().concat(keyUuid), text, appCaptchaProperties.getImageExpire(), TimeUnit.SECONDS);
             // 返回结果
-            captchaOutDTO.setCaptchaKey(keyUuid);
-            captchaOutDTO.setCaptchaValue(captcha.toBase64());
+            captchaResultDTO.setCaptchaKey(keyUuid);
+            captchaResultDTO.setCaptchaValue(captcha.toBase64());
         } catch (Exception e) {
             log.error("图形验证码生成失败：", e);
             throw new BusinessException("图形验证码生成失败");
         }
-        return captchaOutDTO;
+        return captchaResultDTO;
     }
 
 }

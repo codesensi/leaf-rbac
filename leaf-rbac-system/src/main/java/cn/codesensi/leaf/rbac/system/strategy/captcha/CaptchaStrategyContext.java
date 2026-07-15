@@ -1,8 +1,8 @@
 package cn.codesensi.leaf.rbac.system.strategy.captcha;
 
 import cn.codesensi.leaf.rbac.common.exception.BusinessException;
-import cn.codesensi.leaf.rbac.system.dto.CaptchaInDTO;
-import cn.codesensi.leaf.rbac.system.dto.CaptchaOutDTO;
+import cn.codesensi.leaf.rbac.system.dto.CaptchaDTO;
+import cn.codesensi.leaf.rbac.system.dto.CaptchaResultDTO;
 import cn.codesensi.leaf.rbac.system.enums.CaptchaStrategyType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,9 +31,9 @@ public class CaptchaStrategyContext {
     /**
      * 生成验证码
      */
-    public CaptchaOutDTO captcha(CaptchaInDTO captchaInDTO) {
+    public CaptchaResultDTO captcha(CaptchaDTO captchaDTO) {
         // 将属性的值转换成具体的枚举
-        String type = captchaInDTO.getType();
+        String type = captchaDTO.getType();
         CaptchaStrategyType captchaStrategyType = STRATEGY_TYPE_MAP.get(type);
         if (captchaStrategyType == null) {
             log.error("未匹配到验证码策略：{}", type);
@@ -41,6 +41,6 @@ public class CaptchaStrategyContext {
         }
         // 获取策略实现
         CaptchaStrategy captchaStrategy = captchaStrategyFactory.getCaptchaStrategy(captchaStrategyType);
-        return captchaStrategy.captcha(captchaInDTO);
+        return captchaStrategy.captcha(captchaDTO);
     }
 }

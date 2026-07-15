@@ -17,7 +17,7 @@ import java.io.Serializable;
  */
 @Data
 @Accessors(chain = true)
-public class RoleSaveInDTO implements Serializable {
+public class RoleSaveDTO implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;

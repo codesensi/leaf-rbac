@@ -1,13 +1,13 @@
 package cn.codesensi.leaf.rbac.api.controller.auth;
 
+import cn.codesensi.leaf.rbac.api.mapper.LoginMapper;
 import cn.codesensi.leaf.rbac.api.request.LoginAccountRequest;
 import cn.codesensi.leaf.rbac.api.response.LoginResponse;
 import cn.codesensi.leaf.rbac.framework.annotation.ApiResponseBody;
-import cn.codesensi.leaf.rbac.system.dto.LoginAccountInDTO;
-import cn.codesensi.leaf.rbac.system.dto.LoginOutDTO;
+import cn.codesensi.leaf.rbac.system.dto.LoginAccountDTO;
+import cn.codesensi.leaf.rbac.system.dto.LoginResultDTO;
 import cn.codesensi.leaf.rbac.system.service.LoginService;
 import cn.dev33.satoken.annotation.SaIgnore;
-import cn.hutool.core.bean.BeanUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +31,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class LoginController {
 
     private final LoginService loginService;
+    private final LoginMapper loginMapper;
 
     /**
      * 账号密码登录
@@ -39,9 +40,9 @@ public class LoginController {
     @Operation(summary = "账号密码登录")
     @PostMapping("/login/account")
     public LoginResponse loginAccount(@Validated @RequestBody LoginAccountRequest request) {
-        LoginAccountInDTO loginAccountInDTO = BeanUtil.copyProperties(request, LoginAccountInDTO.class);
-        LoginOutDTO loginOutDTO = loginService.loginAccount(loginAccountInDTO);
-        return BeanUtil.copyProperties(loginOutDTO, LoginResponse.class);
+        LoginAccountDTO inDTO = loginMapper.toInDTO(request);
+        LoginResultDTO loginResultDTO = loginService.loginAccount(inDTO);
+        return loginMapper.toResponse(loginResultDTO);
     }
 
     /**

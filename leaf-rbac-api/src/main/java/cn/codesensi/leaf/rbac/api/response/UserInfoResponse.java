@@ -1,6 +1,6 @@
 package cn.codesensi.leaf.rbac.api.response;
 
-import cn.codesensi.leaf.rbac.system.dto.UserInfoOutDTO;
+import cn.codesensi.leaf.rbac.system.dto.UserInfoDTO;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
@@ -21,5 +21,5 @@ import lombok.experimental.Accessors;
 @ToString(callSuper = true)
 @Accessors(chain = true)
 @Schema(description = "获取当前用户信息响应结果")
-public class UserInfoResponse extends UserInfoOutDTO {
+public class UserInfoResponse extends UserInfoDTO {
 }

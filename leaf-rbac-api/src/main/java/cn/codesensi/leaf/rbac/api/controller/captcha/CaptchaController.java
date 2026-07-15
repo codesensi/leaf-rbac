@@ -5,8 +5,8 @@ import cn.codesensi.leaf.rbac.api.response.CaptchaResponse;
 import cn.codesensi.leaf.rbac.common.enums.OperateType;
 import cn.codesensi.leaf.rbac.framework.annotation.ApiResponseBody;
 import cn.codesensi.leaf.rbac.framework.annotation.LogOperate;
-import cn.codesensi.leaf.rbac.system.dto.CaptchaInDTO;
-import cn.codesensi.leaf.rbac.system.dto.CaptchaOutDTO;
+import cn.codesensi.leaf.rbac.system.dto.CaptchaDTO;
+import cn.codesensi.leaf.rbac.system.dto.CaptchaResultDTO;
 import cn.codesensi.leaf.rbac.system.strategy.captcha.CaptchaStrategyContext;
 import cn.dev33.satoken.annotation.SaIgnore;
 import cn.hutool.core.bean.BeanUtil;
@@ -42,8 +42,8 @@ public class CaptchaController {
     @Operation(summary = "生成验证码", description = "生成验证码")
     @GetMapping("/captcha")
     public CaptchaResponse captcha(@Validated @ParameterObject CaptchaRequest request) {
-        CaptchaInDTO captchaInDTO = BeanUtil.copyProperties(request, CaptchaInDTO.class);
-        CaptchaOutDTO captchaOutDTO = captchaStrategyContext.captcha(captchaInDTO);
-        return BeanUtil.copyProperties(captchaOutDTO, CaptchaResponse.class);
+        CaptchaDTO captchaDTO = BeanUtil.copyProperties(request, CaptchaDTO.class);
+        CaptchaResultDTO captchaResultDTO = captchaStrategyContext.captcha(captchaDTO);
+        return BeanUtil.copyProperties(captchaResultDTO, CaptchaResponse.class);
     }
 }
