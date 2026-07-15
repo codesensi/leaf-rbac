@@ -35,7 +35,7 @@ public class LogOperateController {
      * @return 操作日志表详情
      */
     @Operation(summary = "获取操作日志详情", description = "根据主键获取操作日志详情")
-    @GetMapping("/detail/{id}")
+    // @GetMapping("/detail/{id}")
     public LogOperate detail(@Parameter(description = "日志主键ID", required = true) @PathVariable Long id) {
         return logOperateService.getById(id);
     }
@@ -49,7 +49,7 @@ public class LogOperateController {
      * @return 分页对象
      */
     @Operation(summary = "分页查询操作日志", description = "分页查询操作日志")
-    @GetMapping("/page")
+    // @GetMapping("/page")
     public Page<LogOperate> page(@Parameter(description = "当前页码") @RequestParam(defaultValue = "1") Integer pageNumber,
                                  @Parameter(description = "每页数据数量") @RequestParam(defaultValue = "10") Integer pageSize,
                                  @ParameterObject LogOperate logOperate) {

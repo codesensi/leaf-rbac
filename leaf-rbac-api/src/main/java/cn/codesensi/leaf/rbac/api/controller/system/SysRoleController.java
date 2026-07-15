@@ -46,7 +46,7 @@ public class SysRoleController {
      * @return {@code true} 删除成功，{@code false} 删除失败
      */
     @Operation(summary = "删除角色", description = "根据主键删除角色信息")
-    @DeleteMapping("/delete/{id}")
+    // @DeleteMapping("/delete/{id}")
     public boolean delete(@Parameter(description = "角色主键ID", required = true) @PathVariable Long id) {
         return sysRoleService.removeById(id);
     }
@@ -58,7 +58,7 @@ public class SysRoleController {
      * @return {@code true} 更新成功，{@code false} 更新失败
      */
     @Operation(summary = "更新角色", description = "根据主键更新角色信息")
-    @PutMapping("/update")
+    // @PutMapping("/update")
     public boolean update(@RequestBody SysRole sysRole) {
         return sysRoleService.updateById(sysRole);
     }
@@ -69,7 +69,7 @@ public class SysRoleController {
      * @return 所有数据
      */
     @Operation(summary = "查询角色列表", description = "查询所有角色信息")
-    @GetMapping("/list")
+    // @GetMapping("/list")
     public List<SysRole> list() {
         return sysRoleService.list();
     }
@@ -81,7 +81,7 @@ public class SysRoleController {
      * @return 角色信息表详情
      */
     @Operation(summary = "获取角色详情", description = "根据主键获取角色信息详情")
-    @GetMapping("/detail/{id}")
+    // @GetMapping("/detail/{id}")
     public SysRole detail(@Parameter(description = "角色主键ID", required = true) @PathVariable Long id) {
         return sysRoleService.getById(id);
     }
@@ -95,7 +95,7 @@ public class SysRoleController {
      * @return 分页对象
      */
     @Operation(summary = "分页查询角色", description = "分页查询角色信息")
-    @GetMapping("/page")
+    // @GetMapping("/page")
     public Page<SysRole> page(@Parameter(description = "当前页码") @RequestParam(defaultValue = "1") Integer pageNumber,
                               @Parameter(description = "每页数据数量") @RequestParam(defaultValue = "10") Integer pageSize,
                               @ParameterObject SysRole sysRole) {

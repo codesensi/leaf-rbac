@@ -35,7 +35,7 @@ public class LogLoginController {
      * @return 登录日志表详情
      */
     @Operation(summary = "获取登录日志详情", description = "根据主键获取登录日志详情")
-    @GetMapping("/detail/{id}")
+    // @GetMapping("/detail/{id}")
     public LogLogin getInfo(@Parameter(description = "日志主键ID", required = true) @PathVariable Long id) {
         return logLoginService.getById(id);
     }
@@ -49,7 +49,7 @@ public class LogLoginController {
      * @return 分页对象
      */
     @Operation(summary = "分页查询登录日志", description = "分页查询登录日志")
-    @GetMapping("/page")
+    // @GetMapping("/page")
     public Page<LogLogin> page(@Parameter(description = "当前页码") @RequestParam(defaultValue = "1") Integer pageNumber,
                                @Parameter(description = "每页数据数量") @RequestParam(defaultValue = "10") Integer pageSize,
                                @ParameterObject LogLogin logLogin) {

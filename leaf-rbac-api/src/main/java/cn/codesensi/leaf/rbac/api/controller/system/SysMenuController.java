@@ -37,7 +37,7 @@ public class SysMenuController {
      * @return {@code true} 保存成功，{@code false} 保存失败
      */
     @Operation(summary = "保存菜单", description = "保存路由菜单表")
-    @PostMapping("/save")
+    // @PostMapping("/save")
     public boolean save(@RequestBody SysMenu sysMenu) {
         return sysMenuService.save(sysMenu);
     }
@@ -49,7 +49,7 @@ public class SysMenuController {
      * @return {@code true} 删除成功，{@code false} 删除失败
      */
     @Operation(summary = "删除菜单", description = "根据主键删除路由菜单")
-    @DeleteMapping("/delete/{id}")
+    // @DeleteMapping("/delete/{id}")
     public boolean delete(@Parameter(description = "菜单主键ID", required = true) @PathVariable Long id) {
         return sysMenuService.removeById(id);
     }
@@ -61,7 +61,7 @@ public class SysMenuController {
      * @return {@code true} 更新成功，{@code false} 更新失败
      */
     @Operation(summary = "更新菜单", description = "根据主键更新路由菜单")
-    @PutMapping("/update")
+    // @PutMapping("/update")
     public boolean update(@RequestBody SysMenu sysMenu) {
         return sysMenuService.updateById(sysMenu);
     }
@@ -72,7 +72,7 @@ public class SysMenuController {
      * @return 所有数据
      */
     @Operation(summary = "查询菜单列表", description = "查询所有路由菜单")
-    @GetMapping("/list")
+    // @GetMapping("/list")
     public List<SysMenu> list() {
         return sysMenuService.list();
     }
@@ -84,7 +84,7 @@ public class SysMenuController {
      * @return 路由菜单表详情
      */
     @Operation(summary = "获取菜单详情", description = "根据主键获取路由菜单详情")
-    @GetMapping("/detail/{id}")
+    // @GetMapping("/detail/{id}")
     public SysMenu detail(@Parameter(description = "菜单主键ID", required = true) @PathVariable Long id) {
         return sysMenuService.getById(id);
     }
@@ -98,7 +98,7 @@ public class SysMenuController {
      * @return 分页对象
      */
     @Operation(summary = "分页查询菜单", description = "分页查询路由菜单")
-    @GetMapping("page")
+    // @GetMapping("page")
     public Page<SysMenu> page(@Parameter(description = "当前页码") @RequestParam(defaultValue = "1") Integer pageNumber,
                               @Parameter(description = "每页数据数量") @RequestParam(defaultValue = "10") Integer pageSize,
                               @ParameterObject SysMenu sysMenu) {

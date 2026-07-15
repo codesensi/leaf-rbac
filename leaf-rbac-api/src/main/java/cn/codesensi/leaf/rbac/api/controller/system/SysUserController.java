@@ -47,7 +47,7 @@ public class SysUserController {
      * @return {@code true} 删除成功，{@code false} 删除失败
      */
     @Operation(summary = "删除用户", description = "根据主键删除用户信息")
-    @DeleteMapping("/delete/{id}")
+    // @DeleteMapping("/delete/{id}")
     public boolean delete(@Parameter(description = "用户主键ID", required = true) @PathVariable Long id) {
         return sysUserService.removeById(id);
     }
@@ -59,7 +59,7 @@ public class SysUserController {
      * @return {@code true} 更新成功，{@code false} 更新失败
      */
     @Operation(summary = "更新用户", description = "根据主键更新用户信息")
-    @PutMapping("/update")
+    // @PutMapping("/update")
     public boolean update(@RequestBody SysUser sysUser) {
         return sysUserService.updateById(sysUser);
     }
@@ -70,7 +70,7 @@ public class SysUserController {
      * @return 所有数据
      */
     @Operation(summary = "查询用户列表", description = "查询所有用户信息")
-    @GetMapping("/list")
+    // @GetMapping("/list")
     public List<SysUser> list() {
         return sysUserService.list();
     }
@@ -82,7 +82,7 @@ public class SysUserController {
      * @return 用户信息表详情
      */
     @Operation(summary = "获取用户详情", description = "根据主键获取用户信息详情")
-    @GetMapping("/detail/{id}")
+    // @GetMapping("/detail/{id}")
     public SysUser detail(@Parameter(description = "用户主键ID", required = true) @PathVariable Long id) {
         return sysUserService.getById(id);
     }
@@ -95,7 +95,7 @@ public class SysUserController {
      * @return 分页对象
      */
     @Operation(summary = "分页查询用户", description = "分页查询用户信息")
-    @GetMapping("page")
+    // @GetMapping("page")
     public Page<SysUser> page(@Parameter(description = "当前页码") @RequestParam(defaultValue = "1") Integer pageNumber,
                               @Parameter(description = "每页数据数量") @RequestParam(defaultValue = "10") Integer pageSize,
                               @ParameterObject SysUser sysUser) {
