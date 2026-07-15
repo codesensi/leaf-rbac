@@ -1,5 +1,8 @@
-package cn.codesensi.leaf.rbac.system.dto;
+package cn.codesensi.leaf.rbac.api.response;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -8,12 +11,17 @@ import java.io.Serial;
 import java.io.Serializable;
 
 /**
- * 路由菜单
+ * 菜单响应结果
+ *
+ * @author codesensi
+ * @since 2026-07-15
+ * 配置@JsonInclude(Include.NON_NULL)的注解，解决传null值给Vue动态路由渲染时出错
  */
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @Data
 @Accessors(chain = true)
-@Schema(description = "菜单信息")
-public class MenuDTO implements Serializable {
+@Schema(description = "菜单响应结果")
+public class MenuResponse implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
@@ -22,12 +30,14 @@ public class MenuDTO implements Serializable {
      * 路由菜单ID
      */
     @Schema(description = "路由菜单ID", example = "1")
+    @JsonSerialize(using = ToStringSerializer.class) // 序列化为字符串避免前端精度丢失
     private Long id;
 
     /**
      * 父级路由菜单ID
      */
     @Schema(description = "父级路由菜单ID", example = "0")
+    @JsonSerialize(using = ToStringSerializer.class) // 序列化为字符串避免前端精度丢失
     private Long pid;
 
     /**
@@ -131,5 +141,4 @@ public class MenuDTO implements Serializable {
      */
     @Schema(description = "系统内置标识:0-自定义,1-内置", example = "1")
     private Integer sysFlag;
-
 }

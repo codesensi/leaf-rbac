@@ -1,6 +1,5 @@
 package cn.codesensi.leaf.rbac.api.response;
 
-import cn.codesensi.leaf.rbac.system.dto.MenuDTO;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
@@ -92,5 +91,5 @@ public class UserInfoResponse implements Serializable {
      * 菜单
      */
     @Schema(description = "菜单")
-    private List<MenuDTO> menus;
+    private List<MenuResponse> menus;
 }
