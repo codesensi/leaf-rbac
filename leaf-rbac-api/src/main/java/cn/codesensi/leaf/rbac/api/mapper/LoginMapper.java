@@ -16,12 +16,12 @@ import org.mapstruct.Mapper;
 public interface LoginMapper {
 
     /**
-     * LoginAccountRequest → LoginAccountInDTO
+     * LoginAccountRequest → LoginAccountDTO
      */
-    LoginAccountDTO toInDTO(LoginAccountRequest request);
+    LoginAccountDTO toDTO(LoginAccountRequest request);
 
     /**
-     * LoginOutDTO → LoginResponse
+     * LoginResultDTO → LoginResponse
      */
     LoginResponse toResponse(LoginResultDTO loginResultDTO);
 

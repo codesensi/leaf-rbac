@@ -15,6 +15,7 @@ import java.io.Serializable;
  */
 @Data
 @Accessors(chain = true)
+@Schema(description = "登录响应结果")
 public class LoginResultDTO implements Serializable {
 
     @Serial

@@ -40,8 +40,8 @@ public class LoginController {
     @Operation(summary = "账号密码登录")
     @PostMapping("/login/account")
     public LoginResponse loginAccount(@Validated @RequestBody LoginAccountRequest request) {
-        LoginAccountDTO inDTO = loginMapper.toInDTO(request);
-        LoginResultDTO loginResultDTO = loginService.loginAccount(inDTO);
+        LoginAccountDTO dto = loginMapper.toDTO(request);
+        LoginResultDTO loginResultDTO = loginService.loginAccount(dto);
         return loginMapper.toResponse(loginResultDTO);
     }
 

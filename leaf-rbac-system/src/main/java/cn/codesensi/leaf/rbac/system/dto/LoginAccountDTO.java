@@ -1,7 +1,6 @@
 package cn.codesensi.leaf.rbac.system.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -16,6 +15,7 @@ import java.io.Serializable;
  */
 @Data
 @Accessors(chain = true)
+@Schema(description = "账号密码登录请求参数")
 public class LoginAccountDTO implements Serializable {
 
     @Serial
@@ -24,14 +24,12 @@ public class LoginAccountDTO implements Serializable {
     /**
      * 用户账号
      */
-    @NotBlank(message = "登录账号不能为空")
     @Schema(description = "登录账号", example = "admin")
     private String username;
 
     /**
      * 用户密码
      */
-    @NotBlank(message = "登录密码不能为空")
     @Schema(description = "登录密码", example = "123456")
     private String password;
 
