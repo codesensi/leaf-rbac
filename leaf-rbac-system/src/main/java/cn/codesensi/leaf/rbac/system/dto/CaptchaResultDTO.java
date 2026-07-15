@@ -12,6 +12,7 @@ import java.io.Serializable;
  */
 @Data
 @Accessors(chain = true)
+@Schema(description = "生成验证码响应结果")
 public class CaptchaResultDTO implements Serializable {
 
     @Serial

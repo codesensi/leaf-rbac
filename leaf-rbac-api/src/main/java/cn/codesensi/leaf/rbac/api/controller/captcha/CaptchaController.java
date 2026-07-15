@@ -1,5 +1,6 @@
 package cn.codesensi.leaf.rbac.api.controller.captcha;
 
+import cn.codesensi.leaf.rbac.api.mapper.CaptchaMapper;
 import cn.codesensi.leaf.rbac.api.request.CaptchaRequest;
 import cn.codesensi.leaf.rbac.api.response.CaptchaResponse;
 import cn.codesensi.leaf.rbac.common.enums.OperateType;
@@ -9,7 +10,6 @@ import cn.codesensi.leaf.rbac.system.dto.CaptchaDTO;
 import cn.codesensi.leaf.rbac.system.dto.CaptchaResultDTO;
 import cn.codesensi.leaf.rbac.system.strategy.captcha.CaptchaStrategyContext;
 import cn.dev33.satoken.annotation.SaIgnore;
-import cn.hutool.core.bean.BeanUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +33,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class CaptchaController {
 
     private final CaptchaStrategyContext captchaStrategyContext;
+    private final CaptchaMapper captchaMapper;
 
     /**
      * 生成验证码
@@ -42,8 +43,8 @@ public class CaptchaController {
     @Operation(summary = "生成验证码", description = "生成验证码")
     @GetMapping("/captcha")
     public CaptchaResponse captcha(@Validated @ParameterObject CaptchaRequest request) {
-        CaptchaDTO captchaDTO = BeanUtil.copyProperties(request, CaptchaDTO.class);
+        CaptchaDTO captchaDTO = captchaMapper.toDTO(request);
         CaptchaResultDTO captchaResultDTO = captchaStrategyContext.captcha(captchaDTO);
-        return BeanUtil.copyProperties(captchaResultDTO, CaptchaResponse.class);
+        return captchaMapper.toResponse(captchaResultDTO);
     }
 }

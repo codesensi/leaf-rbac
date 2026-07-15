@@ -1,7 +1,6 @@
 package cn.codesensi.leaf.rbac.system.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -13,6 +12,7 @@ import java.io.Serializable;
  */
 @Data
 @Accessors(chain = true)
+@Schema(description = "生成验证码请求参数")
 public class CaptchaDTO implements Serializable {
 
     @Serial
@@ -21,7 +21,6 @@ public class CaptchaDTO implements Serializable {
     /**
      * 唯一标识
      */
-    @NotBlank(message = "验证码类型不能为空")
     @Schema(description = "验证码类型", example = "image")
     private String type;
 
