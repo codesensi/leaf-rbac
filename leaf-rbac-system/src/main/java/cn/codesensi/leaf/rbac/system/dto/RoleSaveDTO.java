@@ -1,8 +1,6 @@
 package cn.codesensi.leaf.rbac.system.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -17,6 +15,7 @@ import java.io.Serializable;
  */
 @Data
 @Accessors(chain = true)
+@Schema(description = "保存角色请求参数")
 public class RoleSaveDTO implements Serializable {
 
     @Serial
@@ -25,16 +24,12 @@ public class RoleSaveDTO implements Serializable {
     /**
      * 角色名称
      */
-    @NotBlank(message = "角色名称不能为空")
-    @Size(max = 20, message = "角色名称长度不能超过20")
     @Schema(description = "角色名称", example = "管理员")
     private String name;
 
     /**
      * 角色编码
      */
-    @NotBlank(message = "角色编码不能为空")
-    @Size(max = 20, message = "角色编码长度不能超过20")
     @Schema(description = "角色编码", example = "admin")
     private String code;
 

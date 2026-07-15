@@ -1,5 +1,6 @@
 package cn.codesensi.leaf.rbac.api.controller.system;
 
+import cn.codesensi.leaf.rbac.api.mapper.RoleMapper;
 import cn.codesensi.leaf.rbac.api.request.AssignMenusRequest;
 import cn.codesensi.leaf.rbac.api.request.RoleSaveRequest;
 import cn.codesensi.leaf.rbac.common.enums.OperateType;
@@ -9,7 +10,6 @@ import cn.codesensi.leaf.rbac.system.dto.AssignMenusDTO;
 import cn.codesensi.leaf.rbac.system.dto.RoleSaveDTO;
 import cn.codesensi.leaf.rbac.system.entity.SysRole;
 import cn.codesensi.leaf.rbac.system.service.SysRoleService;
-import cn.hutool.core.bean.BeanUtil;
 import com.mybatisflex.core.paginate.Page;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -37,19 +37,7 @@ import static cn.codesensi.leaf.rbac.system.entity.table.SysRoleTableDef.SYS_ROL
 public class SysRoleController {
 
     private final SysRoleService sysRoleService;
-
-    /**
-     * 保存角色信息
-     *
-     * @param request 角色信息
-     */
-    @LogOperate(module = "角色管理", type = OperateType.INSERT, desc = "保存角色")
-    @Operation(summary = "保存角色", description = "保存角色信息")
-    @PostMapping("/saveRole")
-    public void saveRole(@Valid @RequestBody RoleSaveRequest request) {
-        RoleSaveDTO roleSaveDTO = BeanUtil.copyProperties(request, RoleSaveDTO.class);
-        sysRoleService.saveRole(roleSaveDTO);
-    }
+    private final RoleMapper roleMapper;
 
     /**
      * 根据主键删除角色信息表。
@@ -120,11 +108,29 @@ public class SysRoleController {
                 .page(page);
     }
 
+    /**
+     * 保存角色信息
+     *
+     * @param request 角色信息
+     */
+    @LogOperate(module = "角色管理", type = OperateType.INSERT, desc = "保存角色")
+    @Operation(summary = "保存角色", description = "保存角色信息")
+    @PostMapping("/saveRole")
+    public void saveRole(@Valid @RequestBody RoleSaveRequest request) {
+        RoleSaveDTO roleSaveDTO = roleMapper.toSaveDTO(request);
+        sysRoleService.saveRole(roleSaveDTO);
+    }
+
+    /**
+     * 分配角色菜单权限
+     *
+     * @param request 角色菜单权限信息
+     */
     @LogOperate(module = "角色管理", desc = "分配角色菜单权限")
     @Operation(summary = "分配角色菜单权限", description = "为角色分配菜单权限")
     @PutMapping("/assignMenus")
     public void assignMenus(@Valid @RequestBody AssignMenusRequest request) {
-        AssignMenusDTO assignMenusDTO = BeanUtil.copyProperties(request, AssignMenusDTO.class);
+        AssignMenusDTO assignMenusDTO = roleMapper.toAssignMenusDTO(request);
         sysRoleService.assignMenus(assignMenusDTO);
     }
 
