@@ -1,6 +1,8 @@
 package cn.codesensi.leaf.rbac.framework.config;
 
 import cn.codesensi.leaf.rbac.common.constants.RbacConst;
+import cn.codesensi.leaf.rbac.common.properties.AppProperties;
+import cn.codesensi.leaf.rbac.framework.interceptor.DemoModeInterceptor;
 import cn.codesensi.leaf.rbac.framework.interceptor.UserContextInterceptor;
 import cn.dev33.satoken.interceptor.SaInterceptor;
 import cn.dev33.satoken.jwt.StpLogicJwtForSimple;
@@ -32,7 +34,9 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Slf4j
 @Configuration
 @RequiredArgsConstructor
-public class SaTokenConfig implements WebMvcConfigurer {
+public class WebMvcConfig implements WebMvcConfigurer {
+
+    private final AppProperties appProperties;
 
     /**
      * 注册鉴权拦截器和用户上下文拦截器，按注册顺序依次执行。
@@ -55,6 +59,12 @@ public class SaTokenConfig implements WebMvcConfigurer {
 
         // 2. 用户上下文拦截器：从 SaToken Session 恢复完整用户信息到 ThreadLocal
         registry.addInterceptor(new UserContextInterceptor()).addPathPatterns(RbacConst.ROOT_PATH);
+
+        // 3. Demo 模式拦截器：只读不允许修改数据
+        registry.addInterceptor(new DemoModeInterceptor(appProperties))
+                .addPathPatterns(RbacConst.ROOT_PATH)
+                // 获取验证码、登录接口允许演示模式下操作
+                .excludePathPatterns(RbacConst.CAPTCHA_PATH, RbacConst.LOGIN_PATH, RbacConst.LOGOUT_PATH);
     }
 
     /**

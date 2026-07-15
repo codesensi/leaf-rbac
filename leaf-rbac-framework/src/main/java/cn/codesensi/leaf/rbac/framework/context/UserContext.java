@@ -1,7 +1,9 @@
 package cn.codesensi.leaf.rbac.framework.context;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -33,6 +35,8 @@ import java.io.Serializable;
  */
 @Builder
 @Data
+@NoArgsConstructor   // ← Jackson 反序列化需要
+@AllArgsConstructor  // ← @Builder 需要
 public class UserContext implements Serializable {
 
     @Serial

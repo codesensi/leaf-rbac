@@ -49,4 +49,21 @@ public class RbacConst {
      * 配置管理接口路径
      */
     public static final String CONF_PATH = "/conf/**";
+
+    /**
+     * 验证码生成接口路径
+     */
+    public static final String CAPTCHA_PATH = "/captcha";
+
+    /**
+     * 登录接口路径
+     */
+    public static final String LOGIN_PATH = "/auth/login/account";
+
+    /**
+     * 退出登录接口路径
+     */
+    public static final String LOGOUT_PATH = "/auth/logout";
+
+
 }
