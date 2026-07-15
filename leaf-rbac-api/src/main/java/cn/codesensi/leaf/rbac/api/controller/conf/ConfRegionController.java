@@ -1,12 +1,12 @@
 package cn.codesensi.leaf.rbac.api.controller.conf;
 
+import cn.codesensi.leaf.rbac.api.mapper.RegionMapper;
 import cn.codesensi.leaf.rbac.api.response.RegionResponse;
 import cn.codesensi.leaf.rbac.common.enums.OperateType;
 import cn.codesensi.leaf.rbac.framework.annotation.ApiResponseBody;
 import cn.codesensi.leaf.rbac.framework.annotation.LogOperate;
 import cn.codesensi.leaf.rbac.system.dto.RegionDTO;
 import cn.codesensi.leaf.rbac.system.service.ConfRegionService;
-import cn.hutool.core.bean.BeanUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -29,6 +29,7 @@ import java.util.List;
 public class ConfRegionController {
 
     private final ConfRegionService confRegionService;
+    private final RegionMapper regionMapper;
 
     /**
      * 从民政部导入行政区划
@@ -52,7 +53,7 @@ public class ConfRegionController {
     @GetMapping("/listChildrenByCode")
     public List<RegionResponse> listChildrenByCode(@Parameter(description = "行政区划代码") @RequestParam(defaultValue = "0") String code) {
         List<RegionDTO> regionDTOS = confRegionService.listChildrenByCode(code);
-        return BeanUtil.copyToList(regionDTOS, RegionResponse.class);
+        return regionMapper.toResponseList(regionDTOS);
     }
 
 }
