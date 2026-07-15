@@ -16,6 +16,7 @@ import java.util.List;
  */
 @Data
 @Accessors(chain = true)
+@Schema(description = "获取当前用户信息响应结果")
 public class UserInfoDTO implements Serializable {
 
     @Serial

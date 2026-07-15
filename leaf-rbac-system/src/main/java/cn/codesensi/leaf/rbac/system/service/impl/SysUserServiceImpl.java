@@ -48,7 +48,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
      */
     @Cacheable(value = CacheConst.USER_INFO, key = "#userId")
     @Override
-    public UserInfoDTO getInfo(Long userId) {
+    public UserInfoDTO getCurrentUser(Long userId) {
         SysUser sysUser = QueryChain.of(sysUserMapper)
                 .select(SYS_USER.ALL_COLUMNS)
                 .where(SYS_USER.ID.eq(userId))

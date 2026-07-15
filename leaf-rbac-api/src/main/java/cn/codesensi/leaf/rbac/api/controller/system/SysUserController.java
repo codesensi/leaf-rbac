@@ -1,5 +1,6 @@
 package cn.codesensi.leaf.rbac.api.controller.system;
 
+import cn.codesensi.leaf.rbac.api.mapper.UserMapper;
 import cn.codesensi.leaf.rbac.api.request.UserSaveRequest;
 import cn.codesensi.leaf.rbac.api.response.UserInfoResponse;
 import cn.codesensi.leaf.rbac.common.enums.OperateType;
@@ -10,7 +11,6 @@ import cn.codesensi.leaf.rbac.system.dto.UserSaveDTO;
 import cn.codesensi.leaf.rbac.system.entity.SysUser;
 import cn.codesensi.leaf.rbac.system.service.SysUserService;
 import cn.dev33.satoken.stp.StpUtil;
-import cn.hutool.core.bean.BeanUtil;
 import com.mybatisflex.core.paginate.Page;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -38,19 +38,7 @@ import static cn.codesensi.leaf.rbac.system.entity.table.SysUserTableDef.SYS_USE
 public class SysUserController {
 
     private final SysUserService sysUserService;
-
-    /**
-     * 保存用户信息
-     *
-     * @param request 保存用户请求参数
-     */
-    @LogOperate(module = "用户管理", type = OperateType.INSERT, desc = "保存用户")
-    @Operation(summary = "保存用户", description = "保存用户信息")
-    @PostMapping("/saveUser")
-    public void saveUser(@Valid @RequestBody UserSaveRequest request) {
-        UserSaveDTO userSaveDTO = BeanUtil.copyProperties(request, UserSaveDTO.class);
-        sysUserService.saveUser(userSaveDTO);
-    }
+    private final UserMapper userMapper;
 
     /**
      * 根据主键删除用户信息表。
@@ -127,11 +115,24 @@ public class SysUserController {
      */
     @LogOperate(module = "用户管理", type = OperateType.QUERY, desc = "获取当前用户信息", recordResult = true)
     @Operation(summary = "获取当前用户信息")
-    @GetMapping("/getInfo")
-    public UserInfoResponse getInfo() {
+    @GetMapping("/getCurrentUser")
+    public UserInfoResponse getCurrentUser() {
         long userId = StpUtil.getLoginIdAsLong();
-        UserInfoDTO userInfoDTO = sysUserService.getInfo(userId);
-        return BeanUtil.copyProperties(userInfoDTO, UserInfoResponse.class);
+        UserInfoDTO userInfoDTO = sysUserService.getCurrentUser(userId);
+        return userMapper.toInfoResponse(userInfoDTO);
+    }
+
+    /**
+     * 保存用户信息
+     *
+     * @param request 保存用户请求参数
+     */
+    @LogOperate(module = "用户管理", type = OperateType.INSERT, desc = "保存用户")
+    @Operation(summary = "保存用户", description = "保存用户信息")
+    @PostMapping("/saveUser")
+    public void saveUser(@Valid @RequestBody UserSaveRequest request) {
+        UserSaveDTO userSaveDTO = userMapper.toSaveDTO(request);
+        sysUserService.saveUser(userSaveDTO);
     }
 
 }

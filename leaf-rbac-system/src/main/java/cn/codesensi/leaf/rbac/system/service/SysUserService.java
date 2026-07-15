@@ -18,7 +18,7 @@ public interface SysUserService extends IService<SysUser> {
      *
      * @return 用户信息
      */
-    UserInfoDTO getInfo(Long userId);
+    UserInfoDTO getCurrentUser(Long userId);
 
     /**
      * 保存用户信息
