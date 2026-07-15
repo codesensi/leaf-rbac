@@ -15,6 +15,10 @@
             <groupId>cn.codesensi.leaf</groupId>
             <artifactId>leaf-rbac-framework</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct</artifactId>
+        </dependency>
         <!-- 数据库驱动 (runtime) -->
         <dependency>
             <groupId>com.h2database</groupId>
