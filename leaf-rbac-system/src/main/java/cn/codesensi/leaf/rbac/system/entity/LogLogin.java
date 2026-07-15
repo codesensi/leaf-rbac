@@ -1,6 +1,6 @@
 package cn.codesensi.leaf.rbac.system.entity;
 
-import cn.codesensi.leaf.rbac.framework.base.BaseEntity;
+import cn.codesensi.leaf.rbac.common.core.BaseEntity;
 import cn.codesensi.leaf.rbac.framework.listener.MybatisFlexListener;
 import com.mybatisflex.annotation.Id;
 import com.mybatisflex.annotation.Table;

@@ -1,6 +1,5 @@
-package cn.codesensi.leaf.rbac.framework.base;
+package cn.codesensi.leaf.rbac.common.core;
 
-import com.mybatisflex.annotation.Column;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -36,7 +35,6 @@ public class BaseEntity implements Serializable {
     /**
      * 更新时间
      */
-    @Column(onUpdateValue = "now()")
     private LocalDateTime updateTime;
 
     /**

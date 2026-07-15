@@ -1,10 +1,12 @@
 package cn.codesensi.leaf.rbac.framework.listener;
 
-import cn.codesensi.leaf.rbac.framework.base.BaseEntity;
+import cn.codesensi.leaf.rbac.common.core.BaseEntity;
 import cn.codesensi.leaf.rbac.framework.context.UserContextHolder;
 import cn.hutool.core.util.ObjUtil;
 import com.mybatisflex.annotation.InsertListener;
 import com.mybatisflex.annotation.UpdateListener;
+
+import java.time.LocalDateTime;
 
 /**
  * MybatisFlex 全局监听器 —— 自动填充实体审计字段。
@@ -32,6 +34,8 @@ public class MybatisFlexListener implements InsertListener, UpdateListener {
     public void onInsert(Object entity) {
         // 检查实体是否继承自 BaseEntity，确保具备审计字段
         if (entity instanceof BaseEntity baseEntity) {
+            // 设置创建时间
+            baseEntity.setCreateTime(LocalDateTime.now());
             // 从当前请求线程的 UserContextHolder 中获取用户 ID
             Long userId = UserContextHolder.getUserId();
             // 仅在用户 ID 不为空时设置，避免被未登录场景（如内部批处理）的空值覆盖
@@ -54,6 +58,8 @@ public class MybatisFlexListener implements InsertListener, UpdateListener {
     public void onUpdate(Object entity) {
         // 检查实体是否继承自 BaseEntity，确保具备审计字段
         if (entity instanceof BaseEntity baseEntity) {
+            // 设置更新时间
+            baseEntity.setUpdateTime(LocalDateTime.now());
             // 从当前请求线程的 UserContextHolder 中获取用户 ID
             Long userId = UserContextHolder.getUserId();
             // 仅在用户 ID 不为空时设置，避免被未登录场景（如内部批处理）的空值覆盖
