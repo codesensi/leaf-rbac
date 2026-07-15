@@ -1,4 +1,4 @@
-package cn.codesensi.leaf.rbac.api.mapper;
+package cn.codesensi.leaf.rbac.api.converter;
 
 import cn.codesensi.leaf.rbac.api.request.AssignMenusRequest;
 import cn.codesensi.leaf.rbac.api.request.RoleSaveRequest;
@@ -13,7 +13,7 @@ import org.mapstruct.Mapper;
  * @since 2026-07-15
  */
 @Mapper(componentModel = "spring")
-public interface RoleMapper {
+public interface RoleConverter {
 
     /**
      * RoleSaveRequest → RoleSaveDTO

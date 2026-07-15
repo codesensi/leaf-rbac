@@ -1,4 +1,4 @@
-package cn.codesensi.leaf.rbac.api.mapper;
+package cn.codesensi.leaf.rbac.api.converter;
 
 import cn.codesensi.leaf.rbac.api.response.RegionResponse;
 import cn.codesensi.leaf.rbac.system.dto.RegionDTO;
@@ -13,7 +13,7 @@ import java.util.List;
  * @since 2026-07-15
  */
 @Mapper(componentModel = "spring")
-public interface RegionMapper {
+public interface RegionConverter {
 
     /**
      * RegionDTO → RegionResponse

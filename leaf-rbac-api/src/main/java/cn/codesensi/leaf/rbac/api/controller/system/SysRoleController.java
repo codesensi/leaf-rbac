@@ -1,6 +1,6 @@
 package cn.codesensi.leaf.rbac.api.controller.system;
 
-import cn.codesensi.leaf.rbac.api.mapper.RoleMapper;
+import cn.codesensi.leaf.rbac.api.converter.RoleConverter;
 import cn.codesensi.leaf.rbac.api.request.AssignMenusRequest;
 import cn.codesensi.leaf.rbac.api.request.RoleSaveRequest;
 import cn.codesensi.leaf.rbac.common.enums.OperateType;
@@ -37,7 +37,7 @@ import static cn.codesensi.leaf.rbac.system.entity.table.SysRoleTableDef.SYS_ROL
 public class SysRoleController {
 
     private final SysRoleService sysRoleService;
-    private final RoleMapper roleMapper;
+    private final RoleConverter roleConverter;
 
     /**
      * 根据主键删除角色信息表。
@@ -117,7 +117,7 @@ public class SysRoleController {
     @Operation(summary = "保存角色", description = "保存角色信息")
     @PostMapping("/saveRole")
     public void saveRole(@Valid @RequestBody RoleSaveRequest request) {
-        RoleSaveDTO roleSaveDTO = roleMapper.toSaveDTO(request);
+        RoleSaveDTO roleSaveDTO = roleConverter.toSaveDTO(request);
         sysRoleService.saveRole(roleSaveDTO);
     }
 
@@ -130,7 +130,7 @@ public class SysRoleController {
     @Operation(summary = "分配角色菜单权限", description = "为角色分配菜单权限")
     @PutMapping("/assignMenus")
     public void assignMenus(@Valid @RequestBody AssignMenusRequest request) {
-        AssignMenusDTO assignMenusDTO = roleMapper.toAssignMenusDTO(request);
+        AssignMenusDTO assignMenusDTO = roleConverter.toAssignMenusDTO(request);
         sysRoleService.assignMenus(assignMenusDTO);
     }
 

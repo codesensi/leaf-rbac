@@ -1,6 +1,6 @@
 package cn.codesensi.leaf.rbac.api.controller.captcha;
 
-import cn.codesensi.leaf.rbac.api.mapper.CaptchaMapper;
+import cn.codesensi.leaf.rbac.api.converter.CaptchaConverter;
 import cn.codesensi.leaf.rbac.api.request.CaptchaRequest;
 import cn.codesensi.leaf.rbac.api.response.CaptchaResponse;
 import cn.codesensi.leaf.rbac.common.enums.OperateType;
@@ -33,7 +33,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class CaptchaController {
 
     private final CaptchaStrategyContext captchaStrategyContext;
-    private final CaptchaMapper captchaMapper;
+    private final CaptchaConverter captchaConverter;
 
     /**
      * 生成验证码
@@ -43,8 +43,8 @@ public class CaptchaController {
     @Operation(summary = "生成验证码", description = "生成验证码")
     @GetMapping("/captcha")
     public CaptchaResponse captcha(@Validated @ParameterObject CaptchaRequest request) {
-        CaptchaDTO captchaDTO = captchaMapper.toDTO(request);
+        CaptchaDTO captchaDTO = captchaConverter.toDTO(request);
         CaptchaResultDTO captchaResultDTO = captchaStrategyContext.captcha(captchaDTO);
-        return captchaMapper.toResponse(captchaResultDTO);
+        return captchaConverter.toResponse(captchaResultDTO);
     }
 }

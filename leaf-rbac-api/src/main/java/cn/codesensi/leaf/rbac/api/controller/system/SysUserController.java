@@ -1,6 +1,6 @@
 package cn.codesensi.leaf.rbac.api.controller.system;
 
-import cn.codesensi.leaf.rbac.api.mapper.UserMapper;
+import cn.codesensi.leaf.rbac.api.converter.UserConverter;
 import cn.codesensi.leaf.rbac.api.request.UserSaveRequest;
 import cn.codesensi.leaf.rbac.api.response.UserInfoResponse;
 import cn.codesensi.leaf.rbac.common.enums.OperateType;
@@ -38,7 +38,7 @@ import static cn.codesensi.leaf.rbac.system.entity.table.SysUserTableDef.SYS_USE
 public class SysUserController {
 
     private final SysUserService sysUserService;
-    private final UserMapper userMapper;
+    private final UserConverter userConverter;
 
     /**
      * 根据主键删除用户信息表。
@@ -119,7 +119,7 @@ public class SysUserController {
     public UserInfoResponse getCurrentUser() {
         long userId = StpUtil.getLoginIdAsLong();
         UserInfoDTO userInfoDTO = sysUserService.getCurrentUser(userId);
-        return userMapper.toInfoResponse(userInfoDTO);
+        return userConverter.toInfoResponse(userInfoDTO);
     }
 
     /**
@@ -131,7 +131,7 @@ public class SysUserController {
     @Operation(summary = "保存用户", description = "保存用户信息")
     @PostMapping("/saveUser")
     public void saveUser(@Valid @RequestBody UserSaveRequest request) {
-        UserSaveDTO userSaveDTO = userMapper.toSaveDTO(request);
+        UserSaveDTO userSaveDTO = userConverter.toSaveDTO(request);
         sysUserService.saveUser(userSaveDTO);
     }
 

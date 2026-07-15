@@ -1,6 +1,6 @@
 package cn.codesensi.leaf.rbac.api.controller.auth;
 
-import cn.codesensi.leaf.rbac.api.mapper.LoginMapper;
+import cn.codesensi.leaf.rbac.api.converter.LoginConverter;
 import cn.codesensi.leaf.rbac.api.request.LoginAccountRequest;
 import cn.codesensi.leaf.rbac.api.response.LoginResponse;
 import cn.codesensi.leaf.rbac.framework.annotation.ApiResponseBody;
@@ -31,7 +31,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class LoginController {
 
     private final LoginService loginService;
-    private final LoginMapper loginMapper;
+    private final LoginConverter loginConverter;
 
     /**
      * 账号密码登录
@@ -40,9 +40,9 @@ public class LoginController {
     @Operation(summary = "账号密码登录")
     @PostMapping("/login/account")
     public LoginResponse loginAccount(@Validated @RequestBody LoginAccountRequest request) {
-        LoginAccountDTO loginAccountDTO = loginMapper.toDTO(request);
+        LoginAccountDTO loginAccountDTO = loginConverter.toDTO(request);
         LoginResultDTO loginResultDTO = loginService.loginAccount(loginAccountDTO);
-        return loginMapper.toResponse(loginResultDTO);
+        return loginConverter.toResponse(loginResultDTO);
     }
 
     /**
