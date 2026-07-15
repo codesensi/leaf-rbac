@@ -2,8 +2,6 @@ package cn.codesensi.leaf.rbac.system.entity;
 
 import cn.codesensi.leaf.rbac.framework.base.BaseEntity;
 import cn.codesensi.leaf.rbac.framework.listener.MybatisFlexListener;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.mybatisflex.annotation.Id;
 import com.mybatisflex.annotation.Table;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -37,7 +35,6 @@ public class LogOperate extends BaseEntity implements Serializable {
      */
     @Id
     @Schema(description = "日志ID", example = "1")
-    @JsonSerialize(using = ToStringSerializer.class) // 序列化为字符串避免前端精度丢失
     private Long id;
 
     /**
@@ -55,7 +52,6 @@ public class LogOperate extends BaseEntity implements Serializable {
     /**
      * 操作人ID
      */
-    @JsonSerialize(using = ToStringSerializer.class) // 序列化为字符串避免前端精度丢失
     @Schema(description = "操作人ID", example = "1")
     private Long userId;
 

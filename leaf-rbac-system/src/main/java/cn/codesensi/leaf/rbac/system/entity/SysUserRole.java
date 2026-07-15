@@ -2,8 +2,6 @@ package cn.codesensi.leaf.rbac.system.entity;
 
 import cn.codesensi.leaf.rbac.framework.base.BaseEntity;
 import cn.codesensi.leaf.rbac.framework.listener.MybatisFlexListener;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.mybatisflex.annotation.Id;
 import com.mybatisflex.annotation.Table;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -37,21 +35,18 @@ public class SysUserRole extends BaseEntity implements Serializable {
      */
     @Id
     @Schema(description = "主键ID", example = "1")
-    @JsonSerialize(using = ToStringSerializer.class) // 序列化为字符串避免前端精度丢失
     private Long id;
 
     /**
      * 用户ID
      */
     @Schema(description = "用户ID", example = "1")
-    @JsonSerialize(using = ToStringSerializer.class) // 序列化为字符串避免前端精度丢失
     private Long userId;
 
     /**
      * 角色ID
      */
     @Schema(description = "角色ID", example = "1")
-    @JsonSerialize(using = ToStringSerializer.class) // 序列化为字符串避免前端精度丢失
     private Long roleId;
 
 }
