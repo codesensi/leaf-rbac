@@ -3,10 +3,8 @@ package cn.codesensi.leaf.rbac.framework.config;
 import cn.codesensi.leaf.rbac.common.constants.AppConst;
 import cn.codesensi.leaf.rbac.common.constants.ThreadConst;
 import cn.codesensi.leaf.rbac.common.properties.ThreadPoolProperties;
-import cn.codesensi.leaf.rbac.common.util.ExceptionUtil;
 import cn.codesensi.leaf.rbac.framework.context.UserContext;
 import cn.codesensi.leaf.rbac.framework.context.UserContextHolder;
-import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.util.IdUtil;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.concurrent.BasicThreadFactory;
@@ -67,7 +65,7 @@ public class ThreadPoolConfig {
      * <ul>
      *   <li>核心/最大线程数、队列容量、超时时间均从配置 {@link ThreadPoolProperties} 读取；</li>
      *   <li>支持优雅停机（等待已提交任务完成）；</li>
-     *   <li>通过 {@link #setTaskDecorator} 自动将主线程的 {@link RequestAttributes} 和
+     *   <li>通过  setTaskDecorator 自动将主线程的 {@link RequestAttributes} 和
      *       MDC 上下文（含 traceId）传递到子线程，并在执行完毕后清理，防止内存泄漏。</li>
      * </ul>
      *
@@ -144,12 +142,9 @@ public class ThreadPoolConfig {
      * <ul>
      *   <li>{@link RequestAttributes} — Spring 请求属性（request/session 作用域的 Bean 访问）；</li>
      *   <li>{@link MDC} 上下文 — 日志链路追踪 ID（traceId）；</li>
-     *   <li>{@link UserContext} — 当前操作人用户 ID。</li>
+     *   <li>{@link UserContext} — 当前操作人的完整信息（用户ID、用户名、昵称等）。</li>
      * </ul>
-     * 之所以额外捕获操作人用户 ID，是因为 SaToken 的 {@code SaStorageForServlet}
-     * 底层依赖 {@code HttpServletRequest}，切换线程后原请求对象会被 Tomcat 回收，
-     * 导致 {@code StpUtil.getLoginIdAsLong()} 抛出 {@code IllegalStateException}，
-     * 因此必须在主线程（请求尚未结束）提前解析并快照。
+     * 从 {@link UserContextHolder} 获取（主线程在 Filter 中已从 SaToken Session 恢复），
      */
     private record AsyncContext(RequestAttributes attributes,
                                 Map<String, String> mdc,
@@ -159,17 +154,24 @@ public class ThreadPoolConfig {
          * 在主线程中拍摄上下文快照。
          * <p>
          * 捕获当前线程的 {@link RequestAttributes}、MDC 上下文副本，
-         * 并提前从 SaToken 解析当前登录用户 ID 存入 {@link UserContext}。
-         * 操作人 ID 必须在主线程（HTTP 请求尚未结束）提前解析，
-         * 避免异步线程中原请求对象已被 Tomcat 回收而无法获取。
+         * 以及完整的 {@link UserContext} 数据。
+         * </p>
+         * <p>
+         * <b>获取策略：</b>
+         * </p>
+         * <ol>
+         *   <li>从 {@link UserContextHolder} 获取 — 在 HTTP 请求场景下，
+         *       已将 SaToken Session 中的完整用户信息恢复到 ThreadLocal，
+         *       此处直接快照即可获得操作人的完整信息；</li>
+         * </ol>
          *
          * @return 包含三个上下文信息的快照记录
          */
         static AsyncContext capture() {
             RequestAttributes attributes = RequestContextHolder.getRequestAttributes();
             Map<String, String> mdc = MDC.getCopyOfContextMap();
-            Long userId = ExceptionUtil.tryGet(StpUtil::getLoginIdAsLong);
-            UserContext userContext = UserContext.builder().userId(userId).build();
+            // 从主线程的 UserContextHolder 快照完整用户上下文
+            UserContext userContext = UserContextHolder.get();
             return new AsyncContext(attributes, mdc, userContext);
         }
 
