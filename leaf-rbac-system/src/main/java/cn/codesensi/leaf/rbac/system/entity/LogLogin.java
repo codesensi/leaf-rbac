@@ -35,9 +35,9 @@ public class LogLogin extends BaseEntity implements Serializable {
     private Long id;
 
     /**
-     * 登录方式:0-未知,1-账号密码,2-手机号
+     * 登录方式:unknown-未知,account-账号密码,phone-手机号验证码,email-邮箱验证码
      */
-    private Integer loginType;
+    private String loginType;
 
     /**
      * 事件类型:0-未知,1-登录,2-登出

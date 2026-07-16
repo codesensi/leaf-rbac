@@ -152,7 +152,7 @@ DROP TABLE IF EXISTS `log_login`;
 CREATE TABLE `log_login`
 (
     `id`              bigint NOT NULL COMMENT '日志ID',
-    `login_type`      tinyint(1)    NULL DEFAULT NULL COMMENT '登录方式:0-未知,1-账号密码,2-手机号',
+    `login_type`      varchar(32) NULL DEFAULT NULL COMMENT '登录方式:unknown-未知,account-账号密码,phone-手机号验证码,email-邮箱验证码',
     `event_type`      tinyint(1)    NULL DEFAULT NULL COMMENT '事件类型:0-未知,1-登录,2-登出',
     `login_key`       varchar(64) NULL DEFAULT NULL COMMENT '登录标识:账号/手机号',
     `user_id`         bigint NULL DEFAULT NULL COMMENT '登录人ID',

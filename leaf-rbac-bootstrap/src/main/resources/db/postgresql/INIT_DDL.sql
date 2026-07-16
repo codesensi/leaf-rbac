@@ -296,7 +296,7 @@ DROP TABLE IF EXISTS log_login;
 CREATE TABLE log_login
 (
     id              BIGSERIAL NOT NULL,
-    login_type      SMALLINT     DEFAULT NULL,
+    login_type      VARCHAR(32)  DEFAULT NULL,
     event_type      SMALLINT     DEFAULT NULL,
     login_key       VARCHAR(64)  DEFAULT NULL,
     user_id         BIGINT       DEFAULT NULL,
@@ -323,7 +323,7 @@ ON TABLE log_login IS '登录日志表';
 COMMENT
 ON COLUMN log_login.id IS '日志ID';
 COMMENT
-ON COLUMN log_login.login_type IS '登录方式:0-未知,1-账号密码,2-手机号';
+ON COLUMN log_login.login_type IS '登录方式:unknown-未知,account-账号密码,phone-手机号验证码,email-邮箱验证码';
 COMMENT
 ON COLUMN log_login.event_type IS '事件类型:0-未知,1-登录,2-登出';
 COMMENT
