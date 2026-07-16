@@ -50,27 +50,27 @@ public class LogLoginEvent extends ApplicationEvent {
     /**
      * 请求来源IP地址
      */
-    private String requestIp;
+    private String ip;
 
     /**
      * 请求地区
      */
-    private String requestArea;
+    private String region;
 
     /**
      * 请求系统
      */
-    private String requestOs;
+    private String os;
 
     /**
      * 请求设备
      */
-    private String requestDevice;
+    private String device;
 
     /**
      * 请求浏览器
      */
-    private String requestBrowser;
+    private String browser;
 
     /**
      * 请求执行耗时（毫秒）
@@ -85,9 +85,9 @@ public class LogLoginEvent extends ApplicationEvent {
     @Builder
     public LogLoginEvent(Object source, String loginType, String eventType,
                          String loginKey, Long userId, String username,
-                         Integer status, String errorMsg, String requestIp,
-                         String requestArea, String requestOs,
-                         String requestDevice, String requestBrowser,
+                         Integer status, String errorMsg, String ip,
+                         String region, String os,
+                         String device, String browser,
                          Long durationMs, String params) {
         // source：事件来源
         super(source);
@@ -98,11 +98,11 @@ public class LogLoginEvent extends ApplicationEvent {
         this.username = username;
         this.status = status;
         this.errorMsg = errorMsg;
-        this.requestIp = requestIp;
-        this.requestArea = requestArea;
-        this.requestOs = requestOs;
-        this.requestDevice = requestDevice;
-        this.requestBrowser = requestBrowser;
+        this.ip = ip;
+        this.region = region;
+        this.os = os;
+        this.device = device;
+        this.browser = browser;
         this.durationMs = durationMs;
         this.params = params;
     }

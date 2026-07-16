@@ -38,8 +38,8 @@ public class LoginController {
     /**
      * 登录
      */
-    @LogLogin(type = LoginEventType.LOGIN)
     @SaIgnore
+    @LogLogin(type = LoginEventType.LOGIN)
     @Operation(summary = "登录")
     @PostMapping("/login")
     public LoginResponse login(@Validated @RequestBody LoginRequest request) {

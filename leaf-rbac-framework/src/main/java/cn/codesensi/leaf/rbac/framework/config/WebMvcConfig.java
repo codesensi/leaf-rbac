@@ -63,10 +63,12 @@ public class WebMvcConfig implements WebMvcConfigurer {
         // 1. SaToken 鉴权拦截器：初始化 SaTokenContext + 登录校验 + 封禁校验 + 角色校验
         registry.addInterceptor(new SaInterceptor(handler -> {
                     // 所有请求（排除 swagger 等公开路径）需登录 + 账号未封禁
-                    SaRouter.match(RbacConst.ROOT_PATH).notMatch(RbacConst.SWAGGER_PATH).check(r -> {
-                        StpUtil.checkLogin();
-                        StpUtil.checkDisable(StpUtil.getLoginIdAsLong());
-                    });
+                    SaRouter.match(RbacConst.ROOT_PATH)
+                            .notMatch(RbacConst.SWAGGER_PATH)
+                            .check(r -> {
+                                StpUtil.checkLogin();
+                                StpUtil.checkDisable(StpUtil.getLoginIdAsLong());
+                            });
                     // 系统管理类接口（/sys/**、/log/**、/conf/**）需 superadmin 角色
                     SaRouter.match(RbacConst.SYS_PATH, RbacConst.LOG_PATH, RbacConst.CONF_PATH)
                             // 排除用户基本信息接口（登录后即可访问）

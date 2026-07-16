@@ -76,4 +76,16 @@ public class UserContextHolder {
         return userContext != null ? userContext.getUserId() : null;
     }
 
+    /**
+     * 便捷方法 —— 直接从当前线程上下文中获取用户名。
+     * <p>
+     * 等效于 {@code get() != null ? get().getUsername() : null}。
+     *
+     * @return 用户名，未设置时返回 {@code null}
+     */
+    public static String getUsername() {
+        UserContext userContext = get();
+        return userContext != null ? userContext.getUsername() : null;
+    }
+
 }

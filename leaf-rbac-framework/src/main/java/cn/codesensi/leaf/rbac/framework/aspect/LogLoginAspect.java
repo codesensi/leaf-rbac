@@ -4,6 +4,7 @@ import cn.codesensi.leaf.rbac.common.enums.LoginEventType;
 import cn.codesensi.leaf.rbac.common.enums.YesEnum;
 import cn.codesensi.leaf.rbac.framework.annotation.LogLogin;
 import cn.codesensi.leaf.rbac.framework.annotation.LoginKeyProvider;
+import cn.codesensi.leaf.rbac.framework.context.UserContextHolder;
 import cn.codesensi.leaf.rbac.framework.event.LogLoginEvent;
 import cn.codesensi.leaf.rbac.framework.util.Ip2regionUtil;
 import cn.codesensi.leaf.rbac.framework.util.IpUtil;
@@ -26,13 +27,13 @@ import org.springframework.stereotype.Component;
  * 通过环绕通知拦截所有标注了 {@link LogLogin} 注解的方法，
  * 自动采集请求元数据（IP、地区、设备、浏览器等）、登录标识、执行耗时及结果状态，
  * 封装为 {@link LogLoginEvent} 事件发布，由
- * {@link cn.codesensi.leaf.rbac.system.listener.LogLoginListener} 异步写入登录日志表。
+ *
+ * @author codesensi
+ * @link cn.codesensi.leaf.rbac.system.listener.LogLoginListener 异步写入登录日志表。
  * <p>
  * 与 {@link LogOperateAspect} 采用相同的切面模式：
  * 切面负责元数据采集 + 事件发布，监听器负责异步持久化，
  * 将日志记录与业务逻辑完全解耦。
- *
- * @author codesensi
  * @see LogOperateAspect
  * @see LogLoginEvent
  * @since 2026-07-15
@@ -98,70 +99,48 @@ public class LogLoginAspect {
         long start = System.currentTimeMillis();
         Signature signature = joinPoint.getSignature();
         LoginEventType loginEventType = logLogin.type();
-        boolean isLogin = loginEventType == LoginEventType.LOGIN;
+        // 登录类型：true 为登录
+        boolean typeLogin = loginEventType == LoginEventType.LOGIN;
 
         // 构建事件构建器（source 传入方法签名，满足 ApplicationEvent 的构造要求）
         LogLoginEvent.LogLoginEventBuilder builder = LogLoginEvent.builder()
                 .source(signature.toLongString())
-                .eventType(loginEventType.getCode());
+                .eventType(loginEventType.getCode())
+                .status(YesEnum.YES.getCode());
 
-        // 先采集不需依赖业务执行结果的元数据
-        collectRequestMetadata(builder);
-
-        if (isLogin) {
-            // 登录：从方法入参反射提取用户名（不依赖具体 DTO 类型，无 system 模块依赖）
-            extractLoginArgs(joinPoint, builder);
+        if (typeLogin) {
+            // 登录：从方法入参提取用户名
+            for (Object arg : joinPoint.getArgs()) {
+                if (arg instanceof LoginKeyProvider provider) {
+                    builder.loginType(provider.getLoginType());
+                    builder.loginKey(provider.getLoginKey());
+                    builder.params(objectMapper.valueToTree(arg).toString());
+                }
+            }
         } else {
             // 登出：在方法执行前获取 userId 和用户名（登出后 token 及会话均失效）
             builder.userId(StpUtil.isLogin() ? StpUtil.getLoginIdAsLong() : null);
-            builder.status(YesEnum.YES.getCode());
+            builder.username(StpUtil.isLogin() ? UserContextHolder.getUsername() : null);
         }
 
         try {
             Object result = joinPoint.proceed();
             // 登录成功：从当前会话获取 userId
-            if (isLogin) {
-                if (StpUtil.isLogin()) {
-                    builder.userId(StpUtil.getLoginIdAsLong());
-                }
-                builder.status(YesEnum.YES.getCode());
+            if (typeLogin && StpUtil.isLogin()) {
+                builder.userId(UserContextHolder.getUserId());
+                builder.username(UserContextHolder.getUsername());
             }
             return result;
         } catch (Throwable t) {
-            // 登录失败：记录失败状态，登出不进入此分支
-            if (isLogin) {
-                builder.status(YesEnum.NO.getCode());
-                builder.errorMsg(t.getMessage());
-            }
+            builder.status(YesEnum.NO.getCode());
+            // 记录失败原因
+            builder.errorMsg(t.getMessage());
             throw t;
         } finally {
+            // 采集请求元数据
+            collectRequestMetadata(builder);
             builder.durationMs(System.currentTimeMillis() - start);
             eventPublisher.publishEvent(builder.build());
-        }
-    }
-
-    /**
-     * 从登录方法入参中提取登录标识及请求参数。
-     * <p>
-     * 遍历方法参数，找到第一个实现了 {@link cn.codesensi.leaf.rbac.framework.annotation.LoginKeyProvider}
-     * 接口的参数，通过 {@code getLoginKey()} 获取登录标识，并使用 Jackson 序列化完整 DTO 作为请求参数。
-     * 不依赖任何 system 模块的具体 DTO 类型。
-     * </p>
-     *
-     * @param joinPoint AOP 切入点
-     * @param builder   登录日志事件构建器
-     */
-    private void extractLoginArgs(ProceedingJoinPoint joinPoint,
-                                  LogLoginEvent.LogLoginEventBuilder builder) {
-        for (Object arg : joinPoint.getArgs()) {
-            if (arg instanceof LoginKeyProvider provider) {
-                String loginKey = provider.getLoginKey();
-                builder.loginType(provider.getLoginType());
-                builder.loginKey(loginKey);
-                builder.username(loginKey);
-                builder.params(objectMapper.valueToTree(arg).toString());
-                return;
-            }
         }
     }
 
@@ -185,16 +164,16 @@ public class LogLoginAspect {
         try {
             String ipAddr = IpUtil.getIpAddr();
             if (StrUtil.isNotBlank(ipAddr)) {
-                builder.requestIp(ipAddr);
-                builder.requestArea(Ip2regionUtil.search(ipAddr));
+                builder.ip(ipAddr);
+                builder.region(Ip2regionUtil.search(ipAddr));
             }
 
             String userAgentStr = ServletUtil.getUserAgent();
             if (StrUtil.isNotBlank(userAgentStr)) {
                 UserAgent userAgent = UserAgent.parseUserAgentString(userAgentStr);
-                builder.requestOs(userAgent.getOperatingSystem().getName());
-                builder.requestDevice(userAgent.getOperatingSystem().getDeviceType().getName());
-                builder.requestBrowser(userAgent.getBrowser().getName());
+                builder.os(userAgent.getOperatingSystem().getName());
+                builder.device(userAgent.getOperatingSystem().getDeviceType().getName());
+                builder.browser(userAgent.getBrowser().getName());
             }
         } catch (Exception e) {
             log.warn("采集登录日志请求元数据异常", e);

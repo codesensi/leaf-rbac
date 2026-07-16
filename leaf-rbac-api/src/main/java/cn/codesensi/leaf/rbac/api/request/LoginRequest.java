@@ -2,6 +2,7 @@ package cn.codesensi.leaf.rbac.api.request;
 
 import cn.codesensi.leaf.rbac.common.enums.LoginType;
 import cn.codesensi.leaf.rbac.framework.annotation.InEnum;
+import cn.codesensi.leaf.rbac.framework.annotation.LoginKeyProvider;
 import cn.codesensi.leaf.rbac.framework.annotation.Phone;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
@@ -19,7 +20,7 @@ import java.io.Serializable;
  */
 @Data
 @Schema(description = "登录请求参数")
-public class LoginRequest implements Serializable {
+public class LoginRequest implements Serializable, LoginKeyProvider {
 
     @Serial
     private static final long serialVersionUID = 1L;
@@ -72,4 +73,38 @@ public class LoginRequest implements Serializable {
      */
     @Schema(description = "验证码内容", example = "123456")
     private String captchaValue;
+
+    /**
+     * 返回登录类型。
+     * <p>
+     * 实现自 {@link LoginKeyProvider}，供登录日志切面获取登录方式。
+     * </p>
+     *
+     * @return 登录类型，如 account / phone / email
+     */
+    @Override
+    public String getLoginType() {
+        return type;
+    }
+
+    /**
+     * 返回登录标识。
+     * <p>
+     * 实现自 {@link LoginKeyProvider}，供登录日志切面在不依赖具体 DTO 类型的前提下
+     * 获取账号标识（用户名/手机号/邮箱）。
+     * </p>
+     *
+     * @return 登录标识
+     */
+    @Override
+    public String getLoginKey() {
+        if (LoginType.ACCOUNT.getCode().equals(type)) {
+            return username;
+        } else if (LoginType.PHONE.getCode().equals(type)) {
+            return phone;
+        } else if (LoginType.EMAIL.getCode().equals(type)) {
+            return email;
+        }
+        return type;
+    }
 }

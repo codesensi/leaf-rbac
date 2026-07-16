@@ -1,5 +1,6 @@
 package cn.codesensi.leaf.rbac.framework.validator;
 
+import cn.codesensi.leaf.rbac.common.enums.BaseEnum;
 import cn.codesensi.leaf.rbac.framework.annotation.InEnum;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
@@ -33,9 +34,20 @@ public class InEnumValidator implements ConstraintValidator<InEnum, Object> {
      */
     @Override
     public void initialize(InEnum constraintAnnotation) {
-        validValues = Arrays.stream(constraintAnnotation.enumClass().getEnumConstants())
-                .map(Enum::name)
-                .collect(Collectors.toSet());
+        Class<? extends Enum<?>> enumClass = constraintAnnotation.enumClass();
+        // 检查枚举是否实现了 BaseEnum 接口
+        if (BaseEnum.class.isAssignableFrom(enumClass)) {
+            // 直接获取枚举常量数组，转换为 BaseEnum 类型
+            Enum<?>[] constants = enumClass.getEnumConstants();
+            validValues = Arrays.stream(constants)
+                    .map(e -> String.valueOf(((BaseEnum<?>) e).getCode()))
+                    .collect(Collectors.toSet());
+        } else {
+            // 普通枚举使用常量名
+            validValues = Arrays.stream(enumClass.getEnumConstants())
+                    .map(Enum::name)
+                    .collect(Collectors.toSet());
+        }
     }
 
     /**
