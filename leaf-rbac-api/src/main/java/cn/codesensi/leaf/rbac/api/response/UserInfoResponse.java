@@ -41,7 +41,7 @@ public class UserInfoResponse implements Serializable {
      * 用户身份证号码
      */
     @Schema(description = "用户身份证号码", example = "110101199001011234")
-    private String idNo;
+    private String idCard;
 
     /**
      * 用户邮箱
@@ -58,8 +58,8 @@ public class UserInfoResponse implements Serializable {
     /**
      * 用户性别:0-保密,1-男,2-女
      */
-    @Schema(description = "用户性别:0-保密,1-男,2-女", example = "1")
-    private Integer gender;
+    @Schema(description = "用户性别:U-未知,M-男,F-女", example = "U")
+    private Integer String;
 
     /**
      * 备注
@@ -68,9 +68,9 @@ public class UserInfoResponse implements Serializable {
     private String remark;
 
     /**
-     * 系统内置标识:0-自定义,1-内置
+     * 系统内置标识:0-非内置,1-内置
      */
-    @Schema(description = "系统内置标识:0-自定义,1-内置", example = "1")
+    @Schema(description = "系统内置标识:0-非内置,1-内置", example = "1")
     private Integer sysFlag;
 
     /**

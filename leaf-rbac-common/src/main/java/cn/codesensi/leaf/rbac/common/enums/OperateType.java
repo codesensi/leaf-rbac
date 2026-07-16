@@ -4,6 +4,11 @@ import lombok.Getter;
 
 /**
  * 操作类型枚举
+ * unknown-未知
+ * insert-新增
+ * update-更新
+ * query-查询
+ * delete-删除
  */
 @Getter
 public enum OperateType implements BaseEnum<String> {

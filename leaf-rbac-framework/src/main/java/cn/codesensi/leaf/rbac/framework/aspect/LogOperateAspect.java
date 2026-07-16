@@ -112,22 +112,22 @@ public class LogOperateAspect {
                 .module(logOperate.module())
                 .type(logOperate.type().getCode())
                 .descr(logOperate.desc())
-                .methodName(signature.toLongString());
+                .method(signature.toLongString());
 
         ServletRequestAttributes attributes = ServletUtil.getRequestAttributes();
         if (ObjUtil.isNotNull(attributes)) {
             HttpServletRequest request = attributes.getRequest();
             StringBuffer requestUrl = request.getRequestURL();
-            builder.requestUrl(requestUrl.toString());
+            builder.url(requestUrl.toString());
         }
 
         String ipAddr = IpUtil.getIpAddr();
-        builder.requestIp(ipAddr);
-        builder.requestArea(Ip2regionUtil.search(ipAddr));
+        builder.ip(ipAddr);
+        builder.region(Ip2regionUtil.search(ipAddr));
         UserAgent userAgent = UserAgent.parseUserAgentString(ServletUtil.getUserAgent());
-        builder.requestOs(userAgent.getOperatingSystem().getName());
-        builder.requestDevice(userAgent.getOperatingSystem().getDeviceType().getName());
-        builder.requestBrowser(userAgent.getBrowser().getName());
+        builder.os(userAgent.getOperatingSystem().getName());
+        builder.device(userAgent.getOperatingSystem().getDeviceType().getName());
+        builder.browser(userAgent.getBrowser().getName());
 
         Set<String> ignoreSet = ObjUtil.isNotEmpty(logOperate.ignoreFields())
                 ? new HashSet<>(Arrays.asList(logOperate.ignoreFields()))

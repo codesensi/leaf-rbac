@@ -46,37 +46,37 @@ public class LogOperateEvent extends ApplicationEvent {
     /**
      * 请求来源IP地址
      */
-    private String requestIp;
+    private String ip;
 
     /**
      * 请求的URL地址
      */
-    private String requestUrl;
+    private String url;
 
     /**
      * 请求地区
      */
-    private String requestArea;
+    private String region;
 
     /**
      * 请求系统
      */
-    private String requestOs;
+    private String os;
 
     /**
      * 请求设备
      */
-    private String requestDevice;
+    private String device;
 
     /**
      * 请求浏览器
      */
-    private String requestBrowser;
+    private String browser;
 
     /**
-     * 被调用方法的全限定名（包名.类名.方法名）
+     * 被调用方法的全限定名(包名.类名.方法名)
      */
-    private String methodName;
+    private String method;
 
     /**
      * 请求执行耗时（毫秒）
@@ -95,10 +95,10 @@ public class LogOperateEvent extends ApplicationEvent {
 
     @Builder
     public LogOperateEvent(Object source, String module, String type, Long userId,
-                           String descr, Integer status, String errorMsg, String requestIp,
-                           String requestUrl, String requestArea, String requestOs,
-                           String requestDevice, String requestBrowser,
-                           String methodName, Long durationMs, String params, String result) {
+                           String descr, Integer status, String errorMsg, String ip,
+                           String url, String region, String os,
+                           String device, String browser,
+                           String method, Long durationMs, String params, String result) {
         // source：事件来源
         super(source);
         this.module = module;
@@ -107,13 +107,13 @@ public class LogOperateEvent extends ApplicationEvent {
         this.descr = descr;
         this.status = status;
         this.errorMsg = errorMsg;
-        this.requestIp = requestIp;
-        this.requestUrl = requestUrl;
-        this.requestArea = requestArea;
-        this.requestOs = requestOs;
-        this.requestDevice = requestDevice;
-        this.requestBrowser = requestBrowser;
-        this.methodName = methodName;
+        this.ip = ip;
+        this.url = url;
+        this.region = region;
+        this.os = os;
+        this.device = device;
+        this.browser = browser;
+        this.method = method;
         this.durationMs = durationMs;
         this.params = params;
         this.result = result;

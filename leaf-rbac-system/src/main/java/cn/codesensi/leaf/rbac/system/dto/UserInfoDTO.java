@@ -36,7 +36,7 @@ public class UserInfoDTO implements Serializable {
     /**
      * 用户身份证号码
      */
-    private String idNo;
+    private String idCard;
 
     /**
      * 用户邮箱
@@ -49,9 +49,9 @@ public class UserInfoDTO implements Serializable {
     private String phone;
 
     /**
-     * 用户性别:0-保密,1-男,2-女
+     * 用户性别:U-未知,M-男,F-女
      */
-    private Integer gender;
+    private String gender;
 
     /**
      * 备注

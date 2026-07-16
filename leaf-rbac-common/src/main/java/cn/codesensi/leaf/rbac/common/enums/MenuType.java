@@ -3,17 +3,17 @@ package cn.codesensi.leaf.rbac.common.enums;
 import lombok.Getter;
 
 /**
- * 登录事件类型枚举
- * unknown-未知
- * login-登录
- * logout-登出
+ * 菜单类型枚举
+ * D-目录
+ * M-菜单
+ * B-按钮
  */
 @Getter
-public enum LoginEventType implements BaseEnum<String> {
+public enum MenuType implements BaseEnum<String> {
 
-    UNKNOWN("unknown", "未知"),
-    LOGIN("login", "登录"),
-    LOGOUT("logout", "登出"),
+    D("D", "目录"),
+    M("M", "菜单"),
+    B("B", "按钮"),
     ;
 
     /**
@@ -32,7 +32,7 @@ public enum LoginEventType implements BaseEnum<String> {
      * @param code 编码
      * @param desc 说明
      */
-    LoginEventType(String code, String desc) {
+    MenuType(String code, String desc) {
         this.code = code;
         this.desc = desc;
     }

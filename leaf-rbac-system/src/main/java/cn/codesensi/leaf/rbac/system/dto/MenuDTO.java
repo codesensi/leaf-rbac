@@ -50,9 +50,9 @@ public class MenuDTO implements Serializable {
     private String title;
 
     /**
-     * 菜单类型:1-目录,2-菜单,3-按钮
+     * 菜单类型:D-目录,M-菜单,B-按钮
      */
-    private Integer type;
+    private String type;
 
     /**
      * 菜单排序

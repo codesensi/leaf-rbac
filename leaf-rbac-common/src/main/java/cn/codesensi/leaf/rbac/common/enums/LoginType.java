@@ -4,6 +4,10 @@ import lombok.Getter;
 
 /**
  * 登录类型枚举
+ * unknown-未知
+ * account-账号密码登录
+ * phone-手机验证码登录
+ * email-邮箱验证码登录
  */
 @Getter
 public enum LoginType implements BaseEnum<String> {

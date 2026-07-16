@@ -4,6 +4,9 @@ import lombok.Getter;
 
 /**
  * 性别枚举
+ * U-未知
+ * M-男
+ * F-女
  */
 @Getter
 public enum GenderEnum implements BaseEnum<String> {

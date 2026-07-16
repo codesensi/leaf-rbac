@@ -2,6 +2,8 @@ package cn.codesensi.leaf.rbac.system.service.impl;
 
 import cn.codesensi.leaf.rbac.common.constants.CacheConst;
 import cn.codesensi.leaf.rbac.common.constants.RbacConst;
+import cn.codesensi.leaf.rbac.common.enums.EnableEnum;
+import cn.codesensi.leaf.rbac.common.enums.MenuType;
 import cn.codesensi.leaf.rbac.system.entity.SysMenu;
 import cn.codesensi.leaf.rbac.system.entity.SysRole;
 import cn.codesensi.leaf.rbac.system.mapper.SysMenuMapper;
@@ -109,8 +111,9 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
         if (roleCodeList.contains(RbacConst.ROLE_ADMIN_CODE)) {
             return QueryChain.of(sysMenuMapper)
                     .select(SYS_MENU.ID, SYS_MENU.PID, SYS_MENU.NAME, SYS_MENU.PATH, SYS_MENU.PARAM, SYS_MENU.COMPONENT, SYS_MENU.TITLE, SYS_MENU.TYPE, SYS_MENU.SORT, SYS_MENU.ICON, SYS_MENU.PERMS, SYS_MENU.IS_LINK, SYS_MENU.IS_FRAME, SYS_MENU.FRAME_SRC, SYS_MENU.IS_SHOW, SYS_MENU.IS_SHOW_PARENT, SYS_MENU.STATUS, SYS_MENU.REMARK, SYS_MENU.SYS_FLAG)
-                    .where(SYS_MENU.TYPE.ne(3)) // 排除按钮类型
-                    .orderBy(SYS_MENU.SORT, true) // 排序
+                    // 排除按钮类型
+                    .where(SYS_MENU.TYPE.ne(MenuType.B.getCode()))
+                    .orderBy(SYS_MENU.SORT, true)
                     .list();
         }
 
@@ -119,7 +122,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
         List<Long> roleIds = sysRoleService.queryChain()
                 .select(SYS_ROLE.ID)
                 .where(SYS_ROLE.CODE.in(roleCodeList))
-                .and(SYS_ROLE.STATUS.eq(0))
+                .and(SYS_ROLE.STATUS.eq(EnableEnum.ENABLE.getCode()))
                 .listAs(Long.class);
         if (CollUtil.isEmpty(roleIds)) {
             return List.of();
@@ -138,9 +141,10 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
         return QueryChain.of(sysMenuMapper)
                 .select(SYS_MENU.ID, SYS_MENU.PID, SYS_MENU.NAME, SYS_MENU.PATH, SYS_MENU.PARAM, SYS_MENU.COMPONENT, SYS_MENU.TITLE, SYS_MENU.TYPE, SYS_MENU.SORT, SYS_MENU.ICON, SYS_MENU.PERMS, SYS_MENU.IS_LINK, SYS_MENU.IS_FRAME, SYS_MENU.FRAME_SRC, SYS_MENU.IS_SHOW, SYS_MENU.IS_SHOW_PARENT, SYS_MENU.STATUS, SYS_MENU.REMARK, SYS_MENU.SYS_FLAG)
                 .where(SYS_MENU.ID.in(menuIds))
-                .and(SYS_MENU.STATUS.eq(0))
-                .and(SYS_MENU.TYPE.ne(3))      // 排除按钮类型
-                .orderBy(SYS_MENU.SORT, true)  // 排序
+                .and(SYS_MENU.STATUS.eq(EnableEnum.ENABLE.getCode()))
+                // 排除按钮类型
+                .and(SYS_MENU.TYPE.ne(MenuType.B.getCode()))
+                .orderBy(SYS_MENU.SORT, true)
                 .list();
     }
 
