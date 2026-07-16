@@ -4,29 +4,27 @@ import lombok.Getter;
 
 /**
  * 登录类型
- * 0-未知
- * 1-账号密码
- * 2-手机号
  */
 @Getter
 public enum LoginType {
-    OTHER(0, "未知"),
-    ACCOUNT(1, "账号密码"),
-    PHONE(2, "手机号"),
+    UNKNOWN("unknown", "未知"),
+    ACCOUNT("account", "账号密码登录"),
+    PHONE("phone", "手机验证码登录"),
+    EMAIL("email", "邮箱验证码登录"),
     ;
 
     /**
-     * 登录类型编码
+     * 登录类型
      */
-    private final Integer code;
+    private final String type;
 
     /**
      * 登录类型说明
      */
-    private final String msg;
+    private final String message;
 
-    LoginType(Integer code, String msg) {
-        this.code = code;
-        this.msg = msg;
+    LoginType(String type, String message) {
+        this.type = type;
+        this.message = message;
     }
 }

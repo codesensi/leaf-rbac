@@ -15,7 +15,7 @@ public class LogLoginEvent extends ApplicationEvent {
     /**
      * 登录方式（如：账号密码、手机号）
      */
-    private Integer loginType;
+    private String loginType;
 
     /**
      * 事件类型（如：登录、登出）
@@ -83,7 +83,7 @@ public class LogLoginEvent extends ApplicationEvent {
     private String params;
 
     @Builder
-    public LogLoginEvent(Object source, Integer loginType, Integer eventType,
+    public LogLoginEvent(Object source, String loginType, Integer eventType,
                          String loginKey, Long userId, String username,
                          Integer status, String errorMsg, String requestIp,
                          String requestArea, String requestOs,
