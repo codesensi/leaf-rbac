@@ -3,10 +3,11 @@ package cn.codesensi.leaf.rbac.common.enums;
 import lombok.Getter;
 
 /**
- * 登录类型
+ * 登录类型枚举
  */
 @Getter
-public enum LoginType {
+public enum LoginType implements BaseEnum<String> {
+
     UNKNOWN("unknown", "未知"),
     ACCOUNT("account", "账号密码登录"),
     PHONE("phone", "手机验证码登录"),
@@ -14,17 +15,33 @@ public enum LoginType {
     ;
 
     /**
-     * 登录类型
+     * 编码
      */
-    private final String type;
+    private final String code;
 
     /**
-     * 登录类型说明
+     * 说明
      */
-    private final String msg;
+    private final String desc;
 
-    LoginType(String type, String msg) {
-        this.type = type;
-        this.msg = msg;
+    /**
+     * 枚举构造函数
+     *
+     * @param code 编码
+     * @param desc 说明
+     */
+    LoginType(String code, String desc) {
+        this.code = code;
+        this.desc = desc;
+    }
+
+    @Override
+    public String getCode() {
+        return code;
+    }
+
+    @Override
+    public String getDesc() {
+        return desc;
     }
 }

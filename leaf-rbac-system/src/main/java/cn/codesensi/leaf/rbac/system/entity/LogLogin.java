@@ -40,12 +40,12 @@ public class LogLogin extends BaseEntity implements Serializable {
     private String loginType;
 
     /**
-     * 事件类型:0-未知,1-登录,2-登出
+     * 事件类型:unknown-未知,login-登录,logout-登出
      */
-    private Integer eventType;
+    private String eventType;
 
     /**
-     * 登录标识:账号/手机号
+     * 登录标识(账号/手机号)
      */
     private String loginKey;
 
@@ -70,32 +70,32 @@ public class LogLogin extends BaseEntity implements Serializable {
     private String errorMsg;
 
     /**
-     * 请求来源IP地址
+     * 登录IP地址
      */
-    private String requestIp;
+    private String ip;
 
     /**
      * 登录地区
      */
-    private String requestArea;
+    private String region;
 
     /**
-     * 登录系统
+     * 登录操作系统
      */
-    private String requestOs;
+    private String os;
 
     /**
-     * 登录设备
+     * 登录设备类型
      */
-    private String requestDevice;
+    private String device;
 
     /**
-     * 登录浏览器
+     * 浏览器
      */
-    private String requestBrowser;
+    private String browser;
 
     /**
-     * 请求执行耗时:单位毫秒
+     * 登录耗时(毫秒)
      */
     private Long durationMs;
 

@@ -40,7 +40,7 @@ public @interface LogOperate {
      * <p>
      * 建议使用 {@code INSERT}、{@code UPDATE}、{@code DELETE}、{@code SELECT}、{@code EXPORT}、{@code IMPORT} 等常量值。
      */
-    OperateType type() default OperateType.OTHER;
+    OperateType type() default OperateType.UNKNOWN;
 
     /**
      * 操作描述，简要说明该操作的业务含义。

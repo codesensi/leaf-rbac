@@ -1,4 +1,4 @@
-package cn.codesensi.leaf.rbac.system.enums;
+package cn.codesensi.leaf.rbac.system.strategy.captcha;
 
 import lombok.Getter;
 
@@ -26,11 +26,11 @@ public enum CaptchaStrategyType {
     /**
      * 验证码类型说明
      */
-    private final String message;
+    private final String msg;
 
-    CaptchaStrategyType(String code, String className, String message) {
+    CaptchaStrategyType(String code, String className, String msg) {
         this.code = code;
         this.className = className;
-        this.message = message;
+        this.msg = msg;
     }
 }

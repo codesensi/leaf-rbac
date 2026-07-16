@@ -21,7 +21,7 @@ public class LogOperateEvent extends ApplicationEvent {
     /**
      * 操作类型（如：新增、修改、删除、查询、导出）
      */
-    private Integer type;
+    private String type;
 
     /**
      * 操作人ID
@@ -94,7 +94,7 @@ public class LogOperateEvent extends ApplicationEvent {
     private String result;
 
     @Builder
-    public LogOperateEvent(Object source, String module, Integer type, Long userId,
+    public LogOperateEvent(Object source, String module, String type, Long userId,
                            String descr, Integer status, String errorMsg, String requestIp,
                            String requestUrl, String requestArea, String requestOs,
                            String requestDevice, String requestBrowser,

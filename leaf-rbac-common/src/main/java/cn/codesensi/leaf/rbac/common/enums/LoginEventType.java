@@ -3,16 +3,14 @@ package cn.codesensi.leaf.rbac.common.enums;
 import lombok.Getter;
 
 /**
- * 操作类型枚举
+ * 登录事件类型枚举
  */
 @Getter
-public enum OperateType implements BaseEnum<String> {
+public enum LoginEventType implements BaseEnum<String> {
 
     UNKNOWN("unknown", "未知"),
-    INSERT("insert", "新增"),
-    UPDATE("update", "更新"),
-    QUERY("query", "查询"),
-    DELETE("delete", "删除"),
+    LOGIN("login", "登录"),
+    LOGOUT("logout", "登出"),
     ;
 
     /**
@@ -31,7 +29,7 @@ public enum OperateType implements BaseEnum<String> {
      * @param code 编码
      * @param desc 说明
      */
-    OperateType(String code, String desc) {
+    LoginEventType(String code, String desc) {
         this.code = code;
         this.desc = desc;
     }

@@ -1,24 +1,24 @@
 package cn.codesensi.leaf.rbac.common.enums;
 
+import cn.codesensi.leaf.rbac.common.constants.AppConst;
 import lombok.Getter;
 
 /**
- * 操作类型枚举
+ * 启用/禁用状态枚举
+ * 0-启用
+ * 1-禁用
  */
 @Getter
-public enum OperateType implements BaseEnum<String> {
+public enum EnableEnum implements BaseEnum<Integer> {
 
-    UNKNOWN("unknown", "未知"),
-    INSERT("insert", "新增"),
-    UPDATE("update", "更新"),
-    QUERY("query", "查询"),
-    DELETE("delete", "删除"),
+    ENABLE(AppConst.ZERO_INT, "启用"),
+    DISABLE(AppConst.ONE_INT, "禁用"),
     ;
 
     /**
      * 编码
      */
-    private final String code;
+    private final Integer code;
 
     /**
      * 说明
@@ -31,13 +31,13 @@ public enum OperateType implements BaseEnum<String> {
      * @param code 编码
      * @param desc 说明
      */
-    OperateType(String code, String desc) {
+    EnableEnum(Integer code, String desc) {
         this.code = code;
         this.desc = desc;
     }
 
     @Override
-    public String getCode() {
+    public Integer getCode() {
         return code;
     }
 

@@ -1,7 +1,6 @@
 package cn.codesensi.leaf.rbac.system.strategy.captcha;
 
 import cn.codesensi.leaf.rbac.common.exception.BusinessException;
-import cn.codesensi.leaf.rbac.system.enums.CaptchaStrategyType;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;

@@ -4,24 +4,24 @@
 DROP TABLE IF EXISTS sys_user;
 CREATE TABLE sys_user
 (
-    id          bigint       NOT NULL,
-    username    varchar(128) NOT NULL,
-    password    varchar(512) NOT NULL,
-    nickname    varchar(64) NULL DEFAULT NULL,
-    id_no       varchar(64) NULL DEFAULT NULL,
-    email       varchar(64) NULL DEFAULT NULL,
-    phone       varchar(11) NULL DEFAULT NULL,
-    gender      smallint NULL DEFAULT 0,
-    avatar      varchar(512) NULL DEFAULT NULL,
-    type        smallint NULL DEFAULT 0,
-    status      smallint NULL DEFAULT 0,
-    remark      varchar(512) NULL DEFAULT NULL,
-    sys_flag    smallint NULL DEFAULT 0,
-    creator     bigint NULL DEFAULT NULL,
+    id          BIGINT       NOT NULL,
+    username    VARCHAR(128) NOT NULL,
+    password    VARCHAR(512) NOT NULL,
+    nickname    VARCHAR(64) NULL DEFAULT NULL,
+    id_card     VARCHAR(64) NULL DEFAULT NULL,
+    email       VARCHAR(64) NULL DEFAULT NULL,
+    phone       VARCHAR(11) NULL DEFAULT NULL,
+    gender      VARCHAR(1) NULL DEFAULT 'U',
+    avatar      VARCHAR(512) NULL DEFAULT NULL,
+    type        SMALLINT NULL DEFAULT 0,
+    status      SMALLINT NULL DEFAULT 0,
+    remark      VARCHAR(512) NULL DEFAULT NULL,
+    sys_flag    SMALLINT NULL DEFAULT 0,
+    creator     BIGINT NULL DEFAULT NULL,
     create_time TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
-    updater     bigint NULL DEFAULT NULL,
+    updater     BIGINT NULL DEFAULT NULL,
     update_time TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
-    del_flag    smallint NULL DEFAULT 0,
+    del_flag    SMALLINT NULL DEFAULT 0,
     PRIMARY KEY (id)
 );
 
@@ -45,7 +45,7 @@ ON COLUMN sys_user.email IS '用户邮箱';
 COMMENT
 ON COLUMN sys_user.phone IS '用户手机号码';
 COMMENT
-ON COLUMN sys_user.gender IS '用户性别:0-保密,1-男,2-女';
+ON COLUMN sys_user.gender IS '用户性别:U-未知,M-男,F-女';
 COMMENT
 ON COLUMN sys_user.avatar IS '用户头像地址';
 COMMENT
@@ -55,7 +55,7 @@ ON COLUMN sys_user.status IS '用户状态:0-启用,1-禁用';
 COMMENT
 ON COLUMN sys_user.remark IS '备注';
 COMMENT
-ON COLUMN sys_user.sys_flag IS '系统内置标识:0-否,1-是';
+ON COLUMN sys_user.sys_flag IS '系统内置标识:0-非内置,1-内置';
 COMMENT
 ON COLUMN sys_user.creator IS '创建人';
 COMMENT
@@ -74,19 +74,19 @@ ON COLUMN sys_user.del_flag IS '逻辑删除标识:0-未删除,1-已删除';
 DROP TABLE IF EXISTS sys_role;
 CREATE TABLE sys_role
 (
-    id          bigint      NOT NULL,
-    name        varchar(64) NOT NULL,
-    code        varchar(64) NOT NULL,
-    pid         bigint NULL DEFAULT 0,
-    sort        integer NULL DEFAULT 0,
-    status      smallint NULL DEFAULT 0,
-    remark      varchar(512) NULL DEFAULT NULL,
-    sys_flag    smallint NULL DEFAULT 0,
-    creator     bigint NULL DEFAULT NULL,
+    id          BIGINT      NOT NULL,
+    name        VARCHAR(64) NOT NULL,
+    code        VARCHAR(64) NOT NULL,
+    pid         BIGINT NULL DEFAULT 0,
+    sort        INTEGER NULL DEFAULT 0,
+    status      SMALLINT NULL DEFAULT 0,
+    remark      VARCHAR(512) NULL DEFAULT NULL,
+    sys_flag    SMALLINT NULL DEFAULT 0,
+    creator     BIGINT NULL DEFAULT NULL,
     create_time TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
-    updater     bigint NULL DEFAULT NULL,
+    updater     BIGINT NULL DEFAULT NULL,
     update_time TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
-    del_flag    smallint NULL DEFAULT 0,
+    del_flag    SMALLINT NULL DEFAULT 0,
     PRIMARY KEY (id)
 );
 
@@ -110,7 +110,7 @@ ON COLUMN sys_role.status IS '角色状态:0-启用,1-禁用';
 COMMENT
 ON COLUMN sys_role.remark IS '备注';
 COMMENT
-ON COLUMN sys_role.sys_flag IS '系统内置标识:0-自定义,1-内置';
+ON COLUMN sys_role.sys_flag IS '系统内置标识:0-非内置,1-内置';
 COMMENT
 ON COLUMN sys_role.creator IS '创建人';
 COMMENT
@@ -129,14 +129,14 @@ ON COLUMN sys_role.del_flag IS '逻辑删除标识:0-未删除,1-已删除';
 DROP TABLE IF EXISTS sys_user_role;
 CREATE TABLE sys_user_role
 (
-    id          bigint NOT NULL,
-    user_id     bigint NOT NULL,
-    role_id     bigint NOT NULL,
-    creator     bigint NULL DEFAULT NULL,
+    id          BIGINT NOT NULL,
+    user_id     BIGINT NOT NULL,
+    role_id     BIGINT NOT NULL,
+    creator     BIGINT NULL DEFAULT NULL,
     create_time TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
-    updater     bigint NULL DEFAULT NULL,
+    updater     BIGINT NULL DEFAULT NULL,
     update_time TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
-    del_flag    smallint NULL DEFAULT 0,
+    del_flag    SMALLINT NULL DEFAULT 0,
     PRIMARY KEY (id)
 );
 
@@ -169,30 +169,30 @@ ON COLUMN sys_user_role.del_flag IS '逻辑删除标识:0-未删除,1-已删除'
 DROP TABLE IF EXISTS sys_menu;
 CREATE TABLE sys_menu
 (
-    id             bigint NOT NULL,
-    pid            bigint NULL DEFAULT 0,
-    name           varchar(2048) NULL DEFAULT NULL,
-    path           varchar(512) NULL DEFAULT NULL,
-    param          varchar(256) NULL DEFAULT NULL,
-    component      varchar(256) NULL DEFAULT NULL,
-    title          varchar(256) NULL DEFAULT NULL,
-    type           smallint NULL DEFAULT NULL,
-    sort           integer NULL DEFAULT 0,
-    icon           varchar(256) NULL DEFAULT NULL,
-    perms          varchar(64) NULL DEFAULT NULL,
-    is_link        smallint NULL DEFAULT 0,
-    is_frame       smallint NULL DEFAULT 0,
-    frame_src      varchar(2048) NULL DEFAULT NULL,
-    is_show        smallint NULL DEFAULT 1,
-    is_show_parent smallint NULL DEFAULT 1,
-    status         smallint NULL DEFAULT 0,
-    remark         varchar(512) NULL DEFAULT NULL,
-    sys_flag       smallint NULL DEFAULT 0,
-    creator        bigint NULL DEFAULT NULL,
+    id             BIGINT NOT NULL,
+    pid            BIGINT NULL DEFAULT 0,
+    name           VARCHAR(2048) NULL DEFAULT NULL,
+    path           VARCHAR(512) NULL DEFAULT NULL,
+    param          VARCHAR(256) NULL DEFAULT NULL,
+    component      VARCHAR(256) NULL DEFAULT NULL,
+    title          VARCHAR(256) NULL DEFAULT NULL,
+    type           VARCHAR(1) NULL DEFAULT NULL,
+    sort           INTEGER NULL DEFAULT 0,
+    icon           VARCHAR(256) NULL DEFAULT NULL,
+    perms          VARCHAR(64) NULL DEFAULT NULL,
+    is_link        SMALLINT NULL DEFAULT 0,
+    is_frame       SMALLINT NULL DEFAULT 0,
+    frame_src      VARCHAR(2048) NULL DEFAULT NULL,
+    is_show        SMALLINT NULL DEFAULT 1,
+    is_show_parent SMALLINT NULL DEFAULT 1,
+    status         SMALLINT NULL DEFAULT 0,
+    remark         VARCHAR(512) NULL DEFAULT NULL,
+    sys_flag       SMALLINT NULL DEFAULT 0,
+    creator        BIGINT NULL DEFAULT NULL,
     create_time    TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
-    updater        bigint NULL DEFAULT NULL,
+    updater        BIGINT NULL DEFAULT NULL,
     update_time    TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
-    del_flag       smallint NULL DEFAULT 0,
+    del_flag       SMALLINT NULL DEFAULT 0,
     PRIMARY KEY (id)
 );
 
@@ -205,7 +205,7 @@ ON COLUMN sys_menu.id IS '路由菜单ID';
 COMMENT
 ON COLUMN sys_menu.pid IS '父级路由菜单ID';
 COMMENT
-ON COLUMN sys_menu.name IS '路由名称(外链地址)';
+ON COLUMN sys_menu.name IS '路由名称/外链地址';
 COMMENT
 ON COLUMN sys_menu.path IS '路由路径';
 COMMENT
@@ -215,7 +215,7 @@ ON COLUMN sys_menu.component IS '组件路径';
 COMMENT
 ON COLUMN sys_menu.title IS '菜单名称';
 COMMENT
-ON COLUMN sys_menu.type IS '菜单类型:1-目录,2-菜单,3-按钮';
+ON COLUMN sys_menu.type IS '菜单类型:D-目录,M-菜单,B-按钮';
 COMMENT
 ON COLUMN sys_menu.sort IS '菜单排序';
 COMMENT
@@ -237,7 +237,7 @@ ON COLUMN sys_menu.status IS '菜单状态:0-启用,1-禁用';
 COMMENT
 ON COLUMN sys_menu.remark IS '备注';
 COMMENT
-ON COLUMN sys_menu.sys_flag IS '系统内置标识:0-自定义,1-内置';
+ON COLUMN sys_menu.sys_flag IS '系统内置标识:0-非内置,1-内置';
 COMMENT
 ON COLUMN sys_menu.creator IS '创建人';
 COMMENT
@@ -256,14 +256,14 @@ ON COLUMN sys_menu.del_flag IS '逻辑删除标识:0-未删除,1-已删除';
 DROP TABLE IF EXISTS sys_role_menu;
 CREATE TABLE sys_role_menu
 (
-    id          bigint NOT NULL,
-    role_id     bigint NOT NULL,
-    menu_id     bigint NOT NULL,
-    creator     bigint NULL DEFAULT NULL,
+    id          BIGINT NOT NULL,
+    role_id     BIGINT NOT NULL,
+    menu_id     BIGINT NOT NULL,
+    creator     BIGINT NULL DEFAULT NULL,
     create_time TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
-    updater     bigint NULL DEFAULT NULL,
+    updater     BIGINT NULL DEFAULT NULL,
     update_time TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
-    del_flag    smallint NULL DEFAULT 0,
+    del_flag    SMALLINT NULL DEFAULT 0,
     PRIMARY KEY (id)
 );
 
@@ -295,26 +295,26 @@ ON COLUMN sys_role_menu.del_flag IS '逻辑删除标识:0-未删除,1-已删除'
 DROP TABLE IF EXISTS log_login;
 CREATE TABLE log_login
 (
-    id              BIGSERIAL NOT NULL,
-    login_type      VARCHAR(32)  DEFAULT NULL,
-    event_type      SMALLINT     DEFAULT NULL,
-    login_key       VARCHAR(64)  DEFAULT NULL,
-    user_id         BIGINT       DEFAULT NULL,
-    username        VARCHAR(128) DEFAULT NULL,
-    status          SMALLINT     DEFAULT NULL,
-    error_msg       TEXT         DEFAULT NULL,
-    request_ip      VARCHAR(256) DEFAULT NULL,
-    request_area    VARCHAR(256) DEFAULT NULL,
-    request_os      VARCHAR(256) DEFAULT NULL,
-    request_device  VARCHAR(64)  DEFAULT NULL,
-    request_browser VARCHAR(64)  DEFAULT NULL,
-    duration_ms     BIGINT       DEFAULT NULL,
-    params          TEXT         DEFAULT NULL,
-    creator         BIGINT       DEFAULT NULL,
-    create_time     TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
-    updater         BIGINT       DEFAULT NULL,
-    update_time     TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
-    del_flag        SMALLINT     DEFAULT 0,
+    id          BIGSERIAL NOT NULL,
+    login_type  VARCHAR(32)  DEFAULT NULL,
+    event_type  VARCHAR(32)  DEFAULT NULL,
+    login_key   VARCHAR(64)  DEFAULT NULL,
+    user_id     BIGINT       DEFAULT NULL,
+    username    VARCHAR(128) DEFAULT NULL,
+    status      SMALLINT     DEFAULT NULL,
+    error_msg   TEXT         DEFAULT NULL,
+    ip          VARCHAR(256) DEFAULT NULL,
+    region      VARCHAR(256) DEFAULT NULL,
+    os          VARCHAR(256) DEFAULT NULL,
+    device      VARCHAR(64)  DEFAULT NULL,
+    browser     VARCHAR(64)  DEFAULT NULL,
+    duration_ms BIGINT       DEFAULT NULL,
+    params      TEXT         DEFAULT NULL,
+    creator     BIGINT       DEFAULT NULL,
+    create_time TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+    updater     BIGINT       DEFAULT NULL,
+    update_time TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+    del_flag    SMALLINT     DEFAULT 0,
     PRIMARY KEY (id)
 );
 
@@ -325,9 +325,9 @@ ON COLUMN log_login.id IS '日志ID';
 COMMENT
 ON COLUMN log_login.login_type IS '登录方式:unknown-未知,account-账号密码,phone-手机号验证码,email-邮箱验证码';
 COMMENT
-ON COLUMN log_login.event_type IS '事件类型:0-未知,1-登录,2-登出';
+ON COLUMN log_login.event_type IS '事件类型:unknown-未知,login-登录,logout-登出';
 COMMENT
-ON COLUMN log_login.login_key IS '登录标识:账号/手机号';
+ON COLUMN log_login.login_key IS '登录标识(账号/手机号)';
 COMMENT
 ON COLUMN log_login.user_id IS '登录人ID';
 COMMENT
@@ -337,17 +337,17 @@ ON COLUMN log_login.status IS '登录状态:0-失败,1-成功';
 COMMENT
 ON COLUMN log_login.error_msg IS '登录失败原因';
 COMMENT
-ON COLUMN log_login.request_ip IS '请求来源IP地址';
+ON COLUMN log_login.ip IS '登录IP';
 COMMENT
-ON COLUMN log_login.request_area IS '登录地区';
+ON COLUMN log_login.region IS '登录地区';
 COMMENT
-ON COLUMN log_login.request_os IS '登录系统';
+ON COLUMN log_login.os IS '登录操作系统';
 COMMENT
-ON COLUMN log_login.request_device IS '登录设备';
+ON COLUMN log_login.device IS '登录设备类型';
 COMMENT
-ON COLUMN log_login.request_browser IS '登录浏览器';
+ON COLUMN log_login.browser IS '登录浏览器';
 COMMENT
-ON COLUMN log_login.duration_ms IS '请求执行耗时:单位毫秒';
+ON COLUMN log_login.duration_ms IS '登录耗时(毫秒)';
 COMMENT
 ON COLUMN log_login.params IS '请求参数';
 COMMENT
@@ -368,28 +368,28 @@ ON COLUMN log_login.del_flag IS '是否删除:0-否,1-是';
 DROP TABLE IF EXISTS log_operate;
 CREATE TABLE log_operate
 (
-    id              bigint NOT NULL,
-    module          varchar(256) NULL DEFAULT NULL,
-    type            smallint NULL DEFAULT NULL,
-    user_id         bigint NULL DEFAULT NULL,
-    descr           varchar(256) NULL DEFAULT NULL,
-    status          smallint NULL DEFAULT NULL,
-    error_msg       text NULL DEFAULT NULL,
-    request_ip      varchar(256) NULL DEFAULT NULL,
-    request_url     varchar(512) NULL DEFAULT NULL,
-    request_area    varchar(256) NULL DEFAULT NULL,
-    request_os      varchar(64) NULL DEFAULT NULL,
-    request_device  varchar(64) NULL DEFAULT NULL,
-    request_browser varchar(64) NULL DEFAULT NULL,
-    method_name     varchar(1024) NULL DEFAULT NULL,
-    duration_ms     bigint NULL DEFAULT NULL,
-    params          text NULL DEFAULT NULL,
-    result          text NULL DEFAULT NULL,
-    creator         bigint NULL DEFAULT NULL,
-    create_time     TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
-    updater         bigint NULL DEFAULT NULL,
-    update_time     TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
-    del_flag        smallint NULL DEFAULT 0,
+    id          BIGINT NOT NULL,
+    module      VARCHAR(256) NULL DEFAULT NULL,
+    type        VARCHAR(32) NULL DEFAULT NULL,
+    user_id     BIGINT NULL DEFAULT NULL,
+    descr       VARCHAR(256) NULL DEFAULT NULL,
+    status      SMALLINT NULL DEFAULT NULL,
+    error_msg   TEXT NULL DEFAULT NULL,
+    ip          VARCHAR(256) NULL DEFAULT NULL,
+    url         VARCHAR(512) NULL DEFAULT NULL,
+    region      VARCHAR(256) NULL DEFAULT NULL,
+    os          VARCHAR(64) NULL DEFAULT NULL,
+    device      VARCHAR(64) NULL DEFAULT NULL,
+    browser     VARCHAR(64) NULL DEFAULT NULL,
+    method      VARCHAR(1024) NULL DEFAULT NULL,
+    duration_ms BIGINT NULL DEFAULT NULL,
+    params      TEXT NULL DEFAULT NULL,
+    result      TEXT NULL DEFAULT NULL,
+    creator     BIGINT NULL DEFAULT NULL,
+    create_time TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+    updater     BIGINT NULL DEFAULT NULL,
+    update_time TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+    del_flag    SMALLINT NULL DEFAULT 0,
     PRIMARY KEY (id)
 );
 
@@ -400,7 +400,7 @@ ON COLUMN log_operate.id IS '日志ID';
 COMMENT
 ON COLUMN log_operate.module IS '操作所属模块';
 COMMENT
-ON COLUMN log_operate.type IS '操作类型:0-未知,1-新增,2-更新,3-查询,4-删除';
+ON COLUMN log_operate.type IS '操作类型:unknown-未知,insert-新增,update-更新,query-查询,delete-删除';
 COMMENT
 ON COLUMN log_operate.user_id IS '操作人ID';
 COMMENT
@@ -410,21 +410,23 @@ ON COLUMN log_operate.status IS '操作状态:0-失败,1-成功';
 COMMENT
 ON COLUMN log_operate.error_msg IS '错误信息';
 COMMENT
-ON COLUMN log_operate.request_ip IS '请求IP';
+ON COLUMN log_operate.ip IS '请求IP';
 COMMENT
-ON COLUMN log_operate.request_url IS '请求的URL地址';
+ON COLUMN log_operate.url IS '请求URL';
 COMMENT
-ON COLUMN log_operate.request_area IS '请求地区';
+ON COLUMN log_operate.region IS '请求地区';
 COMMENT
-ON COLUMN log_operate.request_os IS '请求系统';
+ON COLUMN log_operate.os IS '请求系统';
 COMMENT
-ON COLUMN log_operate.request_device IS '请求设备';
+ON COLUMN log_operate.device IS '请求设备';
 COMMENT
-ON COLUMN log_operate.request_browser IS '请求浏览器';
+ON COLUMN log_operate.browser IS '请求浏览器';
 COMMENT
-ON COLUMN log_operate.method_name IS '被调用方法的全限定名（包名.类名.方法名）';
+ON COLUMN log_operate.browser IS '请求浏览器';
 COMMENT
-ON COLUMN log_operate.duration_ms IS '请求执行耗时:单位毫秒';
+ON COLUMN log_operate.method IS '被调用方法的全限定名(包名.类名.方法名)';
+COMMENT
+ON COLUMN log_operate.duration_ms IS '请求耗时(毫秒)';
 COMMENT
 ON COLUMN log_operate.params IS '请求参数';
 COMMENT
@@ -447,17 +449,17 @@ ON COLUMN log_operate.del_flag IS '逻辑删除标识:0-未删除,1-已删除';
 DROP TABLE IF EXISTS conf_region;
 CREATE TABLE conf_region
 (
-    id          bigint NOT NULL,
+    id          BIGINT NOT NULL,
     pcode       VARCHAR(16) NULL DEFAULT NULL,
     code        VARCHAR(16) NULL DEFAULT NULL,
     name        VARCHAR(128) NULL DEFAULT NULL,
-    level       smallint NULL DEFAULT NULL,
+    level       SMALLINT NULL DEFAULT NULL,
     full_path   VARCHAR(512) NULL DEFAULT NULL,
-    creator     bigint NULL DEFAULT NULL,
+    creator     BIGINT NULL DEFAULT NULL,
     create_time TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
-    updater     bigint NULL DEFAULT NULL,
+    updater     BIGINT NULL DEFAULT NULL,
     update_time TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
-    del_flag    smallint NULL DEFAULT 0,
+    del_flag    SMALLINT NULL DEFAULT 0,
     PRIMARY KEY (`id`)
 );
 

@@ -1,7 +1,8 @@
 package cn.codesensi.leaf.rbac.system.service;
 
 
-import cn.codesensi.leaf.rbac.system.dto.*;
+import cn.codesensi.leaf.rbac.system.dto.LoginDTO;
+import cn.codesensi.leaf.rbac.system.dto.LoginResultDTO;
 
 /**
  * 登录接口
@@ -9,12 +10,12 @@ import cn.codesensi.leaf.rbac.system.dto.*;
 public interface LoginService {
 
     /**
-     * 账号密码登录
+     * 登录
      *
-     * @param loginAccountDTO 登录用户信息
+     * @param loginDTO 登录用户信息
      * @return 登录成功后信息
      */
-    LoginResultDTO loginAccount(LoginAccountDTO loginAccountDTO);
+    LoginResultDTO login(LoginDTO loginDTO);
 
     /**
      * 退出登录

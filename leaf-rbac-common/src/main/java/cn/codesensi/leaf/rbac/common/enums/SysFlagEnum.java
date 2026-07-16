@@ -1,24 +1,24 @@
 package cn.codesensi.leaf.rbac.common.enums;
 
+import cn.codesensi.leaf.rbac.common.constants.AppConst;
 import lombok.Getter;
 
 /**
- * 操作类型枚举
+ * 系统内置标识枚举
+ * 1-内置
+ * 0-非内置
  */
 @Getter
-public enum OperateType implements BaseEnum<String> {
+public enum SysFlagEnum implements BaseEnum<Integer> {
 
-    UNKNOWN("unknown", "未知"),
-    INSERT("insert", "新增"),
-    UPDATE("update", "更新"),
-    QUERY("query", "查询"),
-    DELETE("delete", "删除"),
+    DELETED(AppConst.ONE_INT, "内置"),
+    NOT_DELETED(AppConst.ZERO_INT, "非内置"),
     ;
 
     /**
      * 编码
      */
-    private final String code;
+    private final Integer code;
 
     /**
      * 说明
@@ -31,13 +31,13 @@ public enum OperateType implements BaseEnum<String> {
      * @param code 编码
      * @param desc 说明
      */
-    OperateType(String code, String desc) {
+    SysFlagEnum(Integer code, String desc) {
         this.code = code;
         this.desc = desc;
     }
 
     @Override
-    public String getCode() {
+    public Integer getCode() {
         return code;
     }
 

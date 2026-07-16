@@ -1,6 +1,6 @@
 package cn.codesensi.leaf.rbac.api.request;
 
-import cn.codesensi.leaf.rbac.common.enums.GenderType;
+import cn.codesensi.leaf.rbac.common.enums.GenderEnum;
 import cn.codesensi.leaf.rbac.framework.annotation.IdNo;
 import cn.codesensi.leaf.rbac.framework.annotation.InEnum;
 import cn.codesensi.leaf.rbac.framework.annotation.Phone;
@@ -65,7 +65,7 @@ public class UserSaveRequest implements Serializable {
     /**
      * 用户性别:0-保密,1-男,2-女
      */
-    @InEnum(enumClass = GenderType.class, message = "用户性别不在指定范围内")
+    @InEnum(enumClass = GenderEnum.class, message = "用户性别不在指定范围内")
     @Schema(description = "用户性别:0-保密,1-男,2-女", example = "1")
     private Integer gender;
 

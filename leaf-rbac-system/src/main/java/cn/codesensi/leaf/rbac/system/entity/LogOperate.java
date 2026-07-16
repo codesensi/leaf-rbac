@@ -40,9 +40,9 @@ public class LogOperate extends BaseEntity implements Serializable {
     private String module;
 
     /**
-     * 操作类型:0-未知,1-新增,2-更新,3-查询,4-删除
+     * 操作类型:unknown-未知,insert-新增,update-更新,query-查询,delete-删除
      */
-    private Integer type;
+    private String type;
 
     /**
      * 操作人ID
@@ -67,50 +67,50 @@ public class LogOperate extends BaseEntity implements Serializable {
     /**
      * 请求来源IP地址
      */
-    private String requestIp;
+    private String ip;
 
     /**
      * 请求的URL地址
      */
-    private String requestUrl;
+    private String url;
 
     /**
      * 请求地区
      */
-    private String requestArea;
+    private String region;
 
     /**
      * 请求系统
      */
-    private String requestOs;
+    private String os;
 
     /**
      * 请求设备
      */
-    private String requestDevice;
+    private String device;
 
     /**
      * 请求浏览器
      */
-    private String requestBrowser;
+    private String browser;
 
     /**
-     * 被调用方法的全限定名（包名.类名.方法名）
+     * 被调用方法的全限定名(包名.类名.方法名)
      */
-    private String methodName;
+    private String method;
 
     /**
-     * 请求执行耗时（毫秒）
+     * 求执行耗时(毫秒)
      */
     private Long durationMs;
 
     /**
-     * 请求参数（JSON字符串格式，按配置记录）
+     * 请求参数
      */
     private String params;
 
     /**
-     * 响应结果（JSON字符串格式，按配置记录）
+     * 响应结果
      */
     private String result;
 

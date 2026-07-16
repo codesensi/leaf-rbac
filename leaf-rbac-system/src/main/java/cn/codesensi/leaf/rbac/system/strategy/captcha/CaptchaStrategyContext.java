@@ -3,7 +3,6 @@ package cn.codesensi.leaf.rbac.system.strategy.captcha;
 import cn.codesensi.leaf.rbac.common.exception.BusinessException;
 import cn.codesensi.leaf.rbac.system.dto.CaptchaDTO;
 import cn.codesensi.leaf.rbac.system.dto.CaptchaResultDTO;
-import cn.codesensi.leaf.rbac.system.enums.CaptchaStrategyType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;

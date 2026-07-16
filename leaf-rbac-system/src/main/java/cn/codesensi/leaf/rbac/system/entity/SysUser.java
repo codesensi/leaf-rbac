@@ -52,7 +52,7 @@ public class SysUser extends BaseEntity implements Serializable {
     /**
      * 用户身份证号码
      */
-    private String idNo;
+    private String idCard;
 
     /**
      * 用户邮箱
@@ -65,19 +65,14 @@ public class SysUser extends BaseEntity implements Serializable {
     private String phone;
 
     /**
-     * 用户性别:0-保密,1-男,2-女
+     * 用户性别:U-未知,M-男,F-女
      */
-    private Integer gender;
+    private String gender;
 
     /**
      * 用户头像地址
      */
     private String avatar;
-
-    /**
-     * 用户类型:0-系统用户
-     */
-    private Integer type;
 
     /**
      * 用户状态:0-启用,1-禁用
@@ -90,7 +85,7 @@ public class SysUser extends BaseEntity implements Serializable {
     private String remark;
 
     /**
-     * 系统内置标识:0-自定义,1-内置
+     * 系统内置标识:0-非内置,1-内置
      */
     private Integer sysFlag;
 

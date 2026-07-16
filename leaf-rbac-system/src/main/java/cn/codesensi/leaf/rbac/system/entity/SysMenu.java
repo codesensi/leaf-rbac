@@ -65,9 +65,9 @@ public class SysMenu extends BaseEntity implements Serializable {
     private String title;
 
     /**
-     * 菜单类型:1-目录,2-菜单,3-按钮
+     * 菜单类型:D-目录,M-菜单,B-按钮
      */
-    private Integer type;
+    private String type;
 
     /**
      * 菜单排序
@@ -120,7 +120,7 @@ public class SysMenu extends BaseEntity implements Serializable {
     private String remark;
 
     /**
-     * 系统内置标识:0-自定义,1-内置
+     * 系统内置标识:0-非内置,1-内置
      */
     private Integer sysFlag;
 

@@ -2,8 +2,6 @@ package cn.codesensi.leaf.rbac.common.util;
 
 import cn.codesensi.leaf.rbac.common.enums.BaseEnum;
 
-import java.util.Objects;
-
 /**
  * 枚举工具类
  *
@@ -12,12 +10,14 @@ import java.util.Objects;
 public class EnumUtil {
 
     /**
-     * 根据 code 获取枚举
+     * 根据 code 获取枚举（类型安全）
      */
-    public static <T extends BaseEnum> T fromCode(Class<T> enumClass, Integer code) {
+    public static <E extends Enum<E> & BaseEnum<T>, T> E fromCode(Class<E> enumClass, T code) {
         if (code == null) return null;
-        for (T e : enumClass.getEnumConstants()) {
-            if (Objects.equals(e.getCode(), code)) return e;
+        for (E e : enumClass.getEnumConstants()) {
+            if (code.equals(e.getCode())) {
+                return e;
+            }
         }
         return null;
     }
@@ -25,8 +25,8 @@ public class EnumUtil {
     /**
      * 根据 code 获取描述
      */
-    public static String getDescByCode(Class<? extends BaseEnum> enumClass, Integer code) {
-        BaseEnum e = fromCode((Class<BaseEnum>) enumClass, code);
+    public static <E extends Enum<E> & BaseEnum<T>, T> String getDesc(Class<E> enumClass, T code) {
+        E e = fromCode(enumClass, code);
         return e != null ? e.getDesc() : null;
     }
 }

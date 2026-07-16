@@ -1,6 +1,6 @@
 package cn.codesensi.leaf.rbac.framework.aspect;
 
-import cn.codesensi.leaf.rbac.common.enums.SuccessFailEnum;
+import cn.codesensi.leaf.rbac.common.enums.SuccessEnum;
 import cn.codesensi.leaf.rbac.framework.annotation.LogOperate;
 import cn.codesensi.leaf.rbac.framework.event.LogOperateEvent;
 import cn.codesensi.leaf.rbac.framework.util.Ip2regionUtil;
@@ -161,7 +161,7 @@ public class LogOperateAspect {
 
         try {
             Object result = joinPoint.proceed();
-            builder.status(SuccessFailEnum.SUCCESS.getCode());
+            builder.status(SuccessEnum.SUCCESS.getCode());
             // 记录结果
             if (logOperate.recordResult()) {
                 // 4. 将结果转换为 JsonNode 并剔除字段
@@ -171,7 +171,7 @@ public class LogOperateAspect {
             }
             return result;
         } catch (Throwable t) {
-            builder.status(SuccessFailEnum.FAIL.getCode());
+            builder.status(SuccessEnum.FAIL.getCode());
             builder.errorMsg(t.getMessage());
             throw t;
         } finally {

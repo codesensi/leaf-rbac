@@ -1,10 +1,12 @@
 package cn.codesensi.leaf.rbac.api.controller.auth;
 
 import cn.codesensi.leaf.rbac.api.converter.LoginConverter;
-import cn.codesensi.leaf.rbac.api.request.LoginAccountRequest;
+import cn.codesensi.leaf.rbac.api.request.LoginRequest;
 import cn.codesensi.leaf.rbac.api.response.LoginResponse;
+import cn.codesensi.leaf.rbac.common.enums.LoginEventType;
 import cn.codesensi.leaf.rbac.framework.annotation.ApiResponseBody;
-import cn.codesensi.leaf.rbac.system.dto.LoginAccountDTO;
+import cn.codesensi.leaf.rbac.framework.annotation.LogLogin;
+import cn.codesensi.leaf.rbac.system.dto.LoginDTO;
 import cn.codesensi.leaf.rbac.system.dto.LoginResultDTO;
 import cn.codesensi.leaf.rbac.system.service.LoginService;
 import cn.dev33.satoken.annotation.SaIgnore;
@@ -34,20 +36,22 @@ public class LoginController {
     private final LoginConverter loginConverter;
 
     /**
-     * 账号密码登录
+     * 登录
      */
+    @LogLogin(type = LoginEventType.LOGIN)
     @SaIgnore
-    @Operation(summary = "账号密码登录")
-    @PostMapping("/login/account")
-    public LoginResponse loginAccount(@Validated @RequestBody LoginAccountRequest request) {
-        LoginAccountDTO loginAccountDTO = loginConverter.toDTO(request);
-        LoginResultDTO loginResultDTO = loginService.loginAccount(loginAccountDTO);
+    @Operation(summary = "登录")
+    @PostMapping("/login")
+    public LoginResponse login(@Validated @RequestBody LoginRequest request) {
+        LoginDTO loginDTO = loginConverter.toDTO(request);
+        LoginResultDTO loginResultDTO = loginService.login(loginDTO);
         return loginConverter.toResponse(loginResultDTO);
     }
 
     /**
      * 退出登录
      */
+    @LogLogin(type = LoginEventType.LOGOUT)
     @Operation(summary = "退出登录")
     @PostMapping("/logout")
     public void logout() {

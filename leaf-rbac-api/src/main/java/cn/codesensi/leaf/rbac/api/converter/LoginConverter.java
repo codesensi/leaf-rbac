@@ -1,8 +1,8 @@
 package cn.codesensi.leaf.rbac.api.converter;
 
-import cn.codesensi.leaf.rbac.api.request.LoginAccountRequest;
+import cn.codesensi.leaf.rbac.api.request.LoginRequest;
 import cn.codesensi.leaf.rbac.api.response.LoginResponse;
-import cn.codesensi.leaf.rbac.system.dto.LoginAccountDTO;
+import cn.codesensi.leaf.rbac.system.dto.LoginDTO;
 import cn.codesensi.leaf.rbac.system.dto.LoginResultDTO;
 import org.mapstruct.Mapper;
 
@@ -18,7 +18,7 @@ public interface LoginConverter {
     /**
      * LoginAccountRequest → LoginAccountDTO
      */
-    LoginAccountDTO toDTO(LoginAccountRequest request);
+    LoginDTO toDTO(LoginRequest request);
 
     /**
      * LoginResultDTO → LoginResponse
