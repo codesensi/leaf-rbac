@@ -115,11 +115,11 @@ public class LogOperateAspect {
                 .methodName(signature.toLongString());
 
         ServletRequestAttributes attributes = ServletUtil.getRequestAttributes();
-        Optional.ofNullable(attributes).ifPresent(o -> {
-            HttpServletRequest request = o.getRequest();
+        if (ObjUtil.isNotNull(attributes)) {
+            HttpServletRequest request = attributes.getRequest();
             StringBuffer requestUrl = request.getRequestURL();
             builder.requestUrl(requestUrl.toString());
-        });
+        }
 
         String ipAddr = IpUtil.getIpAddr();
         builder.requestIp(ipAddr);
