@@ -21,10 +21,10 @@ public enum LoginType {
     /**
      * 登录类型说明
      */
-    private final String message;
+    private final String msg;
 
-    LoginType(String type, String message) {
+    LoginType(String type, String msg) {
         this.type = type;
-        this.message = message;
+        this.msg = msg;
     }
 }
