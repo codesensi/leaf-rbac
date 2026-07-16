@@ -1,4 +1,4 @@
-package cn.codesensi.leaf.rbac.system.aspect;
+package cn.codesensi.leaf.rbac.framework.aspect;
 
 import cn.codesensi.leaf.rbac.common.enums.YesNoEnum;
 import cn.codesensi.leaf.rbac.system.dto.LoginAccountDTO;
