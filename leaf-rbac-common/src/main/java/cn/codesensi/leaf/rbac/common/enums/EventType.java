@@ -10,7 +10,7 @@ import lombok.Getter;
  */
 @Getter
 public enum EventType {
-    OTHER(0, "未知"),
+    UNKNOWN(0, "未知"),
     LOGIN(1, "登录"),
     LOGOUT(2, "登出"),
     ;

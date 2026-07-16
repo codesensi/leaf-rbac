@@ -12,7 +12,7 @@ import lombok.Getter;
  */
 @Getter
 public enum OperateType {
-    OTHER(0, "未知"),
+    UNKNOWN(0, "未知"),
     INSERT(1, "新增"),
     UPDATE(2, "更新"),
     QUERY(3, "查询"),
