@@ -124,6 +124,7 @@ app:
     max-extra: 86400
     # 项目启动时行政区划缓存开关
     preload-region: true
+  # 请求日志配置 已使用logbook替代，若想开启，需放开cn.codesensi.leaf.rbac.framework.filter.RequestLogFilter的注释
   request-log:
     # 是否打印请求日志
     enabled: true
