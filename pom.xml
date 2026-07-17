@@ -41,6 +41,7 @@
         <UserAgentUtils.version>1.21</UserAgentUtils.version>
         <easy-captcha.version>1.6.2</easy-captcha.version>
         <nashorn-core.version>15.7</nashorn-core.version>
+        <logbook.version>4.0.4</logbook.version>
         <!-- 插件版本 -->
         <maven-compiler-plugin.version>3.15.0</maven-compiler-plugin.version>
         <maven-surefire-plugin.version>3.5.6</maven-surefire-plugin.version>
@@ -207,6 +208,12 @@
                 <groupId>org.openjdk.nashorn</groupId>
                 <artifactId>nashorn-core</artifactId>
                 <version>${nashorn-core.version}</version>
+            </dependency>
+            <!-- https://mvnrepository.com/artifact/org.zalando/logbook-spring-boot-starter -->
+            <dependency>
+                <groupId>org.zalando</groupId>
+                <artifactId>logbook-spring-boot-starter</artifactId>
+                <version>${logbook.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

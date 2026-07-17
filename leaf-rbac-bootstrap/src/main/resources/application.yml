@@ -25,6 +25,8 @@ logging:
       file-name-pattern: ${logging.file.name}.%d.%i.log
       max-file-size: 100MB
       max-history: 180
+  level:
+    org.zalando.logbook.Logbook: TRACE
 
 # springdoc-openapi项目配置
 springdoc:
@@ -52,6 +54,26 @@ mybatis-flex:
       key-type: generator
       value: snowFlakeId
     logic-delete-column: del_flag
+
+# Logbook配置
+logbook:
+  write:
+    # body 最大记录长度，超出部分用 ... 截断
+    max-body-size: 2000
+  obfuscate:
+    # 混淆内容替换字符串
+    replacement: "***"
+    # 需要混淆的 HTTP Header 名称列表
+    headers:
+      - Authorization
+      - cookie
+    # 需要混淆的 JSON Body 字段名称列表
+    json-body-fields:
+      - accessToken
+      - password
+      - oldPassword
+      - newPassword
+      - confirmPassword
 
 # sa-token配置
 sa-token:
