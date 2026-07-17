@@ -1,6 +1,8 @@
 package cn.codesensi.leaf.rbac.framework.filter;
 
 import cn.codesensi.leaf.rbac.common.properties.AppRequestLogProperties;
+import cn.codesensi.leaf.rbac.framework.util.SensitiveMaskUtil;
+import cn.hutool.core.util.StrUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -17,8 +19,7 @@ import org.springframework.web.util.ContentCachingResponseWrapper;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.List;
 
 /**
  * 请求日志过滤器
@@ -63,84 +64,51 @@ public class RequestLogFilter extends OncePerRequestFilter {
                             ContentCachingResponseWrapper response,
                             long duration) {
 
-        // 1. 构建基本信息
-        StringBuilder logBuilder = new StringBuilder();
+        // 获取请求体和响应体
+        byte[] reqBody = request.getContentAsByteArray();
+        byte[] respBody = response.getContentAsByteArray();
+        String reqBodyStr = reqBody.length > 0 ? new String(reqBody, StandardCharsets.UTF_8) : null;
+        String respBodyStr = respBody.length > 0 ? new String(respBody, StandardCharsets.UTF_8) : null;
 
-        logBuilder.append("\n========== Request Log ==========\n");
-        logBuilder.append("Method   : ").append(request.getMethod()).append("\n");
-        logBuilder.append("URL      : ").append(request.getRequestURL()).append("\n");
-        logBuilder.append("Status   : ").append(response.getStatus()).append("\n");
-        logBuilder.append("Duration : ").append(duration).append("ms\n");
-
-        // 2. 请求参数（Query String + 表单参数）
-        Map<String, String[]> paramMap = request.getParameterMap();
-        if (!paramMap.isEmpty()) {
-            String params = paramMap.entrySet()
-                    .stream()
-                    // 过滤掉值为 null 的参数
-                    .filter(entry -> entry.getValue() != null)
-                    .map(entry -> entry.getKey()
-                            .concat("=")
-                            .concat(String.join(",", entry.getValue())))
-                    .collect(Collectors.joining("&"));
-            // 脱敏
-            params = sensitiveMask(params);
-            logBuilder.append("Params   : ").append(params).append("\n");
+        List<String> sensitiveFields = appRequestLogProperties.getSensitiveFields();
+        // 请求参数脱敏
+        String queryString = request.getQueryString();
+        if (StrUtil.isNotBlank(queryString)) {
+            queryString = SensitiveMaskUtil.maskQueryString(queryString, sensitiveFields);
         }
 
-        // 3. 请求体（Body）
-        byte[] requestBody = request.getContentAsByteArray();
-        if (requestBody.length > 0) {
-            String body = new String(requestBody, StandardCharsets.UTF_8);
-            // 脱敏
-            body = sensitiveMask(body);
-            logBuilder.append("Body     : ").append(body).append("\n");
+        // 请求体脱敏
+        if (StrUtil.isNotBlank(reqBodyStr)) {
+            reqBodyStr = SensitiveMaskUtil.maskJson(reqBodyStr, sensitiveFields);
         }
 
-        // 4. 响应体（可选，生产环境建议关闭）
-        if (appRequestLogProperties.isIncludeResponseBody()) {
-            byte[] responseBody = response.getContentAsByteArray();
-            if (responseBody.length > 0) {
-                String resp = new String(responseBody, StandardCharsets.UTF_8);
-                resp = truncateAndMask(resp);
-                logBuilder.append("Response : ").append(resp).append("\n");
+        // 响应体脱敏
+        boolean includeResponseBody = appRequestLogProperties.isIncludeResponseBody();
+        if (StrUtil.isNotBlank(respBodyStr) && includeResponseBody) {
+            respBodyStr = SensitiveMaskUtil.maskJson(respBodyStr, sensitiveFields);
+            // 截断处理
+            int maxBodyLength = appRequestLogProperties.getMaxBodyLength();
+            if (respBodyStr.length() > maxBodyLength) {
+                respBodyStr = StrUtil.subPre(respBodyStr, maxBodyLength).concat("...(truncated)");
             }
         }
 
-        logBuilder.append("=================================\n");
-
+        String logBuilder = "\n========== Request Log ==========\n" +
+                "Method   : " + request.getMethod() + "\n" +
+                "URL      : " + request.getRequestURL() + "\n" +
+                "Status   : " + response.getStatus() + "\n" +
+                "Duration : " + duration + "ms\n";
+        if (StrUtil.isNotBlank(queryString)) {
+            logBuilder += "Params   : " + queryString + "\n";
+        }
+        if (StrUtil.isNotBlank(reqBodyStr)) {
+            logBuilder += "Body     : " + reqBodyStr + "\n";
+        }
+        if (StrUtil.isNotBlank(respBodyStr) && includeResponseBody) {
+            logBuilder += "Response : " + respBodyStr + "\n";
+        }
+        logBuilder += "=================================\n";
         // 统一打印（使用 INFO 级别，便于查看）
-        log.info(logBuilder.toString());
-    }
-
-    /**
-     * 脱敏处理
-     */
-    private String sensitiveMask(String text) {
-        if (text == null) {
-            return null;
-        }
-        for (String field : appRequestLogProperties.getSensitiveFields()) {
-            // 简单脱敏：将 password=123 替换为 password=***
-            text = text.replaceAll(field + "=[^&]*", field + "=***");
-        }
-        return text;
-    }
-
-    /**
-     * 截断处理
-     */
-    private String truncateAndMask(String text) {
-        if (text == null) {
-            return null;
-        }
-        // 先脱敏
-        String masked = sensitiveMask(text);
-        // 再截断
-        int maxLen = appRequestLogProperties.getMaxBodyLength();
-        if (masked.length() > maxLen) {
-            return masked.substring(0, maxLen) + "... (truncated)";
-        }
-        return masked;
+        log.info(logBuilder);
     }
 }
