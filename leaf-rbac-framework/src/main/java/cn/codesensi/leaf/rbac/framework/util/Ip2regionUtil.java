@@ -47,10 +47,13 @@ public class Ip2regionUtil {
     public static String search(String ip) {
         try {
             String search = ip2Region.search(ip);
-            search = search.replace("|0", "").replace("0|", "");
             if (search.contains("Reserved")) {
-                search = "内网";
+                return "内网";
             }
+            // 去掉 |0 及 0|
+            search = search.replace("|0", "").replace("0|", "");
+            // 去掉最后一个 | 及后边的内容
+            search = search.substring(0, search.lastIndexOf("|"));
             return search;
         } catch (Exception ignored) {
         }
