@@ -26,7 +26,7 @@ import java.util.List;
  */
 @RequiredArgsConstructor
 @Slf4j
-@Component
+// @Component
 @Order(Ordered.HIGHEST_PRECEDENCE + 2)
 public class RequestLogFilter extends OncePerRequestFilter {
 
