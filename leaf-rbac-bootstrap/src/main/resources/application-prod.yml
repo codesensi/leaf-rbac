@@ -134,5 +134,4 @@ app:
       - password
       - oldPassword
       - newPassword
-      - token
       - accessToken
