@@ -13,7 +13,7 @@ import java.util.Map;
 /**
  * HTTP 请求工具类 —— 提供请求体读取和请求头获取的便捷方法。
  * <p>
- * 请求体读取需配合 {@link CacheRequestBodyFilter} 使用：
+ * 请求体读取需配合 {@link cn.codesensi.leaf.rbac.framework.filter.CacheRequestBodyFilter} 使用：
  * 该过滤器将原始请求包装为 {@link ContentCachingRequestWrapper}，
  * 本工具类从中获取缓存的请求体字节数组，避免流被消费后无法重复读取的问题。
  *
