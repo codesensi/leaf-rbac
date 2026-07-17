@@ -58,7 +58,7 @@ public class AccountLoginStrategy implements LoginStrategy {
         }
 
         // 校验验证码
-        if (appCaptchaProperties.getEnabled()) {
+        if (appCaptchaProperties.isEnabled()) {
             if (StrUtil.isBlank(loginDTO.getCaptchaKey())) {
                 throw new ValidationException("验证码唯一标识为空");
             }

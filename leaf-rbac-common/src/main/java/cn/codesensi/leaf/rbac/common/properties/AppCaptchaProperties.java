@@ -12,7 +12,7 @@ public class AppCaptchaProperties {
     /**
      * 验证码开关
      */
-    private Boolean enabled;
+    private boolean enabled = true;
 
     /**
      * 验证码类型

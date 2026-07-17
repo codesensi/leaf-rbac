@@ -53,7 +53,7 @@ public class AppProperties {
      *   <li>{@code false} — 正常模式，所有操作不受限制</li>
      * </ul>
      */
-    private Boolean demoMode;
+    private boolean demoMode = false;
 
     /**
      * 用户随机头像服务地址
