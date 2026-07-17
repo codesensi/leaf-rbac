@@ -20,9 +20,9 @@ public class AppCaptchaProperties {
     private Type type;
 
     /**
-     * 图形验证码类型
+     * 图形验证码类型，默认 SPEC（png 静态图）
      */
-    private ImageType imageType;
+    private ImageType imageType = ImageType.SPEC;
 
     /**
      * 图形验证码过期时间，单位秒。5分钟

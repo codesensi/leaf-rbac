@@ -50,7 +50,11 @@ public class SmsCaptchaStrategy implements CaptchaStrategy {
         // TODO 发短信
 
         // 放入缓存
-        stringRedisTemplate.opsForValue().set(CacheUtil.getCaptchaSmsPrefix().concat(phone), result, appCaptchaProperties.getSmsExpire(), TimeUnit.SECONDS);
+        stringRedisTemplate.opsForValue().set(
+                CacheUtil.getCaptchaSmsPrefix().concat(phone),
+                result,
+                appCaptchaProperties.getSmsExpire(),
+                TimeUnit.SECONDS);
         // 返回结果
         CaptchaResultDTO captchaResultDTO = new CaptchaResultDTO();
         captchaResultDTO.setCaptchaKey(phone);
