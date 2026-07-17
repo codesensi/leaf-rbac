@@ -13,8 +13,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
-import org.springframework.web.context.request.RequestAttributes;
-import org.springframework.web.context.request.RequestContextHolder;
 
 import java.util.Map;
 import java.util.concurrent.*;
@@ -25,7 +23,7 @@ import java.util.concurrent.*;
  * 提供两类线程池：
  * <ul>
  *   <li><b>异步任务线程池</b>（{@link #asyncExecutor()}）— 用于执行 {@code @Async} 异步任务，
- *       自动从主线程传递 {@link RequestAttributes} 和 MDC（含 traceId）到子线程；</li>
+ *       自动从主线程传递 MDC（含 traceId）和当前操作用户信息到子线程；</li>
  *   <li><b>定时任务线程池</b>（{@link #scheduledExecutorService()}）— 用于执行定时/延迟任务，
  *       每次执行前自动生成新的 traceId 并注入 MDC，执行结束后清理。</li>
  * </ul>
@@ -65,8 +63,8 @@ public class ThreadPoolConfig {
      * <ul>
      *   <li>核心/最大线程数、队列容量、超时时间均从配置 {@link ThreadPoolProperties} 读取；</li>
      *   <li>支持优雅停机（等待已提交任务完成）；</li>
-     *   <li>通过  setTaskDecorator 自动将主线程的 {@link RequestAttributes} 和
-     *       MDC 上下文（含 traceId）传递到子线程，并在执行完毕后清理，防止内存泄漏。</li>
+     *   <li>通过 setTaskDecorator 自动将主线程的 MDC 上下文（含 traceId）和
+     *       当前操作用户信息传递到子线程，并在执行完毕后清理，防止线程上下文污染。</li>
      * </ul>
      *
      * @return 异步任务线程池
@@ -136,56 +134,42 @@ public class ThreadPoolConfig {
     }
 
     /**
-     * 异步线程上下文快照 —— 将主线程的三个上下文拍摄快照后在子线程中恢复。
+     * 异步线程上下文快照 —— 将主线程的两个上下文拍摄快照后在子线程中恢复。
      * <p>
      * 捕获内容：
      * <ul>
-     *   <li>{@link RequestAttributes} — Spring 请求属性（request/session 作用域的 Bean 访问）；</li>
      *   <li>{@link MDC} 上下文 — 日志链路追踪 ID（traceId）；</li>
      *   <li>{@link UserContext} — 当前操作人的完整信息（用户ID、用户名、昵称等）。</li>
      * </ul>
      * 从 {@link UserContextHolder} 获取（主线程在 Filter 中已从 SaToken Session 恢复），
      */
-    private record AsyncContext(RequestAttributes attributes,
-                                Map<String, String> mdc,
-                                UserContext userContext) {
+    private record AsyncContext(Map<String, String> mdc, UserContext userContext) {
 
         /**
          * 在主线程中拍摄上下文快照。
          * <p>
-         * 捕获当前线程的 {@link RequestAttributes}、MDC 上下文副本，
-         * 以及完整的 {@link UserContext} 数据。
+         * 捕获当前线程的 MDC 上下文副本和完整的 {@link UserContext} 数据。
+         * 在 HTTP 请求场景下，UserContext 已由 {@code UserContextInterceptor}
+         * 从 SaToken Session 恢复到 ThreadLocal，此处直接快照即可。
          * </p>
-         * <p>
-         * <b>获取策略：</b>
-         * </p>
-         * <ol>
-         *   <li>从 {@link UserContextHolder} 获取 — 在 HTTP 请求场景下，
-         *       已将 SaToken Session 中的完整用户信息恢复到 ThreadLocal，
-         *       此处直接快照即可获得操作人的完整信息；</li>
-         * </ol>
          *
-         * @return 包含三个上下文信息的快照记录
+         * @return 包含 MDC 和用户上下文的快照记录
          */
         static AsyncContext capture() {
-            RequestAttributes attributes = RequestContextHolder.getRequestAttributes();
             Map<String, String> mdc = MDC.getCopyOfContextMap();
             // 从主线程的 UserContextHolder 快照完整用户上下文
             UserContext userContext = UserContextHolder.get();
-            return new AsyncContext(attributes, mdc, userContext);
+            return new AsyncContext(mdc, userContext);
         }
 
         /**
          * 在子线程中恢复捕获的上下文。
          * <p>
-         * 按顺序恢复 {@link RequestAttributes} → MDC → {@link UserContext}，
-         * 确保子线程拥有与主线程相同的请求上下文和操作人身份。
+         * 按顺序恢复 MDC → {@link UserContext}，
+         * 确保子线程拥有与主线程相同的日志追踪和操作用户信息。
          * 每一项均做非空校验，避免空值覆盖子线程中已有的上下文。
          */
         void restore() {
-            if (attributes != null) {
-                RequestContextHolder.setRequestAttributes(attributes);
-            }
             if (mdc != null) {
                 MDC.setContextMap(mdc);
             }
@@ -197,12 +181,11 @@ public class ThreadPoolConfig {
         /**
          * 任务执行完毕后清理子线程的上下文。
          * <p>
-         * 依次清理 {@link RequestAttributes} → MDC → {@link UserContext}，
+         * 依次清理 MDC → {@link UserContext}，
          * 防止 ThreadLocal 在 Tomcat 线程池复用场景下产生上下文污染或内存泄漏。
          * 此方法在 {@code finally} 块中调用，确保异常场景也能正确清理。
          */
         void clear() {
-            RequestContextHolder.resetRequestAttributes();
             MDC.clear();
             UserContextHolder.clear();
         }
