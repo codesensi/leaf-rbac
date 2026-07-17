@@ -48,7 +48,10 @@ public class LeafRbacBootstrapApplication {
         log.info("    Doc URL:  http://127.0.0.1:{}/swagger-ui.html", port);
 
         // 发布行政区划缓存事件
-        eventPublisher.publishEvent(new CacheRegionEvent(this, "应用启动"));
+        Boolean enabled = environment.getProperty("app.cache.preload-region", Boolean.class);
+        if (Boolean.TRUE.equals(enabled)) {
+            eventPublisher.publishEvent(new CacheRegionEvent(this, "应用启动"));
+        }
     }
 
 }

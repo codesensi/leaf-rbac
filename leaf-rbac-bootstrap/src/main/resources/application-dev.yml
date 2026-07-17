@@ -120,6 +120,8 @@ app:
     base-ttl: 604800
     # 缓存随机偏移上限，单位秒。1 天
     max-extra: 86400
+    # 项目启动时行政区划缓存开关
+    preload-region: false
   request-log:
     # 是否打印请求日志
     enabled: true
