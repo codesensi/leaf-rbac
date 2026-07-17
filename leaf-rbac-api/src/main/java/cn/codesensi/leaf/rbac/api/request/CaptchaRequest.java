@@ -1,5 +1,7 @@
 package cn.codesensi.leaf.rbac.api.request;
 
+import cn.codesensi.leaf.rbac.common.enums.CaptchaType;
+import cn.codesensi.leaf.rbac.framework.annotation.InEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
@@ -21,9 +23,10 @@ public class CaptchaRequest implements Serializable {
     private static final long serialVersionUID = 1L;
 
     /**
-     * 唯一标识
+     * 验证码类型
      */
     @NotBlank(message = "验证码类型不能为空")
+    @InEnum(enumClass = CaptchaType.class, message = "验证码类型不在指定范围内")
     @Schema(description = "验证码类型", example = "image")
     private String type;
 

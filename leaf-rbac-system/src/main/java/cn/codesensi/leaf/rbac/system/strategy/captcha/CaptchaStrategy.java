@@ -9,6 +9,11 @@ import cn.codesensi.leaf.rbac.system.dto.CaptchaResultDTO;
 public interface CaptchaStrategy {
 
     /**
+     * 支持的验证码生成方式
+     */
+    String getCaptchaType();
+
+    /**
      * 生成验证码
      */
     CaptchaResultDTO captcha(CaptchaDTO captchaDTO);

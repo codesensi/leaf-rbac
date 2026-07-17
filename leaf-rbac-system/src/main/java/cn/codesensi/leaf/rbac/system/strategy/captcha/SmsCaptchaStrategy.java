@@ -1,11 +1,11 @@
-package cn.codesensi.leaf.rbac.system.strategy.captcha.impl;
+package cn.codesensi.leaf.rbac.system.strategy.captcha;
 
+import cn.codesensi.leaf.rbac.common.enums.CaptchaType;
 import cn.codesensi.leaf.rbac.common.exception.ValidationException;
 import cn.codesensi.leaf.rbac.common.properties.AppCaptchaProperties;
 import cn.codesensi.leaf.rbac.common.util.CacheUtil;
 import cn.codesensi.leaf.rbac.system.dto.CaptchaDTO;
 import cn.codesensi.leaf.rbac.system.dto.CaptchaResultDTO;
-import cn.codesensi.leaf.rbac.system.strategy.captcha.CaptchaStrategy;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 import lombok.RequiredArgsConstructor;
@@ -20,11 +20,19 @@ import java.util.concurrent.TimeUnit;
  */
 @RequiredArgsConstructor
 @Slf4j
-@Service("smsCaptchaStrategy")
-public class SmsCaptchaStrategyImpl implements CaptchaStrategy {
+@Service
+public class SmsCaptchaStrategy implements CaptchaStrategy {
 
     private final AppCaptchaProperties appCaptchaProperties;
     private final StringRedisTemplate stringRedisTemplate;
+
+    /**
+     * 支持的验证码生成方式
+     */
+    @Override
+    public String getCaptchaType() {
+        return CaptchaType.SMS.getCode();
+    }
 
     /**
      * 生成短信验证码
@@ -36,8 +44,8 @@ public class SmsCaptchaStrategyImpl implements CaptchaStrategy {
             throw new ValidationException("手机号不能为空");
         }
         // 生成验证码
-        String result = RandomUtil.randomNumbers(6);
-        log.info("短信验证码手机号：{}，验证码内容：{}", phone, result);
+        String result = RandomUtil.randomNumbers(appCaptchaProperties.getSmsLength());
+        log.debug("短信验证码手机号：{}，验证码内容：{}", phone, result);
 
         // TODO 发短信
 

@@ -8,7 +8,7 @@ import cn.codesensi.leaf.rbac.framework.annotation.ApiResponseBody;
 import cn.codesensi.leaf.rbac.framework.annotation.LogOperate;
 import cn.codesensi.leaf.rbac.system.dto.CaptchaDTO;
 import cn.codesensi.leaf.rbac.system.dto.CaptchaResultDTO;
-import cn.codesensi.leaf.rbac.system.strategy.captcha.CaptchaStrategyContext;
+import cn.codesensi.leaf.rbac.system.service.CaptchaService;
 import cn.dev33.satoken.annotation.SaIgnore;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -32,7 +32,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping()
 public class CaptchaController {
 
-    private final CaptchaStrategyContext captchaStrategyContext;
+    private final CaptchaService captchaService;
     private final CaptchaConverter captchaConverter;
 
     /**
@@ -44,7 +44,7 @@ public class CaptchaController {
     @GetMapping("/captcha")
     public CaptchaResponse captcha(@Validated @ParameterObject CaptchaRequest request) {
         CaptchaDTO captchaDTO = captchaConverter.toDTO(request);
-        CaptchaResultDTO captchaResultDTO = captchaStrategyContext.captcha(captchaDTO);
+        CaptchaResultDTO captchaResultDTO = captchaService.captcha(captchaDTO);
         return captchaConverter.toResponse(captchaResultDTO);
     }
 }

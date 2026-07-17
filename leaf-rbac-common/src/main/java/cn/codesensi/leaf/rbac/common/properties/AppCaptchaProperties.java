@@ -35,6 +35,11 @@ public class AppCaptchaProperties {
     private Long smsExpire = 15L * 60;
 
     /**
+     * 验证码长度
+     */
+    private Integer smsLength = 6;
+
+    /**
      * 验证码类型
      */
     public enum Type {

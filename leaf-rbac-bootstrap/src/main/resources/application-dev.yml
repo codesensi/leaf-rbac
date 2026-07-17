@@ -108,6 +108,8 @@ app:
     image-expire: 300
     # 短信验证码过期时间，单位秒。15 分钟
     sms-expire: 900
+    # 短信验证码长度
+    sms-length: 6
   # 安全配置
   security:
     # 请求缓存限制 5M

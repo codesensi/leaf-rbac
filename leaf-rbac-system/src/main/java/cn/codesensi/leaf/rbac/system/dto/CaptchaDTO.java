@@ -15,7 +15,7 @@ public class CaptchaDTO implements Serializable {
     private static final long serialVersionUID = 1L;
 
     /**
-     * 唯一标识
+     * 验证码类型
      */
     private String type;
 

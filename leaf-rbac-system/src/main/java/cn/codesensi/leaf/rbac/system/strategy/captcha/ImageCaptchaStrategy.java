@@ -1,11 +1,11 @@
-package cn.codesensi.leaf.rbac.system.strategy.captcha.impl;
+package cn.codesensi.leaf.rbac.system.strategy.captcha;
 
+import cn.codesensi.leaf.rbac.common.enums.CaptchaType;
 import cn.codesensi.leaf.rbac.common.exception.BusinessException;
 import cn.codesensi.leaf.rbac.common.properties.AppCaptchaProperties;
 import cn.codesensi.leaf.rbac.common.util.CacheUtil;
 import cn.codesensi.leaf.rbac.system.dto.CaptchaDTO;
 import cn.codesensi.leaf.rbac.system.dto.CaptchaResultDTO;
-import cn.codesensi.leaf.rbac.system.strategy.captcha.CaptchaStrategy;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
 import com.wf.captcha.ArithmeticCaptcha;
@@ -22,11 +22,19 @@ import java.util.concurrent.TimeUnit;
  */
 @RequiredArgsConstructor
 @Slf4j
-@Service("imageCaptchaStrategy")
-public class ImageCaptchaStrategyImpl implements CaptchaStrategy {
+@Service
+public class ImageCaptchaStrategy implements CaptchaStrategy {
 
     private final AppCaptchaProperties appCaptchaProperties;
     private final StringRedisTemplate stringRedisTemplate;
+
+    /**
+     * 支持的验证码生成方式
+     */
+    @Override
+    public String getCaptchaType() {
+        return CaptchaType.IMAGE.getCode();
+    }
 
     /**
      * 生成图形验证码
@@ -46,12 +54,12 @@ public class ImageCaptchaStrategyImpl implements CaptchaStrategy {
             // 算术验证码
             if (captcha instanceof ArithmeticCaptcha) {
                 String arithmeticString = ((ArithmeticCaptcha) captcha).getArithmeticString();
-                log.info("算术验证码运算公式：{}", arithmeticString);
+                log.debug("算术验证码运算公式：{}", arithmeticString);
             }
             String keyUuid = IdUtil.fastSimpleUUID();
             // 验证码结果
             String text = captcha.text();
-            log.info("图形验证码唯一标识：{}，验证码内容：{}", keyUuid, text);
+            log.debug("图形验证码唯一标识：{}，验证码内容：{}", keyUuid, text);
             // 放入缓存
             stringRedisTemplate.opsForValue().set(CacheUtil.getCaptchaImagePrefix().concat(keyUuid), text, appCaptchaProperties.getImageExpire(), TimeUnit.SECONDS);
             // 返回结果
