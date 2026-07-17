@@ -27,6 +27,7 @@ import org.springframework.core.DefaultParameterNameDiscoverer;
 import org.springframework.core.ParameterNameDiscoverer;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.util.ContentCachingRequestWrapper;
 
 import java.lang.reflect.Method;
 import java.util.*;
@@ -117,8 +118,11 @@ public class LogOperateAspect {
         ServletRequestAttributes attributes = ServletUtil.getRequestAttributes();
         if (ObjUtil.isNotNull(attributes)) {
             HttpServletRequest request = attributes.getRequest();
-            StringBuffer requestUrl = request.getRequestURL();
-            builder.url(requestUrl.toString());
+            // 从请求包装器中获取请求
+            if (request instanceof ContentCachingRequestWrapper requestWrapper) {
+                StringBuffer requestUrl = requestWrapper.getRequestURL();
+                builder.url(requestUrl.toString());
+            }
         }
 
         String ipAddr = IpUtil.getIpAddr();
