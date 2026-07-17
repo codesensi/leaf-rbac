@@ -30,7 +30,7 @@ import java.io.IOException;
  * - 通过 {@code requestCacheLimit} 限制最大缓存字节数，超出部分不会被缓存，但仍可在一次读取中正常使用。
  * <p>
  * <b>执行顺序：</b><br>
- * 设为最高优先级（{@link Ordered#HIGHEST_PRECEDENCE}），确保在任何读取请求体的逻辑之前完成包装。
+ * 设为最高优先级（{@link Ordered#HIGHEST_PRECEDENCE + 1}），确保在任何读取请求体的逻辑之前完成包装。
  *
  * @author codesensi
  * @see ContentCachingRequestWrapper
@@ -38,7 +38,7 @@ import java.io.IOException;
  * @since 1.0
  */
 @RequiredArgsConstructor
-@Order(Ordered.HIGHEST_PRECEDENCE)
+@Order(Ordered.HIGHEST_PRECEDENCE + 1)
 @Component
 public class CacheRequestBodyFilter extends OncePerRequestFilter {
 
@@ -70,7 +70,7 @@ public class CacheRequestBodyFilter extends OncePerRequestFilter {
             return;
         }
         // 将原始请求包装为可缓存请求体的包装器，传递给后续过滤器
-        ContentCachingRequestWrapper wrappedRequest = new ContentCachingRequestWrapper(request, appSecurityProperties.getRequestCacheLimit());
-        filterChain.doFilter(wrappedRequest, response);
+        ContentCachingRequestWrapper requestWrapper = new ContentCachingRequestWrapper(request, appSecurityProperties.getRequestCacheLimit());
+        filterChain.doFilter(requestWrapper, response);
     }
 }

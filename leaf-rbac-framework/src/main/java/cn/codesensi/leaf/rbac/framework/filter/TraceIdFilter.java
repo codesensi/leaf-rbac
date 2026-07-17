@@ -38,7 +38,7 @@ import java.io.IOException;
  * @author codesensi
  * @since 1.0
  */
-@Order(Ordered.HIGHEST_PRECEDENCE + 1)
+@Order(Ordered.HIGHEST_PRECEDENCE)
 @Component
 public class TraceIdFilter implements Filter {
 

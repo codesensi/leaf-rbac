@@ -120,3 +120,16 @@ app:
     base-ttl: 604800
     # 缓存随机偏移上限，单位秒。1 天
     max-extra: 86400
+  request-log:
+    # 是否打印请求日志
+    enabled: true
+    # 是否打印响应体
+    include-response-body: true
+    # 打印 body 的最大长度
+    max-body-length: 2000
+    # 脱敏字段列表
+    sensitive-fields:
+      - password
+      - oldPassword
+      - newPassword
+      - accessToken
