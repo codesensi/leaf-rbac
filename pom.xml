@@ -42,6 +42,8 @@
         <easy-captcha.version>1.6.2</easy-captcha.version>
         <nashorn-core.version>15.7</nashorn-core.version>
         <logbook.version>4.0.4</logbook.version>
+        <bucket4j.version>0.13.0</bucket4j.version>
+        <bucket4j_jdk17-lettuce.version>8.19.0</bucket4j_jdk17-lettuce.version>
         <!-- 插件版本 -->
         <maven-compiler-plugin.version>3.15.0</maven-compiler-plugin.version>
         <maven-surefire-plugin.version>3.5.6</maven-surefire-plugin.version>
@@ -214,6 +216,20 @@
                 <groupId>org.zalando</groupId>
                 <artifactId>logbook-spring-boot-starter</artifactId>
                 <version>${logbook.version}</version>
+            </dependency>
+            <!-- Bucket4j 核心库（令牌桶算法实现） -->
+            <!-- https://mvnrepository.com/artifact/com.bucket4j/bucket4j_jdk17-core -->
+            <dependency>
+                <groupId>com.giffing.bucket4j.spring.boot.starter</groupId>
+                <artifactId>bucket4j-spring-boot-starter</artifactId>
+                <version>${bucket4j.version}</version>
+            </dependency>
+            <!-- Bucket4j Redis/Lettuce 集成（分布式令牌桶） -->
+            <!-- https://mvnrepository.com/artifact/com.bucket4j/bucket4j_jdk17-lettuce -->
+            <dependency>
+                <groupId>com.bucket4j</groupId>
+                <artifactId>bucket4j_jdk17-lettuce</artifactId>
+                <version>${bucket4j_jdk17-lettuce.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

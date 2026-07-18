@@ -77,10 +77,11 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 })).addPathPatterns(RbacConst.ROOT_PATH)
                 .order(1);
 
+        // 使用 UserContextFilter 替代
         // 2. 用户上下文拦截器：鉴权通过后，从 SaSession 恢复 UserContext 到 ThreadLocal
-        registry.addInterceptor(new UserContextInterceptor())
-                .addPathPatterns(RbacConst.ROOT_PATH)
-                .order(2);
+        // registry.addInterceptor(new UserContextInterceptor())
+        //         .addPathPatterns(RbacConst.ROOT_PATH)
+        //         .order(2);
 
         // 3. 演示模式拦截器：演示环境下仅允许查询和登录/登出，拒绝所有写操作
         registry.addInterceptor(new DemoModeInterceptor(appProperties))
