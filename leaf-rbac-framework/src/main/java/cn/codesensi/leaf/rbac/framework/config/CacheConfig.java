@@ -241,6 +241,12 @@ public class CacheConfig {
      */
     static class CacheValueSerializer implements RedisSerializer<Object> {
 
+        // 构造函数中一次注册
+        CacheValueSerializer() {
+            // 兼容 Java 8 时间类型
+            this.collectionMapper.registerModule(new JavaTimeModule());
+        }
+
         /**
          * 对象 / Map 类型：利用 As.PROPERTY 在 JSON 对象上嵌入 @class
          */
@@ -282,8 +288,6 @@ public class CacheConfig {
                 return new byte[0];
             }
             if (value instanceof Collection) {
-                // 兼容 Java 8 时间类型
-                collectionMapper.registerModule(new JavaTimeModule());
                 return serializeAsWrapperArray(value);
             }
             return objectSerializer.serialize(value);
