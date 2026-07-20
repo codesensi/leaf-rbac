@@ -1,8 +1,10 @@
 package cn.codesensi.leaf.rbac.api.converter;
 
+import cn.codesensi.leaf.rbac.api.request.AssignRolesRequest;
 import cn.codesensi.leaf.rbac.api.request.UserSaveRequest;
 import cn.codesensi.leaf.rbac.api.response.MenuResponse;
 import cn.codesensi.leaf.rbac.api.response.UserInfoResponse;
+import cn.codesensi.leaf.rbac.system.dto.AssignRolesDTO;
 import cn.codesensi.leaf.rbac.system.dto.MenuDTO;
 import cn.codesensi.leaf.rbac.system.dto.UserInfoDTO;
 import cn.codesensi.leaf.rbac.system.dto.UserSaveDTO;
@@ -31,5 +33,10 @@ public interface UserConverter {
      * MenuDTO → MenuResponse
      */
     MenuResponse mapMenuResponse(MenuDTO menuDTO);
+
+    /**
+     * AssignRolesRequest → AssignRolesDTO
+     */
+    AssignRolesDTO toAssignRolesDTO(AssignRolesRequest request);
 
 }

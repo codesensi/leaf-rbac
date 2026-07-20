@@ -1,11 +1,13 @@
 package cn.codesensi.leaf.rbac.api.controller.system;
 
 import cn.codesensi.leaf.rbac.api.converter.UserConverter;
+import cn.codesensi.leaf.rbac.api.request.AssignRolesRequest;
 import cn.codesensi.leaf.rbac.api.request.UserSaveRequest;
 import cn.codesensi.leaf.rbac.api.response.UserInfoResponse;
 import cn.codesensi.leaf.rbac.common.enums.OperateType;
 import cn.codesensi.leaf.rbac.framework.annotation.ApiResponseBody;
 import cn.codesensi.leaf.rbac.framework.annotation.LogOperate;
+import cn.codesensi.leaf.rbac.system.dto.AssignRolesDTO;
 import cn.codesensi.leaf.rbac.system.dto.UserInfoDTO;
 import cn.codesensi.leaf.rbac.system.dto.UserSaveDTO;
 import cn.codesensi.leaf.rbac.system.entity.SysUser;
@@ -133,6 +135,19 @@ public class SysUserController {
     public void saveUser(@Valid @RequestBody UserSaveRequest request) {
         UserSaveDTO userSaveDTO = userConverter.toSaveDTO(request);
         sysUserService.saveUser(userSaveDTO);
+    }
+
+    /**
+     * 配置用户角色
+     *
+     * @param request 配置用户角色请求参数
+     */
+    @LogOperate(module = "用户管理", type = OperateType.INSERT, desc = "配置用户角色")
+    @Operation(summary = "配置用户角色", description = "配置用户角色")
+    @PutMapping("/assignRoles")
+    public void assignRoles(@RequestBody @Valid AssignRolesRequest request) {
+        AssignRolesDTO assignRolesDTO = userConverter.toAssignRolesDTO(request);
+        sysUserService.assignRoles(assignRolesDTO);
     }
 
 }

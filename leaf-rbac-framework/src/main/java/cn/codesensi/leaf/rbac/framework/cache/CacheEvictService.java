@@ -27,4 +27,14 @@ public class CacheEvictService {
     public void clearRegionPcodeCache() {
         // 空方法，仅用于清除行政区划缓存
     }
+
+    /**
+     * 清除用户角色缓存
+     *
+     * @param userId 用户ID
+     */
+    @CacheEvict(value = CacheConst.USER_ROLE, key = "#userId")
+    public void clearUserRoleCache(Long userId) {
+        // 空方法，仅用于清除用户角色缓存
+    }
 }
