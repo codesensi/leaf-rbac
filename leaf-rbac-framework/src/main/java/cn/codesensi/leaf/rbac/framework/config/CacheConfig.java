@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.time.Duration;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -251,6 +252,21 @@ public class CacheConfig {
         private final ObjectMapper collectionMapper = new ObjectMapper();
 
         /**
+         * 类名 → Class 缓存，避免反序列化时反复 {@code Class.forName()}。
+         * <p>
+         * 缓存中涉及的类数量极少（仅项目中被 {@code @Cacheable} 的集合元素类型），
+         * 写后不淘汰。
+         */
+        private final Map<String, Class<?>> classCache = new ConcurrentHashMap<>();
+
+        /**
+         * 集合类型+元素类型 → JavaType 缓存，避免重复构造参数化类型。
+         * <p>
+         * key 格式：{@code java.util.List:cn.codesensi.leaf.rbac.system.dto.RegionDTO}
+         */
+        private final Map<String, JavaType> javaTypeCache = new ConcurrentHashMap<>();
+
+        /**
          * 序列化：按运行时类型分派到不同序列化策略。
          * <p>
          * {@code null} 值序列化为空字节数组，与 Spring 的
@@ -343,13 +359,35 @@ public class CacheConfig {
         private Object deserializeWrapperArray(byte[] bytes) {
             try {
                 CollectionWrapper wrapper = collectionMapper.readValue(bytes, CollectionWrapper.class);
-                Class<?> collClass = Class.forName(wrapper.type());
-                Class<?> elemClass = Class.forName(wrapper.elementType());
-                JavaType targetType = collectionMapper.getTypeFactory().constructParametricType(collClass, elemClass);
+                Class<?> collClass = resolveClass(wrapper.type());
+                Class<?> elemClass = resolveClass(wrapper.elementType());
+                JavaType targetType = resolveJavaType(collClass, elemClass);
                 return collectionMapper.convertValue(wrapper.data(), targetType);
             } catch (Exception e) {
                 throw new SerializationException("Failed to deserialize wrapper array", e);
             }
+        }
+
+        /**
+         * 按类名解析 Class，优先从缓存获取。
+         */
+        private Class<?> resolveClass(String className) {
+            return classCache.computeIfAbsent(className, key -> {
+                        try {
+                            return collectionMapper.getTypeFactory().findClass(key);
+                        } catch (ClassNotFoundException e) {
+                            throw new SerializationException("Cache type not found: " + key, e);
+                        }
+                    }
+            );
+        }
+
+        /**
+         * 按集合类型+元素类型构建参数化类型，优先从缓存获取。
+         */
+        private JavaType resolveJavaType(Class<?> collClass, Class<?> elemClass) {
+            String cacheKey = collClass.getName().concat(":").concat(elemClass.getName());
+            return javaTypeCache.computeIfAbsent(cacheKey, key -> collectionMapper.getTypeFactory().constructParametricType(collClass, elemClass));
         }
 
         /**
