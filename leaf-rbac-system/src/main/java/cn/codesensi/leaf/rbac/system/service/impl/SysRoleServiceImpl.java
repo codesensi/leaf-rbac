@@ -141,13 +141,15 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
 
         // 3. 删除旧关联
         sysRoleMenuService.remove(SYS_ROLE_MENU.ROLE_ID.eq(roleId));
-        // 同步清除角色下属所有用户的权限缓存
+        // 同步清除角色下属所有用户的相关缓存（权限、菜单、用户信息）
         List<Long> userIds = sysUserRoleService.queryChain()
                 .select(SYS_USER_ROLE.USER_ID)
                 .where(SYS_USER_ROLE.ROLE_ID.eq(roleId))
                 .listAs(Long.class);
         for (Long userId : userIds) {
             cacheEvictService.clearUserPermCache(userId);
+            cacheEvictService.clearUserMenuCache(userId);
+            cacheEvictService.clearUserInfoCache(userId);
         }
 
         List<Long> menuIds = assignMenusDTO.getMenuIds();

@@ -37,4 +37,24 @@ public class CacheEvictService {
     public void clearUserRoleCache(Long userId) {
         // 空方法，仅用于清除用户角色缓存
     }
+
+    /**
+     * 清除用户菜单缓存
+     *
+     * @param userId 用户ID
+     */
+    @CacheEvict(value = CacheConst.USER_MENU, key = "#userId")
+    public void clearUserMenuCache(Long userId) {
+        // 空方法，仅用于清除用户菜单缓存
+    }
+
+    /**
+     * 清除用户信息缓存
+     *
+     * @param userId 用户ID
+     */
+    @CacheEvict(value = CacheConst.USER_INFO, key = "#userId")
+    public void clearUserInfoCache(Long userId) {
+        // 空方法，仅用于清除用户信息缓存
+    }
 }

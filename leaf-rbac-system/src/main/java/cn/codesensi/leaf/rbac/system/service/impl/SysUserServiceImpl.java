@@ -138,8 +138,10 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 
         // 3. 删除旧关联
         sysUserRoleService.remove(SYS_USER_ROLE.USER_ID.eq(userId));
-        // 同步清除用户的角色缓存
+        // 同步清除用户的相关缓存（权限、菜单、用户信息）
         cacheEvictService.clearUserRoleCache(userId);
+        cacheEvictService.clearUserPermCache(userId);
+        cacheEvictService.clearUserInfoCache(userId);
 
         List<Long> roleIds = assignRolesDTO.getRoleIds();
         // 如果角色列表为空，则仅删除旧关联
