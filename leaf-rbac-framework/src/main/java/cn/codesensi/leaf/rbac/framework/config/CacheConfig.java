@@ -3,7 +3,9 @@ package cn.codesensi.leaf.rbac.framework.config;
 import cn.codesensi.leaf.rbac.common.properties.AppCacheProperties;
 import cn.codesensi.leaf.rbac.common.util.CacheUtil;
 import cn.hutool.core.util.ObjUtil;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -20,10 +22,7 @@ import org.springframework.lang.Nullable;
 
 import java.io.IOException;
 import java.time.Duration;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -275,19 +274,29 @@ public class CacheConfig {
         }
 
         /**
-         * 将集合类型序列化为 {@code ["类名",[...]]} 二维数组。
+         * 将集合类型序列化为 {@code ["类型","元素类型",[...]]} 三维数组。
          * <p>
-         * 第一元素为归一化后的类型全限定名，第二元素为集合自身的 JSON 表示。
+         * 第一元素为归一化后的集合接口全限定名，第二元素为元素类型全限定名，
+         * 第三元素为集合自身的 JSON 表示。
          *
          * @param value 集合实例
-         * @return 二维数组格式的 JSON 字节
+         * @return 三维数组格式的 JSON 字节
          */
         private byte[] serializeAsWrapperArray(Object value) {
             try {
-                List<Object> wrapper = new ArrayList<>();
+                Collection<?> coll = (Collection<?>) value;
+                List<Object> wrapper = new ArrayList<>(3);
+                // Element 0: 集合类型（List / Set）
                 wrapper.add(normalizeCollectionType(value));
+                // Element 1: 元素类型，取第一个非 null 元素，空集合回退为 Object
+                String elementType = coll.stream()
+                        .filter(Objects::nonNull)
+                        .findFirst()
+                        .map(e -> e.getClass().getName())
+                        .orElse(Object.class.getName());
+                wrapper.add(elementType);
+                // Element 2: 数据本体
                 wrapper.add(value);
-
                 return collectionMapper.writeValueAsBytes(wrapper);
             } catch (JsonProcessingException e) {
                 throw new SerializationException("Failed to serialize " + value.getClass(), e);
@@ -323,21 +332,35 @@ public class CacheConfig {
         }
 
         /**
-         * 解析二维数组格式 {@code ["类名", 数据]}，还原为原始类型。
+         * 解析数组格式并还原为指定泛型类型的集合。
          * <p>
-         * 流程：读取外层数组 → 提取第一元素作为类型名并反射获取类对象 →
-         * 对第二元素（数据）执行 {@link ObjectMapper#convertValue} 转换为目标类型。
+         * 缓存格式为 {@code ["集合类名","元素类名", 数据]}，由 {@link CollectionWrapper} 通过
+         * {@link JsonFormat @JsonFormat(Shape.ARRAY)} 直接映射，摒弃魔数下标。
          *
-         * @param bytes 二维数组格式的 JSON 字节
-         * @return 还原后的 Java 集合实例
+         * @param bytes 数组格式的 JSON 字节
+         * @return 还原后带泛型的 Java 集合实例
          */
         private Object deserializeWrapperArray(byte[] bytes) {
             try {
-                List<Object> wrapper = collectionMapper.readValue(bytes, collectionMapper.getTypeFactory().constructCollectionType(List.class, Object.class));
-                return collectionMapper.convertValue(wrapper.get(1), Class.forName((String) wrapper.get(0)));
+                CollectionWrapper wrapper = collectionMapper.readValue(bytes, CollectionWrapper.class);
+                Class<?> collClass = Class.forName(wrapper.type());
+                Class<?> elemClass = Class.forName(wrapper.elementType());
+                JavaType targetType = collectionMapper.getTypeFactory().constructParametricType(collClass, elemClass);
+                return collectionMapper.convertValue(wrapper.data(), targetType);
             } catch (Exception e) {
                 throw new SerializationException("Failed to deserialize wrapper array", e);
             }
+        }
+
+        /**
+         * 集合缓存包装记录 —— 与序列化格式 {@code ["类型","元素类型", 数据]} 对应。
+         *
+         * @param type        集合类型全限定名（如 {@code java.util.List}）
+         * @param elementType 元素类型全限定名（如 {@code cn.codesensi.leaf.rbac.system.dto.RegionDTO}）
+         * @param data        集合数据本体
+         */
+        @JsonFormat(shape = JsonFormat.Shape.ARRAY)
+        private record CollectionWrapper(String type, String elementType, Object data) {
         }
 
         /**
