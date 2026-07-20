@@ -81,10 +81,7 @@ public class CacheConfig {
              */
             @Override
             public void put(@NonNull String name, @NonNull byte[] key, @NonNull byte[] value, Duration ttl) {
-                long baseTtl = appCacheProperties.getBaseTtl();
-                long maxExtra = appCacheProperties.getMaxExtra();
-                Duration dynamicTtl = Duration.ofSeconds(baseTtl + ThreadLocalRandom.current().nextLong(maxExtra));
-                defaultWriter.put(name, key, value, dynamicTtl);
+                defaultWriter.put(name, key, value, wrapTtl(ttl));
             }
 
             // ======================== 以下全部委托给 defaultWriter ========================
@@ -126,7 +123,7 @@ public class CacheConfig {
              */
             @Override
             public CompletableFuture<byte[]> retrieve(String name, byte[] key, @Nullable Duration ttl) {
-                return defaultWriter.retrieve(name, key, ttl);
+                return defaultWriter.retrieve(name, key, wrapTtl(ttl));
             }
 
             /**
@@ -143,7 +140,7 @@ public class CacheConfig {
              */
             @Override
             public CompletableFuture<Void> store(String name, byte[] key, byte[] value, @Nullable Duration ttl) {
-                return defaultWriter.store(name, key, value, ttl);
+                return defaultWriter.store(name, key, value, wrapTtl(ttl));
             }
 
             /**
@@ -158,7 +155,7 @@ public class CacheConfig {
             @Nullable
             @Override
             public byte[] putIfAbsent(String name, byte[] key, byte[] value, @Nullable Duration ttl) {
-                return defaultWriter.putIfAbsent(name, key, value, ttl);
+                return defaultWriter.putIfAbsent(name, key, value, wrapTtl(ttl));
             }
 
             /**
@@ -203,6 +200,24 @@ public class CacheConfig {
             @Override
             public RedisCacheWriter withStatisticsCollector(CacheStatisticsCollector cacheStatisticsCollector) {
                 return defaultWriter.withStatisticsCollector(cacheStatisticsCollector);
+            }
+
+            /**
+             * 将传入的 TTL 包装为带随机偏移的 TTL，防止缓存雪崩。
+             * <p>
+             * 当 {@code ttl} 为 {@code null} 时返回 {@code null}（不设置过期时间），
+             * 否则返回 {@code baseTtl + random(maxExtra)} 秒的随机过期时间。
+             *
+             * @param ttl 原始 TTL，可为 {@code null}
+             * @return 带随机偏移的 TTL，或 {@code null}
+             */
+            private Duration wrapTtl(@Nullable Duration ttl) {
+                if (ttl == null) {
+                    return null;
+                }
+                long baseTtl = appCacheProperties.getBaseTtl();
+                long maxExtra = appCacheProperties.getMaxExtra();
+                return Duration.ofSeconds(baseTtl + ThreadLocalRandom.current().nextLong(maxExtra));
             }
         };
 
