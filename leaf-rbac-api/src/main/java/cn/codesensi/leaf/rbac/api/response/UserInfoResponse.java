@@ -59,7 +59,7 @@ public class UserInfoResponse implements Serializable {
      * 用户性别:0-保密,1-男,2-女
      */
     @Schema(description = "用户性别:U-未知,M-男,F-女", example = "U")
-    private Integer String;
+    private String gender;
 
     /**
      * 备注
