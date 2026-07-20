@@ -11,12 +11,11 @@ import cn.codesensi.leaf.rbac.system.strategy.login.LoginStrategy;
 import cn.codesensi.leaf.rbac.system.strategy.login.LoginStrategyFactory;
 import cn.dev33.satoken.SaManager;
 import cn.dev33.satoken.stp.StpUtil;
-import cn.hutool.core.date.LocalDateTimeUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.time.ZoneOffset;
+import java.time.Instant;
 
 /**
  * 登录接口实现
@@ -53,10 +52,14 @@ public class LoginServiceImpl implements LoginService {
         LoginResultDTO loginResultDTO = new LoginResultDTO();
         loginResultDTO.setAccessToken(StpUtil.getTokenValue());
         long accessTokenTimeout = StpUtil.getTokenTimeout();
-        loginResultDTO.setExpires(LocalDateTimeUtil.now()
-                .plusSeconds(accessTokenTimeout)
-                .toInstant(ZoneOffset.of("+8"))
-                .toEpochMilli());
+        if (accessTokenTimeout == -1) {
+            loginResultDTO.setExpires(-1L); // 永不过期
+        } else {
+            loginResultDTO.setExpires(Instant
+                    .now()
+                    .plusSeconds(accessTokenTimeout)
+                    .toEpochMilli());
+        }
         loginResultDTO.setTokenName(SaManager.getConfig().getTokenName());
         loginResultDTO.setTokenPrefix(SaManager.getConfig().getTokenPrefix());
         return loginResultDTO;
