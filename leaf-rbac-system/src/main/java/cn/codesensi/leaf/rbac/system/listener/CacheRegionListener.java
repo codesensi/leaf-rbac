@@ -2,7 +2,6 @@ package cn.codesensi.leaf.rbac.system.listener;
 
 import cn.codesensi.leaf.rbac.framework.cache.CacheEvictService;
 import cn.codesensi.leaf.rbac.framework.event.CacheRegionEvent;
-import cn.codesensi.leaf.rbac.system.entity.ConfRegion;
 import cn.codesensi.leaf.rbac.system.service.ConfRegionService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,6 +10,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 import static cn.codesensi.leaf.rbac.system.entity.table.ConfRegionTableDef.CONF_REGION;
 
@@ -50,16 +50,24 @@ public class CacheRegionListener {
                 .select(CONF_REGION.LEVEL)
                 .groupBy(CONF_REGION.LEVEL)
                 .listAs(Integer.class);
-        // 2.重新加载缓存
-        log.info("[cacheRegion]开始预热缓存：逐级遍历省、市、区（县）三级行政区划");
+        // 2.重新加载缓存：逐级并行预热省→市→县三级行政区划缓存
+        log.info("[cacheRegion]开始预热缓存：逐级并发遍历省、市、区（县）三级行政区划");
         for (Integer level : levels) {
-            List<ConfRegion> confRegions = confRegionService.queryChain()
+            // 收集当前层级去重后的所有父级编码
+            List<String> pcodes = confRegionService.queryChain()
                     .select(CONF_REGION.PCODE)
                     .where(CONF_REGION.LEVEL.eq(level))
-                    .list();
-            for (ConfRegion confRegion : confRegions) {
-                confRegionService.listChildrenByCode(confRegion.getPcode());
-            }
+                    .listAs(String.class)
+                    .stream()
+                    .distinct()
+                    .toList();
+
+            // 并发调用 listChildrenByCode 写入缓存
+            CompletableFuture.allOf(pcodes.stream()
+                    .map(pcode -> CompletableFuture.runAsync(() -> confRegionService.listChildrenByCode(pcode)))
+                    .toArray(CompletableFuture[]::new)
+            ).join();
         }
+        log.info("[cacheRegion]缓存预热完成");
     }
 }
