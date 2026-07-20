@@ -11,8 +11,8 @@ import lombok.Getter;
 @Getter
 public enum SysFlagEnum implements BaseEnum<Integer> {
 
-    DELETED(AppConst.ONE_INT, "内置"),
-    NOT_DELETED(AppConst.ZERO_INT, "非内置"),
+    YES(AppConst.ONE_INT, "内置"),
+    NO(AppConst.ZERO_INT, "非内置"),
     ;
 
     /**

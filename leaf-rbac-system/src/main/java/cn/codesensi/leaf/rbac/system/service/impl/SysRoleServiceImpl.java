@@ -1,8 +1,8 @@
 package cn.codesensi.leaf.rbac.system.service.impl;
 
-import cn.codesensi.leaf.rbac.common.constants.AppConst;
 import cn.codesensi.leaf.rbac.common.constants.CacheConst;
 import cn.codesensi.leaf.rbac.common.constants.RbacConst;
+import cn.codesensi.leaf.rbac.common.enums.SysFlagEnum;
 import cn.codesensi.leaf.rbac.common.exception.BusinessException;
 import cn.codesensi.leaf.rbac.framework.cache.CacheEvictService;
 import cn.codesensi.leaf.rbac.system.converter.SysRoleConverter;
@@ -135,7 +135,7 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
         }
 
         // 2. 系统内置角色不允许修改权限
-        if (AppConst.ONE_INT.equals(sysRole.getSysFlag())) {
+        if (SysFlagEnum.YES.getCode().equals(sysRole.getSysFlag())) {
             throw new BusinessException("系统内置角色不允许修改权限");
         }
 
