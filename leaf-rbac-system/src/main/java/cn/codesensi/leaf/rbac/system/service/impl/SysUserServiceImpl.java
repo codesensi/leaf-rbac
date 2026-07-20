@@ -131,9 +131,9 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
             throw new BusinessException("用户不存在");
         }
 
-        // 2. 系统内置用户不允许修改权限
+        // 2. 系统内置用户不允许修改角色
         if (SysFlagEnum.YES.getCode().equals(sysUser.getSysFlag())) {
-            throw new BusinessException("系统内置用户不允许修改权限");
+            throw new BusinessException("系统内置用户不允许修改角色");
         }
 
         // 3. 删除旧关联
