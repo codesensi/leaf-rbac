@@ -93,6 +93,7 @@ sa-token:
   # token 风格（默认可取值：uuid、simple-uuid、random-32、random-64、random-128、tik）
   token-style: random-128
 
+# 项目监控配置
 management:
   tracing:
     # 采样率：1.0 表示 100% 采样，生产环境建议 0.1~0.5
@@ -103,6 +104,54 @@ management:
       # 指定 OpenTelemetry OTLP（OpenTelemetry Protocol） 协议的数据上报目标地址。
       # 追踪数据会通过该端点发送到后端的追踪系统（如 Jaeger、Tempo、Grafana Cloud 或 OpenTelemetry Collector）。
       endpoint: http://localhost:4318/v1/traces
+  server:
+    # 独立管理端口
+    port: 9099
+  endpoints:
+    web:
+      exposure:
+        # 通过 HTTP 暴露的端点列表（白名单）
+        include: health,info,metrics,loggers
+        # 明确排除的端点（黑名单，优先级高于 include）
+        exclude: env,configprops,beans
+    # 端点访问权限控制
+    access:
+      default: read_only
+  endpoint:
+    # 健康检测
+    health:
+      # 显示详细健康信息
+      show-details: always
+      # 显示组件级别健康信息
+      show-components: always
+    # 应用信息
+    info:
+      access: read_only
+    # 性能指标
+    metrics:
+      access: read_only
+  info:
+    env:
+      # 激活环境信息贡献器 将指定的环境变量和系统属性暴露到 /actuator/info 端点中
+      enabled: true
+    # 激活 JVM 运行时息贡献器 将 JVM 运行时相关信息暴露到 /actuator/info 端点中
+    java:
+      enabled: true
+    # 激活操作系统信息贡献器 将操作系统相关信息暴露到 /actuator/info 端点中
+    os:
+      enabled: true
+    # 激活 SSL/TLS 证书与协议信息贡献器 将 SSL/TLS 证书与协议相关信息暴露到 /actuator/info 端点中
+    ssl:
+      enabled: true
+    # 激活当前进程运行时信息贡献器 将当前进程运行时相关信息暴露到 /actuator/info 端点中
+    process:
+      enabled: true
+
+info:
+  app:
+    name: ${spring.application.name}
+    version: @project.version@
+    author: ${app.author}
 
 # 项目配置
 app:
