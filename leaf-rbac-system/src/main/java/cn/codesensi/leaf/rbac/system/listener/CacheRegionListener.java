@@ -1,19 +1,15 @@
 package cn.codesensi.leaf.rbac.system.listener;
 
 import cn.codesensi.leaf.rbac.framework.cache.CacheEvictService;
-import cn.codesensi.leaf.rbac.framework.context.UserContext;
-import cn.codesensi.leaf.rbac.framework.context.UserContextHolder;
 import cn.codesensi.leaf.rbac.framework.event.CacheRegionEvent;
 import cn.codesensi.leaf.rbac.system.service.ConfRegionService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.MDC;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 
@@ -58,11 +54,6 @@ public class CacheRegionListener {
                 .listAs(Integer.class);
         // 2.重新加载缓存：逐级并行预热省→市→县三级行政区划缓存
         log.info("[cacheRegion]开始预热缓存：逐级并发遍历省、市、区（县）三级行政区划");
-
-        // 在循环外一次性捕获上下文快照
-        Map<String, String> masterMdc = MDC.getCopyOfContextMap();
-        UserContext masterUserContext = UserContextHolder.get();
-
         for (Integer level : levels) {
             // 收集当前层级去重后的所有父级编码
             List<String> pcodes = confRegionService.queryChain()
@@ -75,22 +66,7 @@ public class CacheRegionListener {
 
             // 并发调用 listChildrenByCode 写入缓存
             CompletableFuture.allOf(pcodes.stream()
-                    .map(pcode -> CompletableFuture.runAsync(() -> {
-                        // 使用外层捕获的上下文快照恢复
-                        if (masterMdc != null) {
-                            MDC.setContextMap(masterMdc);
-                        }
-                        if (masterUserContext != null) {
-                            UserContextHolder.set(masterUserContext);
-                        }
-                        try {
-                            confRegionService.listChildrenByCode(pcode);
-                        } finally {
-                            MDC.clear();
-                            UserContextHolder.clear();
-                        }
-                        // 指定线程池
-                    }, asyncExecutor))
+                    .map(pcode -> CompletableFuture.runAsync(() -> confRegionService.listChildrenByCode(pcode), asyncExecutor))
                     .toArray(CompletableFuture[]::new)
             ).join();
         }
