@@ -84,12 +84,19 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
         }
 
         // Step 3: 主键批量查询菜单（走主键索引，天然无重复）
-        return QueryChain.of(sysMenuMapper)
-                .select(SYS_MENU.PERMS)
+        List<SysMenu> menus = QueryChain.of(sysMenuMapper)
+                .select(SYS_MENU.ALL_COLUMNS)
                 .where(SYS_MENU.ID.in(menuIds))
                 .and(SYS_MENU.STATUS.eq(0))
-                .orderBy(SYS_MENU.SORT, true) // 排序
-                .listAs(String.class);
+                .orderBy(SYS_MENU.SORT, true)
+                .list();
+        if (CollUtil.isEmpty(menus)) {
+            return List.of();
+        }
+        return menus.stream()
+                .map(SysMenu::getPerms)
+                .filter(StrUtil::isNotBlank)
+                .toList();
     }
 
     /**
