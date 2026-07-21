@@ -38,7 +38,7 @@ public class RbacConst {
     /**
      * 获取用户信息接口路径
      */
-    public static final String SYS_USER_INFO_PATH = "/sys/user/getInfo";
+    public static final String SYS_USER_INFO_PATH = "/sys/user/getCurrentUser";
 
     /**
      * 日志管理接口路径
@@ -58,7 +58,7 @@ public class RbacConst {
     /**
      * 登录接口路径
      */
-    public static final String LOGIN_PATH = "/auth/login/account";
+    public static final String LOGIN_PATH = "/auth/login";
 
     /**
      * 退出登录接口路径
