@@ -46,8 +46,13 @@ public class AppConst {
     public static final String DEFAULT_PASSWORD = "123456";
 
     /**
-     * SaToken Session 中存储用户上下文的 Key
+     * 用户上下文
      */
-    public static final String USER_CONTEXT_KEY = "userContext";
+    public static final String USER_CONTEXT = "userContext";
+
+    /**
+     * MDC上下文
+     */
+    public static final String MDC_CONTEXT = "mdcContext";
 
 }

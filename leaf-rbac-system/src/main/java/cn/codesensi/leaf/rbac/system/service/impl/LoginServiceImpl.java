@@ -97,7 +97,7 @@ public class LoginServiceImpl implements LoginService {
                 .loginKey(username)
                 .build();
         // 存入 SaToken Session，供后续请求拦截器恢复
-        StpUtil.getSession().set(AppConst.USER_CONTEXT_KEY, userContext);
+        StpUtil.getSession().set(AppConst.USER_CONTEXT, userContext);
         // 同时绑定到当前线程，供当前请求（如登录日志等）使用
         UserContextHolder.set(userContext);
     }

@@ -7,7 +7,6 @@ import cn.dev33.satoken.session.SaSession;
 import cn.dev33.satoken.stp.StpUtil;
 import jakarta.servlet.*;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
@@ -87,7 +86,7 @@ public class UserContextFilter implements Filter {
         try {
             if (StpUtil.isLogin()) {
                 SaSession session = StpUtil.getSession();
-                Object userContextObj = session.get(AppConst.USER_CONTEXT_KEY);
+                Object userContextObj = session.get(AppConst.USER_CONTEXT);
                 if (userContextObj instanceof UserContext userContext) {
                     UserContextHolder.set(userContext);
                 }

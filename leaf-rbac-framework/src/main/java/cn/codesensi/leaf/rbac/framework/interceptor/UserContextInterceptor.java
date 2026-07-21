@@ -102,7 +102,7 @@ public class UserContextInterceptor implements HandlerInterceptor {
     private void loadUserContextFromSession() {
         try {
             SaSession session = StpUtil.getSession();
-            Object userContextObj = session.get(AppConst.USER_CONTEXT_KEY);
+            Object userContextObj = session.get(AppConst.USER_CONTEXT);
             if (userContextObj instanceof UserContext userContext) {
                 UserContextHolder.set(userContext);
             }
