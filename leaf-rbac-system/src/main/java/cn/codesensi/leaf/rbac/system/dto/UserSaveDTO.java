@@ -30,7 +30,7 @@ public class UserSaveDTO implements Serializable {
     /**
      * 用户身份证号码
      */
-    private String idNo;
+    private String idCard;
 
     /**
      * 用户邮箱

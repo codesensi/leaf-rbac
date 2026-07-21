@@ -1,7 +1,7 @@
 package cn.codesensi.leaf.rbac.api.request;
 
 import cn.codesensi.leaf.rbac.common.enums.GenderEnum;
-import cn.codesensi.leaf.rbac.framework.annotation.IdNo;
+import cn.codesensi.leaf.rbac.framework.annotation.IdCard;
 import cn.codesensi.leaf.rbac.framework.annotation.InEnum;
 import cn.codesensi.leaf.rbac.framework.annotation.Phone;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -44,9 +44,9 @@ public class UserSaveRequest implements Serializable {
     /**
      * 用户身份证号码
      */
-    @IdNo(message = "身份证号码格式不正确")
+    @IdCard(message = "身份证号码格式不正确")
     @Schema(description = "用户身份证号码", example = "110101199001011234")
-    private String idNo;
+    private String idCard;
 
     /**
      * 用户邮箱

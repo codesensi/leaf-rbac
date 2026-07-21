@@ -1,6 +1,6 @@
 package cn.codesensi.leaf.rbac.framework.annotation;
 
-import cn.codesensi.leaf.rbac.framework.validator.IdNoValidator;
+import cn.codesensi.leaf.rbac.framework.validator.IdCardValidator;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 
@@ -17,8 +17,8 @@ import java.lang.annotation.Target;
  */
 @Target({ElementType.FIELD, ElementType.PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = IdNoValidator.class)
-public @interface IdNo {
+@Constraint(validatedBy = IdCardValidator.class)
+public @interface IdCard {
 
     String message() default "";
 

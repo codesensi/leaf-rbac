@@ -1,6 +1,6 @@
 package cn.codesensi.leaf.rbac.framework.validator;
 
-import cn.codesensi.leaf.rbac.framework.annotation.IdNo;
+import cn.codesensi.leaf.rbac.framework.annotation.IdCard;
 import cn.hutool.core.lang.Validator;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
@@ -11,7 +11,7 @@ import jakarta.validation.ConstraintValidatorContext;
  * @author codesensi
  * @since 1.0
  */
-public class IdNoValidator implements ConstraintValidator<IdNo, String> {
+public class IdCardValidator implements ConstraintValidator<IdCard, String> {
 
     /**
      * Implements the validation logic.
