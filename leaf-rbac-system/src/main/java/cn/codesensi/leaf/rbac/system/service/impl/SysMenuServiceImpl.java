@@ -1,5 +1,6 @@
 package cn.codesensi.leaf.rbac.system.service.impl;
 
+import cn.codesensi.leaf.rbac.common.constants.AppConst;
 import cn.codesensi.leaf.rbac.common.constants.CacheConst;
 import cn.codesensi.leaf.rbac.common.constants.RbacConst;
 import cn.codesensi.leaf.rbac.common.enums.EnableEnum;
@@ -18,7 +19,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static cn.codesensi.leaf.rbac.system.entity.table.SysMenuTableDef.SYS_MENU;
 import static cn.codesensi.leaf.rbac.system.entity.table.SysRoleMenuTableDef.SYS_ROLE_MENU;
@@ -153,6 +158,43 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
                 .and(SYS_MENU.TYPE.ne(MenuType.B.getCode()))
                 .orderBy(SYS_MENU.SORT, true)
                 .list();
+    }
+
+    /**
+     * 获取菜单的所有祖先ID（包含自身）
+     */
+    @Override
+    public Set<Long> getMenuAncestorsById(Long menuId) {
+        Set<Long> result = new HashSet<>();
+        SysMenu sysMenu = QueryChain.of(sysMenuMapper)
+                .select(SYS_MENU.ALL_COLUMNS)
+                .where(SYS_MENU.ID.eq(menuId))
+                .one();
+        while (sysMenu != null && !AppConst.ZERO_LONG.equals(sysMenu.getId())) {
+            result.add(sysMenu.getId());
+            if (AppConst.ZERO_LONG.equals(sysMenu.getPid())) {
+                break;
+            }
+            sysMenu = QueryChain.of(sysMenuMapper)
+                    .select(SYS_MENU.ALL_COLUMNS)
+                    .where(SYS_MENU.ID.eq(sysMenu.getPid()))
+                    .one();
+        }
+        return result;
+    }
+
+    /**
+     * 批量获取多个菜单的所有祖先ID（并集，去重）
+     */
+    @Override
+    public Set<Long> getMenuAncestorsByIds(List<Long> menuIds) {
+        if (CollUtil.isEmpty(menuIds)) {
+            return Collections.emptySet();
+        }
+        return menuIds.stream()
+                .map(this::getMenuAncestorsById)
+                .flatMap(Set::stream)
+                .collect(Collectors.toSet());
     }
 
 }

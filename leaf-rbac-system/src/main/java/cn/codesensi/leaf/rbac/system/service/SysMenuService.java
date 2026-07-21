@@ -4,6 +4,7 @@ import cn.codesensi.leaf.rbac.system.entity.SysMenu;
 import com.mybatisflex.core.service.IService;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 路由菜单表 服务层。
@@ -29,4 +30,19 @@ public interface SysMenuService extends IService<SysMenu> {
      */
     List<SysMenu> getMenusByUserId(Long userId);
 
+    /**
+     * 获取菜单的所有祖先ID（包含自身）
+     *
+     * @param menuId 菜单ID
+     * @return 菜单的所有祖先ID（包含自身）
+     */
+    Set<Long> getMenuAncestorsById(Long menuId);
+
+    /**
+     * 批量获取多个菜单的所有祖先ID（并集，去重）
+     *
+     * @param menuIds 菜单ID列表
+     * @return 菜单的所有祖先ID（包含自身）
+     */
+    Set<Long> getMenuAncestorsByIds(List<Long> menuIds);
 }

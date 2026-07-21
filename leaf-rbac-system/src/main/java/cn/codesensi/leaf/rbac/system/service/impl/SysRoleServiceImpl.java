@@ -11,6 +11,7 @@ import cn.codesensi.leaf.rbac.system.dto.RoleSaveDTO;
 import cn.codesensi.leaf.rbac.system.entity.SysRole;
 import cn.codesensi.leaf.rbac.system.entity.SysRoleMenu;
 import cn.codesensi.leaf.rbac.system.mapper.SysRoleMapper;
+import cn.codesensi.leaf.rbac.system.service.SysMenuService;
 import cn.codesensi.leaf.rbac.system.service.SysRoleMenuService;
 import cn.codesensi.leaf.rbac.system.service.SysRoleService;
 import cn.codesensi.leaf.rbac.system.service.SysUserRoleService;
@@ -23,7 +24,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static cn.codesensi.leaf.rbac.system.entity.table.SysRoleMenuTableDef.SYS_ROLE_MENU;
 import static cn.codesensi.leaf.rbac.system.entity.table.SysRoleTableDef.SYS_ROLE;
@@ -44,6 +47,7 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
     private final SysUserRoleService sysUserRoleService;
     private final SysRoleMenuService sysRoleMenuService;
     private final CacheEvictService cacheEvictService;
+    private final SysMenuService sysMenuService;
 
     /**
      * 返回一个账号所拥有的角色编码列表
@@ -134,12 +138,12 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
             throw new BusinessException("角色不存在");
         }
 
-        // 2. 系统内置角色不允许修改权限
+        // 系统内置角色不允许修改权限
         if (SysFlagEnum.YES.getCode().equals(sysRole.getSysFlag())) {
             throw new BusinessException("系统内置角色不允许修改权限");
         }
 
-        // 3. 删除旧关联
+        // 2. 删除旧关联
         sysRoleMenuService.remove(SYS_ROLE_MENU.ROLE_ID.eq(roleId));
         // 同步清除角色下属所有用户的相关缓存（权限、菜单、用户信息）
         List<Long> userIds = sysUserRoleService.queryChain()
@@ -153,12 +157,19 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
         }
 
         List<Long> menuIds = assignMenusDTO.getMenuIds();
+        // 3. 补全所有父菜单
+        Set<Long> allMenuIds = new HashSet<>();
         // 如果菜单列表为空，则仅删除旧关联
         if (CollUtil.isNotEmpty(menuIds)) {
             // 菜单ID去重
             menuIds = menuIds.stream().distinct().toList();
+            // 获取所有菜单的祖先ID（包含自身）
+            Set<Long> ancestors = sysMenuService.getMenuAncestorsByIds(menuIds);
+            allMenuIds.addAll(ancestors);
+        }
+        if (CollUtil.isNotEmpty(allMenuIds)) {
             // 4. 插入新关联（如果菜单列表为空，则仅删除）
-            List<SysRoleMenu> entities = menuIds.stream()
+            List<SysRoleMenu> entities = allMenuIds.stream()
                     .map(menuId -> {
                         SysRoleMenu sysRoleMenu = new SysRoleMenu();
                         sysRoleMenu.setRoleId(roleId);
