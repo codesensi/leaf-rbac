@@ -99,11 +99,11 @@ management:
     # 采样率：1.0 表示 100% 采样，生产环境建议 0.1~0.5
     sampling:
       probability: 1.0
-  otlp:
-    tracing:
+  # otlp:
+    # tracing:
       # 指定 OpenTelemetry OTLP（OpenTelemetry Protocol） 协议的数据上报目标地址。
       # 追踪数据会通过该端点发送到后端的追踪系统（如 Jaeger、Tempo、Grafana Cloud 或 OpenTelemetry Collector）。
-      endpoint: http://localhost:4318/v1/traces
+      # endpoint: http://localhost:4318/v1/traces
   server:
     # 独立管理端口
     port: 9099
