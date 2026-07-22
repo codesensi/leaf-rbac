@@ -20,15 +20,15 @@ public interface SysMenuService extends IService<SysMenu> {
      * @param userId 用户ID
      * @return 权限编码列表
      */
-    List<String> listPermsCodeByUserId(Long userId);
+    List<String> listPermCodeByUserId(Long userId);
 
     /**
-     * 查询用户路由菜单树
+     * 查询用户路由菜单列表
      *
      * @param userId 用户id
-     * @return 路由菜单树
+     * @return 路由菜单列表
      */
-    List<SysMenu> getMenusByUserId(Long userId);
+    List<SysMenu> listMenuByUserId(Long userId);
 
     /**
      * 获取菜单的所有祖先ID（包含自身）
@@ -36,7 +36,7 @@ public interface SysMenuService extends IService<SysMenu> {
      * @param menuId 菜单ID
      * @return 菜单的所有祖先ID（包含自身）
      */
-    Set<Long> getMenuAncestorsById(Long menuId);
+    Set<Long> listAncestorIdsById(Long menuId);
 
     /**
      * 批量获取多个菜单的所有祖先ID（并集，去重）
@@ -44,5 +44,5 @@ public interface SysMenuService extends IService<SysMenu> {
      * @param menuIds 菜单ID列表
      * @return 菜单的所有祖先ID（包含自身）
      */
-    Set<Long> getMenuAncestorsByIds(List<Long> menuIds);
+    Set<Long> listAncestorIdsByIds(List<Long> menuIds);
 }

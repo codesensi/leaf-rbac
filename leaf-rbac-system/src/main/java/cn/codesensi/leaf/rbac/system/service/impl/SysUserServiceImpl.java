@@ -74,7 +74,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         List<String> perms = StpUtil.getPermissionList();
         userInfoDTO.setPermissions(perms);
         // 拥有的菜单
-        List<SysMenu> menus = sysMenuService.getMenusByUserId(userId);
+        List<SysMenu> menus = sysMenuService.listMenuByUserId(userId);
         List<MenuDTO> menuDTOS = sysUserConverter.toMenuDTOList(menus);
         userInfoDTO.setMenus(menuDTOS);
         return userInfoDTO;
@@ -141,6 +141,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         // 同步清除用户的相关缓存（权限、菜单、用户信息）
         cacheEvictService.clearUserRoleCache(userId);
         cacheEvictService.clearUserPermCache(userId);
+        cacheEvictService.clearUserMenuCache(userId);
         cacheEvictService.clearUserInfoCache(userId);
 
         List<Long> roleIds = assignRolesDTO.getRoleIds();

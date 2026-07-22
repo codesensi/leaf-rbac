@@ -1,7 +1,7 @@
 package cn.codesensi.leaf.rbac.system.security;
 
 import cn.codesensi.leaf.rbac.system.service.SysMenuService;
-import cn.codesensi.leaf.rbac.system.service.SysRoleService;
+import cn.codesensi.leaf.rbac.system.service.SysUserRoleService;
 import cn.dev33.satoken.stp.StpInterface;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,9 +15,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class StpInterfaceImpl implements StpInterface {
 
-
-    private final SysRoleService sysRoleService;
     private final SysMenuService sysMenuService;
+    private final SysUserRoleService sysUserRoleService;
 
     /**
      * 返回一个账号所拥有的权限编码列表
@@ -30,7 +29,7 @@ public class StpInterfaceImpl implements StpInterface {
     public List<String> getPermissionList(Object loginId, String loginType) {
         String userIdStr = String.valueOf(loginId);
         Long userId = Long.valueOf(userIdStr);
-        return sysMenuService.listPermsCodeByUserId(userId);
+        return sysMenuService.listPermCodeByUserId(userId);
     }
 
     /**
@@ -44,7 +43,7 @@ public class StpInterfaceImpl implements StpInterface {
     public List<String> getRoleList(Object loginId, String loginType) {
         String userIdStr = String.valueOf(loginId);
         Long userId = Long.valueOf(userIdStr);
-        return sysRoleService.listRoleCodeByUserId(userId);
+        return sysUserRoleService.listRoleCodeByUserId(userId);
     }
 
 }
