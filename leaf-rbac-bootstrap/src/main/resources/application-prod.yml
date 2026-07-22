@@ -50,6 +50,62 @@ sa-token:
   # jwt秘钥
   jwt-secret-key: f3c55ed9e4f54edfa8867f904aef6742
 
+# bucket4j配置
+bucket4j:
+  enabled: true
+  cache-to-use: redis-lettuce
+  default-http-content-type: application/json;charset=UTF-8
+  default-http-response-body: '{"code": 429, "msg": "请求过于频繁，请稍后重试", "data": null, "timestamp": 0}'
+  filters:
+    # ==================== 场景1: 登录接口 —— IP 限流防暴力破解 ====================
+    # 需要限流的接口路径
+    - url: /auth/login
+      rate-limits:
+        # 限流缓存的key，客户端IP
+        # T(cn.codesensi.leaf.rbac.framework.util.IpUtil).getIpAddr(#root) #root 表示传入 HttpServletRequest 对象
+        - cache-key: "T(cn.codesensi.leaf.rbac.framework.util.IpUtil).getIpAddr(#root)"
+          bandwidths:
+            # 每分钟最多 5 次
+            - capacity: 5
+              time: 1
+              unit: minutes
+            # 每小时最多 20 次
+            - capacity: 20
+              time: 1
+              unit: hours
+            # 每天最多 50 次
+            - capacity: 50
+              time: 1
+              unit: days
+    # ==================== 场景2: 验证码接口 —— IP 限流防刷 ====================
+    - url: /captcha
+      rate-limits:
+        - cache-key: "T(cn.codesensi.leaf.rbac.framework.util.IpUtil).getIpAddr(#root)"
+          bandwidths:
+            # 每分钟 3 次，不攒令牌
+            - capacity: 3
+              time: 1
+              unit: minutes
+    # ==================== 场景3: 系统管理接口 —— 用户 ID 限流 ====================
+    # ==================== 需 filter-order: -102 让 Bucket4j 在 UserContextFilter(-103) 之后执行 ====================
+    - url: /sys/.*
+      filter-order: -102
+      rate-limits:
+        - cache-key: "T(cn.codesensi.leaf.rbac.framework.context.UserContextHolder).getUserId()"
+          bandwidths:
+            - capacity: 100
+              time: 1
+              unit: minutes
+    # ==================== 场景4: 全局兜底 —— 所有接口按 IP 限流 ====================
+    - url: /.*
+      rate-limits:
+        - cache-key: "T(cn.codesensi.leaf.rbac.framework.util.IpUtil).getIpAddr(#root)"
+          bandwidths:
+            # 每分钟每 IP 最多 200 次
+            - capacity: 200
+              time: 1
+              unit: minutes
+
 # 线程池配置
 thread:
   pool:
