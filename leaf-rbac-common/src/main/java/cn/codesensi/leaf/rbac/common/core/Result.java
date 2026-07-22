@@ -17,12 +17,14 @@ public class Result<T> implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
+    private boolean success;
     private int code;
     private String msg;
     private T data;
     private long timestamp;
 
     private Result(int code, String msg, T data) {
+        this.success = code == ResultCode.SUCCESS.getCode();
         this.code = code;
         this.msg = msg;
         this.data = data;
