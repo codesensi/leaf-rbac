@@ -24,13 +24,13 @@ public class Ip2regionUtil {
      */
     static {
         try {
-            InputStream v4Is = ResourceUtil.getStream("ip2region_v4.xdb");
+            InputStream v4Is = ResourceUtil.getStream("xdb/ip2region_v4.xdb");
             Config v4Config = Config.custom()
                     .setCachePolicy(Config.BufferCache)
                     .setSearchers(15)
                     .setXdbInputStream(v4Is)
                     .asV4();
-            InputStream v6Is = ResourceUtil.getStream("ip2region_v6.xdb");
+            InputStream v6Is = ResourceUtil.getStream("xdb/ip2region_v6.xdb");
             Config v6Config = Config.custom()
                     .setCachePolicy(Config.BufferCache)
                     .setSearchers(15)
