@@ -166,14 +166,14 @@ public class DatabaseInitializer {
         populator.setSqlScriptEncoding(CharsetUtil.UTF_8);
 
         // 加载 DDL 脚本（建表）
-        ClassPathResource ddl = new ClassPathResource("db/" + dbType + "/INIT_DDL.sql");
+        ClassPathResource ddl = new ClassPathResource("sql/" + dbType + "/INIT_DDL.sql");
         if (!ddl.exists()) {
             throw new IllegalStateException("Database DDL script not found: " + ddl.getDescription());
         }
         populator.addScript(ddl);
         log.info("Loading INIT_DDL.sql: {}", ddl.getDescription());
         // 加载 DML 脚本（数据）
-        ClassPathResource dml = new ClassPathResource("db/" + dbType + "/INIT_DML.sql");
+        ClassPathResource dml = new ClassPathResource("sql/" + dbType + "/INIT_DML.sql");
         if (!dml.exists()) {
             throw new IllegalStateException("Database DML script not found: " + dml.getDescription());
         }
