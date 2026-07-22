@@ -39,7 +39,7 @@ ON COLUMN sys_user.password IS '用户密码';
 COMMENT
 ON COLUMN sys_user.nickname IS '用户昵称';
 COMMENT
-ON COLUMN sys_user.id_no IS '用户身份证号码';
+ON COLUMN sys_user.id_card IS '用户身份证号码';
 COMMENT
 ON COLUMN sys_user.email IS '用户邮箱';
 COMMENT
@@ -460,7 +460,7 @@ CREATE TABLE conf_region
     updater     BIGINT NULL DEFAULT NULL,
     update_time TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
     del_flag    SMALLINT NULL DEFAULT 0,
-    PRIMARY KEY (`id`)
+    PRIMARY KEY (id)
 );
 
 CREATE INDEX idx_cr_code ON conf_region (code);
@@ -489,3 +489,103 @@ COMMENT
 ON COLUMN conf_region.update_time IS '更新时间';
 COMMENT
 ON COLUMN conf_region.del_flag IS '逻辑删除标识:0-未删除,1-已删除';
+
+
+-- ----------------------------
+-- Table structure for conf_dict_type
+-- ----------------------------
+DROP TABLE IF EXISTS conf_dict_type;
+CREATE TABLE conf_dict_type
+(
+    id          BIGINT NOT NULL,
+    type        VARCHAR(128) NULL,
+    name        VARCHAR(128) NULL,
+    status      SMALLINT NULL DEFAULT 0,
+    remark      VARCHAR(512) NULL,
+    creator     BIGINT NULL,
+    create_time TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+    updater     BIGINT NULL,
+    update_time TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+    del_flag    SMALLINT NULL DEFAULT 0,
+    PRIMARY KEY (id)
+);
+
+CREATE INDEX idx_dt_type ON conf_dict_type (type);
+
+COMMENT
+ON TABLE conf_dict_type IS '字典类型配置表';
+COMMENT
+ON COLUMN conf_dict_type.id IS '字典类型ID';
+COMMENT
+ON COLUMN conf_dict_type.type IS '字典类型';
+COMMENT
+ON COLUMN conf_dict_type.name IS '字典名称';
+COMMENT
+ON COLUMN conf_dict_type.status IS '字典状态:0-启用,1-禁用';
+COMMENT
+ON COLUMN conf_dict_type.remark IS '备注';
+COMMENT
+ON COLUMN conf_dict_type.creator IS '创建人';
+COMMENT
+ON COLUMN conf_dict_type.create_time IS '创建时间';
+COMMENT
+ON COLUMN conf_dict_type.updater IS '更新人';
+COMMENT
+ON COLUMN conf_dict_type.update_time IS '更新时间';
+COMMENT
+ON COLUMN conf_dict_type.del_flag IS '逻辑删除标识:0-未删除,1-已删除';
+
+
+-- ----------------------------
+-- Table structure for conf_dict_data
+-- ----------------------------
+DROP TABLE IF EXISTS conf_dict_data;
+CREATE TABLE conf_dict_data
+(
+    id          BIGINT NOT NULL,
+    type        VARCHAR(128) NULL,
+    code        VARCHAR(128) NULL,
+    value       VARCHAR(128) NULL,
+    status      SMALLINT NULL DEFAULT 0,
+    sort        INTEGER NULL DEFAULT 0,
+    is_default  SMALLINT NULL DEFAULT 0,
+    remark      VARCHAR(512) NULL,
+    creator     BIGINT NULL,
+    create_time TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+    updater     BIGINT NULL,
+    update_time TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+    del_flag    SMALLINT NULL DEFAULT 0,
+    PRIMARY KEY (id)
+);
+
+CREATE INDEX idx_dd_type ON conf_dict_data (type);
+CREATE INDEX idx_dd_code ON conf_dict_data (code);
+
+COMMENT
+ON TABLE conf_dict_data IS '字典数据配置表';
+COMMENT
+ON COLUMN conf_dict_data.id IS '字典数据ID';
+COMMENT
+ON COLUMN conf_dict_data.type IS '字典类型';
+COMMENT
+ON COLUMN conf_dict_data.code IS '字典编码';
+COMMENT
+ON COLUMN conf_dict_data.value IS '字典键值';
+COMMENT
+ON COLUMN conf_dict_data.status IS '字典状态:0-启用,1-禁用';
+COMMENT
+ON COLUMN conf_dict_data.sort IS '字典排序:数字越小越靠前';
+COMMENT
+ON COLUMN conf_dict_data.is_default IS '是否默认:0-否,1-是';
+COMMENT
+ON COLUMN conf_dict_data.remark IS '备注';
+COMMENT
+ON COLUMN conf_dict_data.creator IS '创建人';
+COMMENT
+ON COLUMN conf_dict_data.create_time IS '创建时间';
+COMMENT
+ON COLUMN conf_dict_data.updater IS '更新人';
+COMMENT
+ON COLUMN conf_dict_data.update_time IS '更新时间';
+COMMENT
+ON COLUMN conf_dict_data.del_flag IS '逻辑删除标识:0-未删除,1-已删除';

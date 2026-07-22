@@ -235,3 +235,55 @@ CREATE TABLE `conf_region`
   CHARACTER SET = utf8mb4
   COLLATE = utf8mb4_general_ci COMMENT = '行政区划配置表'
   ROW_FORMAT = DYNAMIC;
+
+
+-- ----------------------------
+-- Table structure for conf_dict_type
+-- ----------------------------
+DROP TABLE IF EXISTS `conf_dict_type`;
+CREATE TABLE `conf_dict_type`
+(
+    `id`          bigint NOT NULL COMMENT '字典类型ID',
+    `type`        VARCHAR(128) NULL DEFAULT NULL COMMENT '字典类型',
+    `name`        VARCHAR(128) NULL DEFAULT NULL COMMENT '字典名称',
+    `status`      tinyint(1)    NULL DEFAULT 0 COMMENT '字典状态:0-启用,1-禁用',
+    `remark`      varchar(512) NULL DEFAULT NULL COMMENT '备注',
+    `creator`     bigint NULL DEFAULT NULL COMMENT '创建人',
+    `create_time` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `updater`     bigint NULL DEFAULT NULL COMMENT '更新人',
+    `update_time` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
+    `del_flag`    tinyint(1)    NULL DEFAULT 0 COMMENT '逻辑删除标识:0-未删除,1-已删除',
+    PRIMARY KEY (`id`) USING BTREE,
+    INDEX         `idx_type` (`type` ASC) USING BTREE
+)ENGINE = InnoDB
+  CHARACTER SET = utf8mb4
+  COLLATE = utf8mb4_general_ci COMMENT = '字典类型配置表'
+  ROW_FORMAT = DYNAMIC;
+
+
+-- ----------------------------
+-- Table structure for conf_dict_data
+-- ----------------------------
+DROP TABLE IF EXISTS `conf_dict_data`;
+CREATE TABLE `conf_dict_data`
+(
+    `id`          bigint NOT NULL COMMENT '字典数据ID',
+    `type`        VARCHAR(128) NULL DEFAULT NULL COMMENT '字典类型',
+    `code`        VARCHAR(128) NULL DEFAULT NULL COMMENT '字典编码',
+    `value`       VARCHAR(128) NULL DEFAULT NULL COMMENT '字典键值',
+    `status`      tinyint(1)    NULL DEFAULT 0 COMMENT '字典状态:0-启用,1-禁用',
+    `sort`        int NULL DEFAULT 0 COMMENT '字典排序:数字越小越靠前',
+    `is_default`  tinyint(1)    NULL DEFAULT 0 COMMENT '是否默认:0-否,1-是',
+    `remark`      varchar(512) NULL DEFAULT NULL COMMENT '备注',
+    `creator`     bigint NULL DEFAULT NULL COMMENT '创建人',
+    `create_time` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `updater`     bigint NULL DEFAULT NULL COMMENT '更新人',
+    `update_time` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
+    `del_flag`    tinyint(1)    NULL DEFAULT 0 COMMENT '逻辑删除标识:0-未删除,1-已删除',
+    PRIMARY KEY (`id`) USING BTREE,
+    INDEX         `idx_type` (`type` ASC) USING BTREE,
+    INDEX         `idx_code` (`code` ASC) USING BTREE
+)ENGINE = InnoDB
+  CHARACTER SET = utf8mb4
+  COLLATE = utf8mb4_general_ci COMMENT = '字典数据配置表'
+  ROW_FORMAT = DYNAMIC;
