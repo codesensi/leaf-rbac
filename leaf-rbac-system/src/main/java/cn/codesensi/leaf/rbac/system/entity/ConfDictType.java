@@ -11,6 +11,7 @@ import lombok.experimental.Accessors;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * 字典类型配置表 实体类。
@@ -53,5 +54,11 @@ public class ConfDictType extends BaseEntity implements Serializable {
      * 备注
      */
     private String remark;
+
+    /**
+     * 字典数据列表
+     * 非数据库字段
+     */
+    private List<ConfDictData> dataList;
 
 }

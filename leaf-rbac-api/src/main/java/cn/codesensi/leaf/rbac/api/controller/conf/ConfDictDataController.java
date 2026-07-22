@@ -1,9 +1,16 @@
 package cn.codesensi.leaf.rbac.api.controller.conf;
 
+import cn.codesensi.leaf.rbac.api.converter.DictConverter;
+import cn.codesensi.leaf.rbac.api.response.DictResponse;
+import cn.codesensi.leaf.rbac.framework.annotation.ApiResponseBody;
+import cn.codesensi.leaf.rbac.system.dto.DictDTO;
 import cn.codesensi.leaf.rbac.system.entity.ConfDictData;
 import cn.codesensi.leaf.rbac.system.service.ConfDictDataService;
 import com.mybatisflex.core.paginate.Page;
-import org.springframework.beans.factory.annotation.Autowired;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,12 +21,15 @@ import java.util.List;
  * @author codesensi
  * @since 2026-07-22
  */
+@ApiResponseBody
+@RequiredArgsConstructor
+@Tag(name = "字典数据配置", description = "字典数据配置相关接口")
 @RestController
-@RequestMapping("/confDictData")
+@RequestMapping("/conf/dict/data")
 public class ConfDictDataController {
 
-    @Autowired
-    private ConfDictDataService confDictDataService;
+    private final ConfDictDataService confDictDataService;
+    private final DictConverter dictConverter;
 
     /**
      * 保存字典数据配置表。
@@ -84,6 +94,19 @@ public class ConfDictDataController {
     // @GetMapping("page")
     public Page<ConfDictData> page(Page<ConfDictData> page) {
         return confDictDataService.page(page);
+    }
+
+    /**
+     * 根据字典类型批量获取字典数据
+     *
+     * @param dictTypeList 字典类型列表
+     * @return 字典数据列表
+     */
+    @Operation(summary = "根据字典类型批量获取字典数据", description = "根据字典类型批量获取字典数据")
+    @GetMapping("/listDataByTypeList")
+    public List<DictResponse> listDataByTypeList(@Parameter(description = "字典类型列表") @RequestParam List<String> dictTypeList) {
+        List<DictDTO> dictDTOList = confDictDataService.listDataByTypeList(dictTypeList);
+        return dictConverter.toResponseList(dictDTOList);
     }
 
 }

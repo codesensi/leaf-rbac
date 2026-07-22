@@ -45,4 +45,9 @@ public class CacheConst {
      */
     public static final String REGION_PCODE = "region:pcode";
 
+    /**
+     * 字典数据缓存
+     */
+    public static final String DICT = "dict";
+
 }
