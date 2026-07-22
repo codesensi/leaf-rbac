@@ -83,7 +83,7 @@ public class UserInfoResponse implements Serializable {
      * 权限
      */
     @Schema(description = "权限", example = "[\"system:user:list\",\"system:user:add\"]")
-    private List<String> permissions;
+    private List<String> perms;
 
     /**
      * 菜单

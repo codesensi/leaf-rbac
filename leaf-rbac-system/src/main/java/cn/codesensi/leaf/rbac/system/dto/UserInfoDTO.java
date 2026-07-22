@@ -71,7 +71,7 @@ public class UserInfoDTO implements Serializable {
     /**
      * 权限
      */
-    private List<String> permissions;
+    private List<String> perms;
 
     /**
      * 菜单

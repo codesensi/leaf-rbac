@@ -72,7 +72,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         userInfoDTO.setRoles(roles);
         // 权限码集合
         List<String> perms = StpUtil.getPermissionList();
-        userInfoDTO.setPermissions(perms);
+        userInfoDTO.setPerms(perms);
         // 拥有的菜单
         List<SysMenu> menus = sysMenuService.listMenuByUserId(userId);
         List<MenuDTO> menuDTOS = sysUserConverter.toMenuDTOList(menus);
