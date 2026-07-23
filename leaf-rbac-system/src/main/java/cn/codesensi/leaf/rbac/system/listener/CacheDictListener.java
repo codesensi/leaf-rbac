@@ -1,5 +1,6 @@
 package cn.codesensi.leaf.rbac.system.listener;
 
+import cn.codesensi.leaf.rbac.common.constants.CacheConst;
 import cn.codesensi.leaf.rbac.common.constants.RbacConst;
 import cn.codesensi.leaf.rbac.framework.cache.CacheEvictService;
 import cn.codesensi.leaf.rbac.framework.event.CacheDictEvent;
@@ -56,8 +57,8 @@ public class CacheDictListener {
                 .toList();
         // 模拟超级管理员登录：查询全量字典数据
         SaTokenContextMockUtil.setMockContext(() -> {
-            StpUtil.login(RbacConst.USER_ADMIN_ID);
-            confDictDataService.listDataByTypeList(typeList);
+            StpUtil.login(RbacConst.USER_ADMIN_ID, CacheConst.EXPIRE_TIME_1_MINUTE);
+            confDictDataService.listDictByTypeList(typeList);
         });
         log.info("[cacheDict]缓存预热完成");
     }

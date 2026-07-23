@@ -50,4 +50,9 @@ public class CacheConst {
      */
     public static final String DICT = "dict";
 
+    /**
+     * 过期时间 1分钟
+     */
+    public static final Long EXPIRE_TIME_1_MINUTE = 60L;
+
 }

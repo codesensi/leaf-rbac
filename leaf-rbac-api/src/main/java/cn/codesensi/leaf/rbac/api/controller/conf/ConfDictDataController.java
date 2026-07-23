@@ -103,9 +103,9 @@ public class ConfDictDataController {
      * @return 字典数据列表
      */
     @Operation(summary = "根据字典类型批量获取字典数据", description = "根据字典类型批量获取字典数据")
-    @GetMapping("/listDataByTypeList")
-    public List<DictResponse> listDataByTypeList(@Parameter(description = "字典类型列表") @RequestParam List<String> dictTypeList) {
-        List<DictDTO> dictDTOList = confDictDataService.listDataByTypeList(dictTypeList);
+    @GetMapping("/listDictByTypeList")
+    public List<DictResponse> listDictByTypeList(@Parameter(description = "字典类型列表") @RequestParam(required = false) List<String> dictTypeList) {
+        List<DictDTO> dictDTOList = confDictDataService.listDictByTypeList(dictTypeList);
         return dictConverter.toResponseList(dictDTOList);
     }
 

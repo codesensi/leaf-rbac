@@ -15,12 +15,20 @@ import java.util.List;
 public interface ConfDictDataService extends IService<ConfDictData> {
 
     /**
-     * 根据字典类型获取字典数据
+     * 根据字典类型获取字典配置
      *
      * @param dictType 字典类型
-     * @return 字典数据
+     * @return 字典配置
      */
-    List<DictDTO> listDataByType(String dictType);
+    List<DictDTO> listDictByType(String dictType);
+
+    /**
+     * 根据字典类型获取字典配置
+     *
+     * @param dictTypeList 字典类型列表
+     * @return 字典配置
+     */
+    List<DictDTO> listDictByTypeList(List<String> dictTypeList);
 
     /**
      * 根据字典类型批量获取字典数据
@@ -28,6 +36,6 @@ public interface ConfDictDataService extends IService<ConfDictData> {
      * @param dictTypeList 字典类型列表
      * @return 字典数据列表
      */
-    List<DictDTO> listDataByTypeList(List<String> dictTypeList);
+    List<ConfDictData> listDataByTypeList(List<String> dictTypeList);
 
 }

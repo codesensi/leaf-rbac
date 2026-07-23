@@ -70,5 +70,4 @@ public class RbacConst {
      */
     public static final String LOGOUT_PATH = "/auth/logout";
 
-
 }
