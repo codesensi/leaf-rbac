@@ -3310,10 +3310,10 @@ VALUES (1, 'yes_no', '是否', '是否'),
 -- Records of conf_dict_data
 -- ----------------------------
 INSERT INTO conf_dict_data (id, type, code, value, sort, is_default, remark)
-VALUES (1, 'yes_no', '1', '是', 0, 1, '是'),
-       (2, 'yes_no', '0', '否', 0, 0, '否'),
-       (3, 'sys_flag', '1', '内置', 0, 0, '内置'),
-       (4, 'sys_flag', '0', '非内置', 0, 0, '非内置'),
+VALUES (1, 'yes_no', '1', '是', 1, 1, '是'),
+       (2, 'yes_no', '0', '否', 2, 0, '否'),
+       (3, 'sys_flag', '1', '内置', 1, 0, '内置'),
+       (4, 'sys_flag', '0', '非内置', 2, 0, '非内置'),
        (5, 'success_fail', '1', '成功', 1, 1, '成功'),
        (6, 'success_fail', '0', '失败', 2, 0, '失败'),
        (7, 'enable_disable', '1', '启用', 1, 1, '启用'),
