@@ -57,4 +57,12 @@ public class CacheEvictService {
     public void clearUserInfoCache(Long userId) {
         // 空方法，仅用于清除用户信息缓存
     }
+
+    /**
+     * 清空字典缓存
+     */
+    @CacheEvict(value = CacheConst.DICT, allEntries = true)
+    public void clearDictCache() {
+        // 空方法，仅用于清除字典缓存
+    }
 }

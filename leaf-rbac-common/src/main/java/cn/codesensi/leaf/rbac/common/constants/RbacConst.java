@@ -6,6 +6,11 @@ package cn.codesensi.leaf.rbac.common.constants;
 public class RbacConst {
 
     /**
+     * 超级管理员用户ID
+     */
+    public static final Long USER_ADMIN_ID = AppConst.ONE_LONG;
+
+    /**
      * 超级管理员名称
      */
     public static final String USER_ADMIN_NAME = "sadmin";

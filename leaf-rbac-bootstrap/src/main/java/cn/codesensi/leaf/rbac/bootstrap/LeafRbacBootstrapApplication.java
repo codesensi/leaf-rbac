@@ -1,5 +1,6 @@
 package cn.codesensi.leaf.rbac.bootstrap;
 
+import cn.codesensi.leaf.rbac.framework.event.CacheDictEvent;
 import cn.codesensi.leaf.rbac.framework.event.CacheRegionEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -48,9 +49,15 @@ public class LeafRbacBootstrapApplication {
         log.info("    Doc URL:  http://127.0.0.1:{}/swagger-ui.html", port);
 
         // 发布行政区划缓存事件
-        Boolean enabled = environment.getProperty("app.cache.preload-region", Boolean.class);
-        if (Boolean.TRUE.equals(enabled)) {
+        Boolean enabledRegion = environment.getProperty("app.cache.preload-region", Boolean.class);
+        if (Boolean.TRUE.equals(enabledRegion)) {
             eventPublisher.publishEvent(new CacheRegionEvent(this, "应用启动"));
+        }
+
+        // 发布字典缓存事件
+        Boolean enabledDict = environment.getProperty("app.cache.preload-dict", Boolean.class);
+        if (Boolean.TRUE.equals(enabledDict)) {
+            eventPublisher.publishEvent(new CacheDictEvent(this, "应用启动"));
         }
     }
 
