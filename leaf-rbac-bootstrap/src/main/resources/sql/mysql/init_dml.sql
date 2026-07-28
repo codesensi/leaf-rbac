@@ -12,21 +12,25 @@ FOREIGN_KEY_CHECKS = 0;
 INSERT INTO `sys_user` (`id`, `username`, `password`, `nickname`, `id_card`, `email`, `phone`, `avatar`, `remark`,
                         `sys_flag`)
 VALUES (1, 'sadmin', '$2a$10$U.k0b43Pwg./Jg2QQl4bMOukItbYg4aYhKsciMamtHWvp3JEF2ism', '超级管理员', '110101200001010001',
-        'sadmin@leaf.com', '18900000000', 'https://api.dicebear.com/7.x/bottts/svg?seed=sadmin', '超级管理员', 1);
+        'sadmin@leaf.com', '18900000000', 'https://api.dicebear.com/7.x/bottts/svg?seed=sadmin', '超级管理员', 1),
+       (2, 'suser', '$2a$10$U.k0b43Pwg./Jg2QQl4bMOukItbYg4aYhKsciMamtHWvp3JEF2ism', '普通用户', '110101200001010002',
+        'suser@leaf.com', '13800000000', 'https://api.dicebear.com/7.x/bottts/svg?seed=suser', '普通用户', 1);
 
 
 -- ----------------------------
 -- Records of sys_role
 -- ----------------------------
 INSERT INTO `sys_role` (`id`, `name`, `code`, `remark`, `sys_flag`)
-VALUES (1, '超级管理员', 'sadmin', '超级管理员角色', 1);
+VALUES (1, '超级管理员', 'sadmin', '超级管理员角色', 1),
+       (2, '普通用户', 'suser', '普通用户角色', 1);
 
 
 -- ----------------------------
 -- Records of sys_user_role
 -- ----------------------------
 INSERT INTO `sys_user_role` (`id`, `user_id`, `role_id`)
-VALUES (1, 1, 1);
+VALUES (1, 1, 1),
+       (2, 2, 2);
 
 
 -- ----------------------------
@@ -38,10 +42,6 @@ VALUES (1001, 0, NULL, '/dashboard', NULL, NULL, '工作台', 'D', 0, 'ri:dashbo
        (1002, 0, NULL, '/system', NULL, NULL, '系统管理', 'D', 1, 'ri:setting', NULL, '系统管理目录', 1),
        (10020001, 1002, 'SystemUser', '/system/user/index', NULL, NULL, '用户管理', 'M', 11, 'ri:user', NULL,
         '用户管理菜单', 1),
-       (10020002, 1002, 'SystemRole', '/system/role/index', NULL, NULL, '角色管理', 'M', 12, 'ri:role', NULL,
-        '角色管理菜单', 1),
-       (10020003, 1002, 'SystemMenu', '/system/menu/index', NULL, NULL, '菜单管理', 'M', 13, 'ri:menu', NULL,
-        '菜单管理菜单', 1),
        (100200010001, 10020001, NULL, NULL, NULL, NULL, '查询用户分页列表', 'B', 0, NULL, 'sys:user:page',
         '查询用户分页列表', 1),
        (100200010002, 10020001, NULL, NULL, NULL, NULL, '保存用户信息', 'B', 0, NULL, 'sys:user:save', '新增用户', 1),
@@ -51,6 +51,8 @@ VALUES (1001, 0, NULL, '/dashboard', NULL, NULL, '工作台', 'D', 0, 'ri:dashbo
         1),
        (100200010005, 10020001, NULL, NULL, NULL, NULL, '删除用户信息', 'B', 0, NULL, 'sys:user:delete', '删除用户信息',
         1),
+       (10020002, 1002, 'SystemRole', '/system/role/index', NULL, NULL, '角色管理', 'M', 12, 'ri:role', NULL,
+        '角色管理菜单', 1),
        (100200020001, 10020002, NULL, NULL, NULL, NULL, '查询角色分页列表', 'B', 0, NULL, 'sys:role:page',
         '查询角色分页列表', 1),
        (100200020002, 10020002, NULL, NULL, NULL, NULL, '保存角色信息', 'B', 0, NULL, 'sys:role:save', '新增角色', 1),
@@ -60,6 +62,8 @@ VALUES (1001, 0, NULL, '/dashboard', NULL, NULL, '工作台', 'D', 0, 'ri:dashbo
         1),
        (100200020005, 10020002, NULL, NULL, NULL, NULL, '删除角色信息', 'B', 0, NULL, 'sys:role:delete', '删除角色信息',
         1),
+       (10020003, 1002, 'SystemMenu', '/system/menu/index', NULL, NULL, '菜单管理', 'M', 13, 'ri:menu', NULL,
+        '菜单管理菜单', 1),
        (100200030001, 10020003, NULL, NULL, NULL, NULL, '查询菜单分页列表', 'B', 0, NULL, 'sys:menu:page',
         '查询菜单分页列表', 1),
        (100200030002, 10020003, NULL, NULL, NULL, NULL, '保存菜单信息', 'B', 0, NULL, 'sys:menu:save', '新增菜单', 1),
@@ -68,7 +72,57 @@ VALUES (1001, 0, NULL, '/dashboard', NULL, NULL, '工作台', 'D', 0, 'ri:dashbo
        (100200030004, 10020003, NULL, NULL, NULL, NULL, '获取菜单详情', 'B', 0, NULL, 'sys:menu:detail', '获取菜单详情',
         1),
        (100200030005, 10020003, NULL, NULL, NULL, NULL, '删除菜单信息', 'B', 0, NULL, 'sys:menu:delete', '删除菜单信息',
+        1),
+       (1003, 0, NULL, '/log', NULL, NULL, '日志管理', 'D', 2, 'ri:log', NULL, '日志管理目录', 1),
+       (10030001, 1003, 'LogOperate', '/log/operate/index', NULL, NULL, '操作日志管理', 'M', 11, 'ri:operate', NULL,
+        '操作日志管理菜单', 1),
+       (100300010001, 10030001, NULL, NULL, NULL, NULL, '查询操作日志分页列表', 'B', 0, NULL, 'log:operate:page',
+        '查询操作日志分页列表', 1),
+       (100300010002, 10030001, NULL, NULL, NULL, NULL, '保存操作日志', 'B', 0, NULL, 'log:operate:save',
+        '新增操作日志', 1),
+       (100300010003, 10030001, NULL, NULL, NULL, NULL, '更新操作日志', 'B', 0, NULL, 'log:operate:update',
+        '更新操作日志',
+        1),
+       (100300010004, 10030001, NULL, NULL, NULL, NULL, '获取操作日志详情', 'B', 0, NULL, 'log:operate:detail',
+        '获取操作日志详情',
+        1),
+       (100300010005, 10030001, NULL, NULL, NULL, NULL, '删除操作日志', 'B', 0, NULL, 'log:operate:delete',
+        '删除操作日志',
+        1),
+       (10030002, 1003, 'LogLogin', '/log/login/index', NULL, NULL, '登录日志管理', 'M', 12, 'ri:login', NULL,
+        '登录日志管理菜单', 1),
+       (100300020001, 10030002, NULL, NULL, NULL, NULL, '查询登录日志分页列表', 'B', 0, NULL, 'log:login:page',
+        '查询登录日志分页列表', 1),
+       (100300020002, 10030002, NULL, NULL, NULL, NULL, '保存登录日志', 'B', 0, NULL, 'log:login:save', '新增登录日志',
+        1),
+       (100300020003, 10030002, NULL, NULL, NULL, NULL, '更新登录日志', 'B', 0, NULL, 'log:login:update',
+        '更新登录日志',
+        1),
+       (100300020004, 10030002, NULL, NULL, NULL, NULL, '获取登录日志详情', 'B', 0, NULL, 'log:login:detail',
+        '获取登录日志详情',
+        1),
+       (100300020005, 10030002, NULL, NULL, NULL, NULL, '删除登录日志', 'B', 0, NULL, 'log:login:delete',
+        '删除登录日志',
         1);
+
+
+-- ----------------------------
+-- Records of sys_role_menu
+-- ----------------------------
+INSERT INTO `sys_role_menu` (`id`, `role_id`, `menu_id`)
+VALUES (1, 2, 1003),
+       (2, 2, 10030001),
+       (3, 2, 100300010001),
+       (4, 2, 100300010002),
+       (5, 2, 100300010003),
+       (6, 2, 100300010004),
+       (7, 2, 100300010005),
+       (8, 2, 10030002),
+       (9, 2, 100300020001),
+       (10, 2, 100300020002),
+       (11, 2, 100300020003),
+       (12, 2, 100300020004),
+       (13, 2, 100300020005);
 
 
 -- ----------------------------
