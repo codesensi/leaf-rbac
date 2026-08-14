@@ -42,6 +42,7 @@
 - **统一异常**：不要到处 try/catch 后返回错误，抛出业务异常，由 `GlobalExceptionHandler` 统一转换为错误 `Result`。
 - **权限注解**：公开接口用 Sa-Token 的 `@SaIgnore`；受保护接口靠 Sa-Token 拦截器 + `StpUtil` 校验（`StpInterfaceImpl` 已实现权限/角色装配，鉴权时用它）。用户上下文从 `UserContextHolder` 取，不要自行解析 token。
 - **审计日志**：写操作/敏感查询加 `@LogOperate(module=…, type=OperateType.…, desc=…, recordResult=…)`，登录/退出加 `@LogLogin(type=LoginEventType.…)`；通过 `framework/event` 的事件 + `system/listener` 异步落库，不要在 Service 内直接写日志表。
+- **请求日志链路**：traceId 由 `TraceIdFilter` 生成/透传/清理（MDC `traceId`）；请求体缓存（供业务多读）由 `CacheRequestBodyFilter`；请求/响应体日志与敏感字段脱敏统一由 **Logbook**（`logbook.obfuscate`）承担——**禁止再启用 `RequestLogFilter`**（历史实现，已废弃，仅标 `// @Component` 未注册）。日志脱敏字段请统一在 `logbook.obfuscate.json-body-fields` 维护。
 - **缓存**：字典/行政区划等热数据通过 Spring Cache + 缓存事件（`CacheDictEvent`/`CacheRegionEvent`）+ 监听器刷新，变更时发布事件而不是直改缓存。
 - **扩展点用策略模式**：新增登录方式 → 实现 `LoginStrategy` 并注册到 `LoginStrategyFactory`；新增验证码 → 实现 `CaptchaStrategy` 并注册到 `CaptchaStrategyFactory`。
 - **ORM 写法**：用 MyBatis-Flex 的 `queryChain()` + `TableDef` 静态字段（如 `SYS_USER.ALL_COLUMNS`）写查询；实体逻辑删除列 `del_flag`、主键雪花 `snowFlakeId` 由全局配置处理，不要在 SQL 里手写这些。
