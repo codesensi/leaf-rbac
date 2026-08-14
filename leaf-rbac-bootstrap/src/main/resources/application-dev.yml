@@ -188,9 +188,10 @@ app:
     include-response-body: true
     # 打印 body 的最大长度
     max-body-length: 2000
-    # 脱敏字段列表
+    # 脱敏字段（历史配置，真实生效的是 logbook.obfuscate.json-body-fields；维护时需与之一致）
     sensitive-fields:
+      - accessToken
       - password
       - oldPassword
       - newPassword
-      - accessToken
+      - confirmPassword

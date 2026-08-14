@@ -29,6 +29,9 @@ public class AppRequestLogProperties {
 
     /**
      * 敏感字段列表
+     * <p>
+     * 注意：本配置为历史实现（仅供已废弃的 {@code RequestLogFilter} 使用），
+     * 真实生效的脱敏是 {@code logbook.obfuscate.json-body-fields}。维护时请与之一致。
      */
-    private List<String> sensitiveFields = Arrays.asList("password", "accessToken");
+    private List<String> sensitiveFields = Arrays.asList("accessToken", "password", "oldPassword", "newPassword", "confirmPassword");
 }
