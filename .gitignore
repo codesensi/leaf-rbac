@@ -35,3 +35,5 @@ build/
 logs
 data
 docker/.env
+/.reasonix/
+/reasonix.toml
