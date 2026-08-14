@@ -35,6 +35,14 @@ import java.io.IOException;
  * 配合日志配置中的 {@code [%X{traceId}]} 占位符，即可在日志中打印 traceId。
  * 示例日志输出：{@code 2026-06-29 10:00:00.123 INFO [main] [a1b2c3d4] com.example.Service : ...}
  *
+ * <b>请求日志职责边界（与 {@link CacheRequestBodyFilter}、Logbook 分工，勿重复叠加）：</b>
+ * <ul>
+ *   <li><b>traceId 生成/透传/清理</b> — 仅本过滤器负责（写入 MDC {@code traceId}）；</li>
+ *   <li><b>请求体缓存（供业务多读）</b> — {@link CacheRequestBodyFilter} 负责；</li>
+ *   <li><b>请求/响应体日志 + 敏感字段脱敏</b> — 统一由 Logbook（{@code logbook.obfuscate}）承担，
+ *       禁止再启用 {@link RequestLogFilter}（历史实现，已废弃）。</li>
+ * </ul>
+ *
  * @author codesensi
  * @since 1.0
  */

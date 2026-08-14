@@ -23,7 +23,14 @@ import java.util.List;
 
 /**
  * 请求日志过滤器
+ * <p>
+ * <b>已废弃（DEPRECATED）</b>：本过滤器为历史实现，已被 Logbook（{@code logbook.obfuscate}）
+ * 取代，当前不注册（{@code // @Component}），请勿再启用。
+ * <p>
+ * 请求日志职责边界：traceId 由 {@link TraceIdFilter} 生成（MDC {@code traceId}）、
+ * 请求体缓存由 {@link CacheRequestBodyFilter}、请求/响应日志与脱敏统一由 Logbook 承担。
  */
+@Deprecated
 @RequiredArgsConstructor
 @Slf4j
 // @Component

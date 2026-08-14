@@ -32,6 +32,14 @@ import java.io.IOException;
  * <b>执行顺序：</b><br>
  * 设为最高优先级（{@link Ordered#HIGHEST_PRECEDENCE + 1}），确保在任何读取请求体的逻辑之前完成包装。
  *
+ * <b>请求日志职责边界（与 {@link TraceIdFilter}、Logbook 分工，勿重复叠加）：</b>
+ * <ul>
+ *   <li><b>traceId 生成/透传/清理</b> — {@link TraceIdFilter} 负责（写入 MDC {@code traceId}）；</li>
+ *   <li><b>请求体缓存（供业务多读）</b> — 仅本过滤器负责；</li>
+ *   <li><b>请求/响应体日志 + 敏感字段脱敏</b> — 统一由 Logbook（{@code logbook.obfuscate}）承担，
+ *       禁止再启用 {@link RequestLogFilter}（历史实现，已废弃）。</li>
+ * </ul>
+ *
  * @author codesensi
  * @see ContentCachingRequestWrapper
  * @see cn.codesensi.leaf.rbac.framework.util.RequestUtil#getRequestBody(HttpServletRequest)
