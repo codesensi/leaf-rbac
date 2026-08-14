@@ -37,3 +37,5 @@ data
 docker/.env
 /.reasonix/
 /reasonix.toml
+# Maven flatten 插件生成的扁平化 pom（构建产物，勿入库）
+**/.flattened-pom.xml
