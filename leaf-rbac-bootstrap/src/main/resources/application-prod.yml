@@ -127,11 +127,8 @@ thread:
     rejected-execution-handler: CallerRunsPolicy
 
 # 生产环境关闭API文档
-springdoc:
-  swagger-ui:
-    enabled: false
-  api-docs:
-    enabled: false
+knife4j:
+  production: true
 
 # 项目配置
 app:

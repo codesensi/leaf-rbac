@@ -31,6 +31,7 @@
         <commons-lang3.version>3.20.0</commons-lang3.version>
         <mapstruct.version>1.6.3</mapstruct.version>
         <springdoc.version>2.8.17</springdoc.version>
+        <knife4j.version>4.5.0</knife4j.version>
         <h2.version>2.4.240</h2.version>
         <mysql.version>9.7.0</mysql.version>
         <postgresql.version>42.7.11</postgresql.version>
@@ -121,7 +122,17 @@
                 <artifactId>mapstruct</artifactId>
                 <version>${mapstruct.version}</version>
             </dependency>
-            <!-- SpringDoc OpenAPI（生成 Swagger 接口文档，提供 Knife4j UI） -->
+            <!-- Knife4j 增强版 OpenAPI UI（基于 SpringDoc，提供 Aggregation/离线文档等功能） -->
+            <!-- https://mvnrepository.com/artifact/com.github.xiaoymin/knife4j-openapi3-jakarta-spring-boot-starter -->
+            <dependency>
+                <groupId>com.github.xiaoymin</groupId>
+                <artifactId>knife4j-openapi3-jakarta-spring-boot-starter</artifactId>
+                <version>${knife4j.version}</version>
+            </dependency>
+            <!-- SpringDoc OpenAPI（生成 Swagger 接口文档） -->
+            <!-- 用于压制 knife4j starter 传递引入的 springdoc 2.3.0（该版本与 Spring 6.2 不兼容，
+                 调用已移除的 ControllerAdviceBean(Object) 构造函数抛 NoSuchMethodError）。
+                 此处锁定为兼容 Spring 6.2 / Spring Boot 3.5 的版本。 -->
             <!-- https://mvnrepository.com/artifact/org.springdoc/springdoc-openapi-starter-webmvc-ui -->
             <dependency>
                 <groupId>org.springdoc</groupId>
@@ -211,6 +222,7 @@
                 <artifactId>nashorn-core</artifactId>
                 <version>${nashorn-core.version}</version>
             </dependency>
+            <!-- Logbook HTTP 请求/响应日志（含敏感字段自动脱敏） -->
             <!-- https://mvnrepository.com/artifact/org.zalando/logbook-spring-boot-starter -->
             <dependency>
                 <groupId>org.zalando</groupId>

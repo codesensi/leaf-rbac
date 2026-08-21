@@ -33,7 +33,7 @@ public class RbacConst {
     /**
      * SWAGGER接口路径
      */
-    public static final String[] SWAGGER_PATH = {"/swagger-ui.html", "/swagger-ui/**", "/favicon.ico", "/v3/api-docs/**", "/webjars/**"};
+    public static final String[] SWAGGER_PATH = {"/swagger-ui.html", "/swagger-ui/**", "/favicon.ico", "/v3/api-docs/**", "/webjars/**", "/doc.html", "/favicon.ico"};
 
     /**
      * 系统管理接口路径
