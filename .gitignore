@@ -34,7 +34,8 @@ build/
 
 logs
 data
-docker/.env
+# 环境变量文件（含明文连接信息，勿入库）
+.env
 /.reasonix/
 /reasonix.toml
 # Maven flatten 插件生成的扁平化 pom（构建产物，勿入库）

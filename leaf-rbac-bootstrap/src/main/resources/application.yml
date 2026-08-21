@@ -1,6 +1,11 @@
 spring:
   application:
     name: leaf-rbac
+  # 加载工作目录下的 .env 文件（可选），其中的 KEY=VALUE 属性供 ${MYSQL_HOST} 等占位符注入。
+  # optional: 前缀保证文件不存在时不报错（回退到 yml 内默认值）；
+  # .env 不提交仓库，避免数据库信息泄露
+  config:
+    import: optional:file:.env[.properties]
   lifecycle:
     # 优雅停机最大等待时间
     timeout-per-shutdown-phase: 60s
