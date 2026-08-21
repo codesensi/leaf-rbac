@@ -28,13 +28,13 @@ spring:
     redis:
       # 缓存空值，防缓存穿透
       cache-null-values: true
-  # redis配置
+  # redis配置（连接参数支持环境变量注入，与 app.db 一致；生产环境用 REDIS_* 注入，勿提交明文）
   data:
     redis:
-      database: 1
-      host: 192.168.2.3
-      port: 6379
-      password: redis_kiGRPw
+      database: ${REDIS_DATABASE:1}
+      host: ${REDIS_HOST:192.168.2.3}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD:redis_kiGRPw}
       timeout: 60s
       lettuce:
         pool:
