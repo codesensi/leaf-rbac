@@ -1,0 +1,63 @@
+# ============================================================
+# leaf-rbac Docker Compose —— 仅编排应用本身（image-only 部署）
+#
+# 流程：先用 Dockerfile 打包出镜像，再通过本文件部署（compose 不负责构建）：
+#   1) 打包镜像（项目根目录执行）：
+#        docker build -t codesensi/leaf-rbac:latest .
+#   2) 用镜像部署：
+#        docker compose --env-file .env up -d
+#
+# 连接方式：宿主机 IP + 端口直连（应用容器用宿主机网络访问中间件）。
+#   前提：Redis 与数据库（MySQL/PostgreSQL）已跑在 Docker 里，
+#        且已把对应端口映射到宿主机（如 -p 3306:3306、-p 6379:6379）。
+#   应用不 join 中间件的 Docker 网络，HOST 统一填宿主机 IP。
+# ============================================================
+
+services:
+  app:
+    # image-only：引用已打包好的镜像（先 docker build 生成）。本地没有时不会自动构建，而是直接使用
+    image: codesensi/leaf-rbac:latest
+    container_name: leaf-rbac
+    restart: unless-stopped
+    ports:
+      # 宿主机端口由 .env 的 APP_PORT 指定（默认 9098），容器内部固定 9098（application.yml 定义）
+      - "${APP_PORT:-9098}:9098"   # 主业务端口（宿主机→容器）
+    environment:
+      # ---- 运行 profile：prod 使用环境变量注入连接信息 ----
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE:-prod}
+
+      # ---- Java 堆参数 ----
+      JAVA_OPTS: ${JAVA_OPTS:--Xms256m -Xmx512m}
+
+      # ---- 数据库类型：mysql / postgresql ----
+      DB_TYPE: ${DB_TYPE:-mysql}
+      # HOST 填宿主机 IP（中间件容器需已把端口映射到宿主机）
+      MYSQL_HOST: ${MYSQL_HOST:}
+      MYSQL_PORT: ${MYSQL_PORT:-3306}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-leaf_rbac}
+      MYSQL_USERNAME: ${MYSQL_USERNAME:-root}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-}
+      # PostgreSQL（DB_TYPE=postgresql 时使用）
+      POSTGRESQL_HOST: ${POSTGRESQL_HOST:}
+      POSTGRESQL_PORT: ${POSTGRESQL_PORT:-5432}
+      POSTGRESQL_DATABASE: ${POSTGRESQL_DATABASE:-leaf_rbac}
+      POSTGRESQL_USERNAME: ${POSTGRESQL_USERNAME:-postgres}
+      POSTGRESQL_PASSWORD: ${POSTGRESQL_PASSWORD:-}
+
+      # ---- Redis ----
+      REDIS_DATABASE: ${REDIS_DATABASE:-1}
+      REDIS_HOST: ${REDIS_HOST:}
+      REDIS_PORT: ${REDIS_PORT:-6379}
+      REDIS_PASSWORD: ${REDIS_PASSWORD:-}
+
+    volumes:
+      # bind mount 到宿主机固定目录（首次启动 DatabaseInitializer 会写 data/app.lock，持久化避免重复初始化；日志同理）
+      - /docker/leaf-rbac/data:/app/data
+      - /docker/leaf-rbac/logs:/app/logs
+    # 应用内部 Actuator health 检查
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:9099/actuator/health || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 60s

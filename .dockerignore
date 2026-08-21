@@ -1,0 +1,19 @@
+# Docker 构建上下文忽略项
+.git
+.idea
+.reasonix
+reasonix.toml
+target
+**/target
+data
+logs
+*.log
+.env
+**/.env
+.gitignore
+AGENTS.md
+README.md
+*.md
+Dockerfile
+docker-compose.yml
+deploy
