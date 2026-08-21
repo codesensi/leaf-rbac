@@ -29,8 +29,8 @@ spring:
     redis:
       database: 1
       host: 192.168.2.3
-      password: redis_kiGRPw
       port: 6379
+      password: redis_kiGRPw
       timeout: 60s
       lettuce:
         pool:
