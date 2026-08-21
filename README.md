@@ -16,6 +16,7 @@
 - [接口概览](#接口概览)
 - [统一响应](#统一响应)
 - [配置说明](#配置说明)
+- [部署方案](#部署方案)
 - [项目目录](#项目目录)
 - [许可证](#许可证)
 
@@ -116,7 +117,7 @@
 
 ### 启动（开发模式）
 
-默认开发环境使用 **H2 内存/文件数据库（`app.db.type: h2`）**，无需额外安装任何数据库中间件，首次启动自动完成建库建表与数据初始化：
+默认开发环境使用 **MySQL（`app.db.type: ${DB_TYPE:mysql}`，缺省 `mysql`）**，也可通过 `DB_TYPE` 环境变量切换为 `h2` / `postgresql`。首次启动自动完成建库建表与数据初始化；若选用 H2 则无需额外安装任何数据库中间件：
 
 ```bash
 # Windows
@@ -141,12 +142,12 @@ java -jar leaf-rbac-bootstrap/target/leaf-rbac-1.0.0.jar
 
 ### 切换数据库
 
-修改 `leaf-rbac-bootstrap/src/main/resources/application-dev.yml` 中的 `app.db.type`：
+修改 `leaf-rbac-bootstrap/src/main/resources/application-dev.yml` 中的 `app.db.type`（现为环境变量占位符形式，也可直接改默认值）：
 
 ```yaml
 app:
   db:
-    type: mysql        # 可选：h2 / mysql / postgresql
+    type: ${DB_TYPE:mysql}   # 可选：h2 / mysql / postgresql；开发缺省 mysql，亦可通过环境变量 DB_TYPE 注入
 ```
 
 项目支持 **MySQL / PostgreSQL / H2** 三种数据库，连接信息集中在 `app.db.*` 下管理；HikariCP 全局参数通过 `spring.datasource.hikari` 绑定。系统会在首次启动时自动创建目标数据库与表结构，并导入初始数据（脚本位于 `leaf-rbac-bootstrap/src/main/resources/sql/{type}/`）。
@@ -197,7 +198,7 @@ app:
 | 配置项 | 说明 |
 | --- | --- |
 | `server.port` | 应用端口，默认 `9098` |
-| `app.db.type` | 数据库类型：`h2` / `mysql` / `postgresql`（默认 `h2`） |
+| `app.db.type` | 数据库类型：`h2` / `mysql` / `postgresql`（开发缺省 `mysql`，生产缺省 `postgresql`，均支持 `DB_TYPE` 环境变量覆盖） |
 | `app.demo-mode` | 演示模式开关（配合 `DemoModeInterceptor` 拦截写操作） |
 | `app.captcha` | 验证码开关、类型、过期时间、位数 |
 | `app.cache` | 缓存基础 TTL、随机偏移（防雪崩）、启动预加载开关 |
@@ -219,6 +220,135 @@ app:
 - Actuator 独立端口 `9099`，仅暴露 `health,info,metrics,loggers`。
 - 建议将 bucket4j 限流与 Sa-Token 均接入 Redis，实现多实例集群一致性。
 - 日志按日期 + 大小滚动（100MB × 180 天），留痕可追溯。
+
+---
+
+## 部署方案
+
+部署的核心思路：**一套代码、两种介质（环境变量 + `.env` 文件）、三个数据库（H2 / MySQL / PostgreSQL）**。应用在运行时通过环境变量注入敏感连接信息，生产与开发共用同一份编译产物。
+
+### 产物与运行环境
+
+- **编译产物**：`leaf-rbac-bootstrap/target/leaf-rbac-1.0.0.jar`（`finalName` 由父 POM 的 `revision=1.0.0` 决定，可 `-Drevision=...` 覆盖）。
+- **运行环境**：仅需 **JDK 21+**，无需安装 Maven（产物为可执行 fat jar）。H2 模式零外部中间件依赖。
+- **可执行性**：内嵌 Tomcat，`java -jar` 即跑；启用优雅停机（`server.shutdown: graceful`，最长等待 60s）。
+
+### 环境变量清单
+
+以下是全部支持环境变量注入的配置项。变量缺省时回退到 yml 内默认值，因此**不配置也能启动**（但生产环境敏感信息请务必显式注入）。
+
+| 变量 | 作用 | 默认值
+| --- | --- | --- |
+| `DB_TYPE` | 数据库类型 `h2` / `mysql` / `postgresql` | `mysql`（dev）／`postgresql`（prod） |
+| `MYSQL_HOST` / `MYSQL_PORT` / `MYSQL_DATABASE` | MySQL 连接 | `192.168.2.3` / `3306` / `leaf_rbac` |
+| `MYSQL_USERNAME` / `MYSQL_PASSWORD` | MySQL 账号 | `root` / 明文默认值 |
+| `POSTGRESQL_HOST` / `POSTGRESQL_PORT` / `POSTGRESQL_DATABASE` | PostgreSQL 连接 | `192.168.2.3` / `5432` / `leaf_rbac` |
+| `POSTGRESQL_USERNAME` / `POSTGRESQL_PASSWORD` | PostgreSQL 账号 | `postgres` / 明文默认值 |
+| `REDIS_DATABASE` / `REDIS_HOST` / `REDIS_PORT` | Redis 连接 | `1` / `192.168.2.3` / `6379` |
+| `REDIS_PASSWORD` | Redis 密码 | 明文默认值 |
+
+> **安全提示**：默认 yml 内嵌了连接明文密码，生产务必用环境变量覆盖，且**不要提交 `.env`**（已加入 `.gitignore`）。
+
+### 配置文件加载机制
+
+- 三个 yml 按 Profile 加载：`application.yml`（环境无关）+ `application-{dev,prod}.yml`（可切换项），默认激活 `dev`。
+- 环境变量可直接注入（`${MYSQL_HOST:默认值}` 语法），也可通过工作目录下的 **`.env` 文件**统一管理（模板见 `leaf-rbac-bootstrap/src/main/resources/.env.example`）：用 `spring.config.import: optional:file:.env[.properties]` 自动加载，`optional:` 保证文件缺失时不报错。
+- **推荐做法**：`.env` 写在应用运行目录下（而非源码目录），一份对应一个部署环境，随容器/主机管理。
+
+### 首次启动自动初始化
+
+无论哪种数据库，**首次启动自动建库建表并导入初始数据**（脚本位于 `leaf-rbac-bootstrap/src/main/resources/sql/{type}/`）：
+
+- 初始化完成后写入运行目录下的 `data/app.lock` 锁文件；
+- 之后启动检测到锁文件则跳过初始化；
+- **删除 `data/app.lock` 可重新触发初始化**（数据库会被重建/重置，操作前请注意备份）。
+
+### 数据库选型建议
+
+| 场景 | 推荐 | 说明 |
+| --- | --- | --- |
+| 本地开发 / 演示 | **H2** | 零依赖，文件库落在 `./data/`，`MODE=MySQL` 兼容 MySQL 语法 |
+| 生产单机 / 中小规模 | **MySQL** | 生态成熟，运维成本低 |
+| 生产多实例 / 高并发 | **PostgreSQL** | 事务与并发控制更强，适合集群化 |
+
+> 多实例部署（集群）时：**Sa-Token token 存储、Spring Cache 缓存、Bucket4j 分布式限流均需接入 Redis**（`bucket4j.cache-to-use: redis-lettuce`），否则各实例状态不一致。
+
+### 部署步骤
+
+#### 1. 方式一：打包 jar 直接部署（推荐）
+
+```bash
+# Windows
+.\mvnw.cmd clean package
+
+# Linux / macOS
+./mvnw clean package
+```
+
+产物：`leaf-rbac-bootstrap/target/leaf-rbac-1.0.0.jar`
+
+**开发 (零配置)**：
+```bash
+java -jar leaf-rbac-1.0.0.jar
+# 默认激活 dev Profile，数据库缺省 mysql（可由 DB_TYPE 切换为 h2 / postgresql），Redis(默认地址)，自动建库建表
+```
+
+**开发 (H2 零外部依赖)**：
+```bash
+java -jar leaf-rbac-1.0.0.jar --DB_TYPE=h2
+# 无需安装任何中间件即可运行
+```
+
+**生产 (MySQL + 环境变量)**：
+```bash
+java -jar leaf-rbac-1.0.0.jar \
+  --spring.profiles.active=prod \
+  --DB_TYPE=mysql \
+  --MYSQL_HOST=10.0.0.10 \
+  --MYSQL_PORT=3306 \
+  --MYSQL_DATABASE=leaf_rbac \
+  --MYSQL_USERNAME=leaf \
+  --MYSQL_PASSWORD='***' \
+  --REDIS_HOST=10.0.0.11 \
+  --REDIS_PORT=6379 \
+  --REDIS_PASSWORD='***'
+```
+
+或借助 `.env` 文件（推荐，避免命令过长 / 明文暴露在进程列表）：
+```bash
+# 运行目录下创建 .env，填入连接信息
+java -jar leaf-rbac-1.0.0.jar --spring.profiles.active=prod
+```
+
+#### 2. 方式二：使用 `spring-boot:run`（开发调试）
+
+```bash
+# 先整体 install 以便依赖模块被 reactor 解析
+.\mvnw.cmd install
+.\mvnw.cmd spring-boot:run -pl leaf-rbac-bootstrap
+```
+
+### 端口与对外暴露
+
+| 端口 | 用途 | 建议 |
+| --- | --- | --- |
+| `9098` | 应用主端口（业务 API） | 对外暴露，置于反向代理 / 负载均衡之后 |
+| `9099` | Actuator 管理端口 | **仅内网访问**，勿暴露公网 |
+
+生产默认已关闭 Swagger（`springdoc.*.enabled: false`）；Actuator 仅开放 `health,info,metrics,loggers` 且 `read_only`。
+
+### 验证部署
+
+```bash
+# 健康检查（独立管理端口）
+curl http://127.0.0.1:9099/actuator/health
+# 期望返回 {"status":"UP", ...}
+
+# 应用信息
+curl http://127.0.0.1:9099/actuator/info
+```
+
+访问应用入口并登录（默认账密 `sadmin / 123456`）确认接口正常；查看 `logs/leaf-rbac_{profile}.log` 确认链路日志与审计日志均已落盘。
 
 ---
 

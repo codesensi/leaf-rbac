@@ -136,7 +136,7 @@ springdoc:
 # 项目配置
 app:
   db:
-    type: ${DB_TYPE:h2}
+    type: ${DB_TYPE:postgresql}
     h2:
       url: jdbc:h2:./data/leaf_rbac;DB_CLOSE_DELAY=-1;MODE=MySQL
       username: sa

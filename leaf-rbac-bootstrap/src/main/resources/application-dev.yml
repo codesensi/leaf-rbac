@@ -134,7 +134,7 @@ thread:
 app:
   # 数据库配置
   db:
-    type: mysql
+    type: ${DB_TYPE:mysql}
     h2:
       url: jdbc:h2:./data/leaf_rbac_dev;DB_CLOSE_DELAY=-1;MODE=MySQL
       username: sa
