@@ -12,11 +12,16 @@
 - [核心特性](#核心特性)
 - [技术栈](#技术栈)
 - [模块架构](#模块架构)
+  - [各模块职责](#各模块职责)
 - [项目目录](#项目目录)
 - [快速开始](#快速开始)
+  - [环境要求](#环境要求)
+  - [启动（开发模式）](#启动开发模式)
+  - [切换数据库](#切换数据库)
 - [接口概览](#接口概览)
 - [统一响应](#统一响应)
 - [配置说明](#配置说明)
+  - [生产建议](#生产建议)
 - [部署方案](#部署方案)
 - [许可证](#许可证)
 
@@ -69,7 +74,21 @@ flowchart LR
     A[leaf-rbac-common] --> B[leaf-rbac-framework] --> C[leaf-rbac-system] --> D[leaf-rbac-api] --> E[leaf-rbac-bootstrap]
 ```
 
-### 项目目录
+### 各模块职责
+
+| 模块 | 职责 | 关键子包 |
+| --- | --- | --- |
+| `common` | 常量、枚举、核心对象（`Result`）、异常、配置属性、通用工具 | `constants` `core` `enums` `exception` `properties` `util` |
+| `framework` | 统一响应、全局异常、AOP 切面、过滤器、拦截器、事件、缓存、自定义校验、用户上下文 | `advice` `annotation` `aspect` `filter` `handler` `event` `context` `validator` `config` |
+| `system` | 实体、Mapper、Service、DTO、MapStruct 转换器、登录/验证码策略、Sa-Token 权限装配 | `entity` `mapper` `service` `dto` `converter` `strategy` `security` |
+| `api` | Controller、请求/响应对象、DTO↔VO 转换、Swagger 配置 | `controller` `request` `response` `converter` `config` |
+| `bootstrap` | 应用启动入口、环境配置、动态数据源、数据库初始化 | `config` `initializer` `condition` |
+
+**分层约定**：`system` 层暴露 `DTO`（领域对象），`api` 层持有网络对象（`request`/`response`），通过两级 MapStruct `converter` 完成转换，实现依赖方向单一、实体不对外暴露。
+
+---
+
+## 项目目录
 
 ```
 leaf-rbac/
@@ -86,18 +105,6 @@ leaf-rbac/
 ├── logs/                   # 运行日志
 └── pom.xml                 # 父 POM（版本与依赖统一管理）
 ```
-
-### 各模块职责
-
-| 模块 | 职责 | 关键子包 |
-| --- | --- | --- |
-| `common` | 常量、枚举、核心对象（`Result`）、异常、配置属性、通用工具 | `constants` `core` `enums` `exception` `properties` `util` |
-| `framework` | 统一响应、全局异常、AOP 切面、过滤器、拦截器、事件、缓存、自定义校验、用户上下文 | `advice` `annotation` `aspect` `filter` `handler` `event` `context` `validator` `config` |
-| `system` | 实体、Mapper、Service、DTO、MapStruct 转换器、登录/验证码策略、Sa-Token 权限装配 | `entity` `mapper` `service` `dto` `converter` `strategy` `security` |
-| `api` | Controller、请求/响应对象、DTO↔VO 转换、Swagger 配置 | `controller` `request` `response` `converter` `config` |
-| `bootstrap` | 应用启动入口、环境配置、动态数据源、数据库初始化 | `config` `initializer` `condition` |
-
-**分层约定**：`system` 层暴露 `DTO`（领域对象），`api` 层持有网络对象（`request`/`response`），通过两级 MapStruct `converter` 完成转换，实现依赖方向单一、实体不对外暴露。
 
 ---
 
@@ -204,8 +211,6 @@ app:
 | `management` | Actuator 监控（独立端口 `9099`）与链路追踪采样 |
 
 生产环境（`application-prod.yml`）支持通过环境变量覆盖数据库与 Redis 连接（`DB_TYPE`、`MYSQL_HOST`/`MYSQL_PORT`/`MYSQL_DATABASE`/`MYSQL_USERNAME`/`MYSQL_PASSWORD`、`POSTGRESQL_HOST`/`POSTGRESQL_PORT`/`POSTGRESQL_DATABASE`/`POSTGRESQL_USERNAME`/`POSTGRESQL_PASSWORD`、`REDIS_HOST` 等），用于容器化部署。
-
----
 
 ### 生产建议
 
