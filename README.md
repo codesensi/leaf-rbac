@@ -51,7 +51,7 @@
 | 认证鉴权 | Sa-Token 1.45.0（starter + Redis 模板 + JWT） |
 | 数据库 | MySQL 9.7 / PostgreSQL 42.7 / H2 2.4（HikariCP 连接池） |
 | 对象映射 | MapStruct 1.6.3 + Lombok 1.18.46 |
-| API 文档 | SpringDoc / Swagger UI（Knife4j 风格） |
+| API 文档 | SpringDoc / Swagger UI |
 | 缓存 | Spring Cache + Redis（Lettuce） |
 | 限流 | Bucket4j（令牌桶，支持 Redis / Lettuce） |
 | 工具库 | Hutool 5.8、Commons-Lang3 |
