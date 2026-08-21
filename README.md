@@ -12,12 +12,12 @@
 - [核心特性](#核心特性)
 - [技术栈](#技术栈)
 - [模块架构](#模块架构)
+- [项目目录](#项目目录)
 - [快速开始](#快速开始)
 - [接口概览](#接口概览)
 - [统一响应](#统一响应)
 - [配置说明](#配置说明)
 - [部署方案](#部署方案)
-- [项目目录](#项目目录)
 - [许可证](#许可证)
 
 ---
@@ -64,33 +64,27 @@
 
 工程采用 Maven 多模块结构，依赖关系呈单向递进：
 
+```mermaid
+flowchart LR
+    A[leaf-rbac-common] --> B[leaf-rbac-framework] --> C[leaf-rbac-system] --> D[leaf-rbac-api] --> E[leaf-rbac-bootstrap]
 ```
-┌─────────────────────────────────────────────┐
-│  leaf-rbac-common     公共基础（常量/枚举/   │ ◄── 被所有模块依赖
-│                       异常/工具/配置属性）    │
-└─────────────────────────────────────────────┘
-                     ▲
-┌─────────────────────────────────────────────┐
-│  leaf-rbac-framework  框架核心（切面/过滤器/  │
-│                       拦截器/全局异常/配置）  │
-└─────────────────────────────────────────────┘
-                     ▲
-┌─────────────────────────────────────────────┐
-│  leaf-rbac-system     系统业务（实体/Mapper/  │
-│                       Service/策略实现）      │
-└─────────────────────────────────────────────┘
-                     ▲
-┌─────────────────────────────────────────────┐
-│  leaf-rbac-api        接口层（Controller/    │
-│                       Request/Response）     │
-└─────────────────────────────────────────────┘
-                     ▲
-┌─────────────────────────────────────────────┐
-│  leaf-rbac-bootstrap  启动模块（启动类/yml/   │
-│                       数据库初始化）          │
-└─────────────────────────────────────────────┘
 
-   leaf-rbac-codegen    代码生成器（独立模块，不依赖业务模块）
+### 项目目录
+
+```
+leaf-rbac/
+├── leaf-rbac-common/       # 公共基础模块
+├── leaf-rbac-framework/    # 框架核心模块
+├── leaf-rbac-system/       # 系统业务模块
+├── leaf-rbac-api/          # 接口层模块
+├── leaf-rbac-bootstrap/    # 启动模块（yml、SQL、xdb）
+│   └── src/main/resources/
+│       ├── application.yml / application-dev.yml / application-prod.yml
+│       ├── sql/{h2,mysql,postgresql}/   # 建表与初始化脚本
+│       └── xdb/                          # IP 定位库
+├── data/                   # 运行数据（数据库文件、app.lock 锁文件）
+├── logs/                   # 运行日志
+└── pom.xml                 # 父 POM（版本与依赖统一管理）
 ```
 
 ### 各模块职责
@@ -102,7 +96,6 @@
 | `system` | 实体、Mapper、Service、DTO、MapStruct 转换器、登录/验证码策略、Sa-Token 权限装配 | `entity` `mapper` `service` `dto` `converter` `strategy` `security` |
 | `api` | Controller、请求/响应对象、DTO↔VO 转换、Swagger 配置 | `controller` `request` `response` `converter` `config` |
 | `bootstrap` | 应用启动入口、环境配置、动态数据源、数据库初始化 | `config` `initializer` `condition` |
-| `codegen` | MyBatis-Flex 代码生成器 | — |
 
 **分层约定**：`system` 层暴露 `DTO`（领域对象），`api` 层持有网络对象（`request`/`response`），通过两级 MapStruct `converter` 完成转换，实现依赖方向单一、实体不对外暴露。
 
@@ -240,9 +233,9 @@ app:
 | 变量 | 作用 | 默认值
 | --- | --- | --- |
 | `DB_TYPE` | 数据库类型 `h2` / `mysql` / `postgresql` | `mysql`（dev）／`postgresql`（prod） |
-| `MYSQL_HOST` / `MYSQL_PORT` / `MYSQL_DATABASE` | MySQL 连接 | `192.168.2.3` / `3306` / `leaf_rbac` |
+| `MYSQL_HOST` / `MYSQL_PORT` / `MYSQL_DATABASE` | MySQL 连接 | `192.168.2.3` / `3306` / `leaf_rbac_dev`（dev）· `leaf_rbac`（prod） |
 | `MYSQL_USERNAME` / `MYSQL_PASSWORD` | MySQL 账号 | `root` / 明文默认值 |
-| `POSTGRESQL_HOST` / `POSTGRESQL_PORT` / `POSTGRESQL_DATABASE` | PostgreSQL 连接 | `192.168.2.3` / `5432` / `leaf_rbac` |
+| `POSTGRESQL_HOST` / `POSTGRESQL_PORT` / `POSTGRESQL_DATABASE` | PostgreSQL 连接 | `192.168.2.3` / `5432` / `leaf_rbac_dev`（dev）· `leaf_rbac`（prod） |
 | `POSTGRESQL_USERNAME` / `POSTGRESQL_PASSWORD` | PostgreSQL 账号 | `postgres` / 明文默认值 |
 | `REDIS_DATABASE` / `REDIS_HOST` / `REDIS_PORT` | Redis 连接 | `1` / `192.168.2.3` / `6379` |
 | `REDIS_PASSWORD` | Redis 密码 | 明文默认值 |
@@ -349,27 +342,6 @@ curl http://127.0.0.1:9099/actuator/info
 ```
 
 访问应用入口并登录（默认账密 `sadmin / 123456`）确认接口正常；查看 `logs/leaf-rbac_{profile}.log` 确认链路日志与审计日志均已落盘。
-
----
-
-## 项目目录
-
-```
-leaf-rbac/
-├── leaf-rbac-common/       # 公共基础模块
-├── leaf-rbac-framework/    # 框架核心模块
-├── leaf-rbac-system/       # 系统业务模块
-├── leaf-rbac-api/          # 接口层模块
-├── leaf-rbac-bootstrap/    # 启动模块（yml、SQL、xdb）
-│   └── src/main/resources/
-│       ├── application.yml / application-dev.yml / application-prod.yml
-│       ├── sql/{h2,mysql,postgresql}/   # 建表与初始化脚本
-│       └── xdb/                          # IP 定位库
-├── leaf-rbac-codegen/      # 代码生成器
-├── data/                   # 运行数据（数据库文件、app.lock 锁文件）
-├── logs/                   # 运行日志
-└── pom.xml                 # 父 POM（版本与依赖统一管理）
-```
 
 ---
 

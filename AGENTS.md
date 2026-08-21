@@ -21,19 +21,17 @@
   `.\mvnw.cmd spring-boot:run -pl leaf-rbac-bootstrap`
   （bootstrap 依赖其余模块，聚合 reactor 下先 install 依赖模块再运行；也可 `-am` 连带构建依赖）。
 - 打包：`.\mvnw.cmd clean package` → 产物 `leaf-rbac-bootstrap/target/leaf-rbac-1.0.0.jar`（finalName=`${project.parent.artifactId}-${revision}`）。
-- 代码生成器（独立模块）：运行 `leaf-rbac-codegen` 的 `Codegen` 主类生成实体/Mapper 等。
 - 运行后：Swagger 文档 <http://127.0.0.1:9098/swagger-ui.html>；默认账密 `sadmin / 123456`。
 
 ## Architecture
 
-模块依赖单向：`common → framework → system → api → bootstrap`；`codegen` 独立。
+模块依赖单向：`common → framework → system → api → bootstrap`。
 
 - **leaf-rbac-common** — 无 Spring 依赖的基础：常量、枚举、核心对象（`Result` 统一响应）、异常、配置属性（如 `AppDbProperties`）、工具类。
 - **leaf-rbac-framework** — 横切关注点：`advice`（`ApiResponseBodyAdvice` 统一响应包装）、`annotation`/`aspect`（`@LogOperate`/`@LogLogin` 审计切面）、`filter`（TraceId/请求日志/用户上下文/缓存请求体）、`interceptor`（演示模式/用户上下文）、`handler`（`GlobalExceptionHandler`）、`event`、`validator`（`@Phone`/`@IdCard`/`@InEnum`）、`context`（`UserContext`/`UserContextHolder`）、`registry`、`config`、`util`。
 - **leaf-rbac-system** — 业务领域：`entity`（`SysUser/SysRole/SysMenu/SysUserRole/SysRoleMenu/ConfDict*/ConfRegion/Log*`）、`mapper`、`service`/`impl`、`dto`、`converter`（entity↔DTO）、`strategy`（登录/验证码策略 + 工厂）、`security`（`StpInterfaceImpl` 装配权限/角色）、`listener`（事件落库/刷新缓存）。
 - **leaf-rbac-api** — 网络层：`controller`（auth/captcha/conf/log/system）、`request`/`response`、`converter`（DTO↔VO）、`config`（`SwaggerConfig`）。**Controller 只处理 request/response，不直接触达 entity。**
 - **leaf-rbac-bootstrap** — 启动与装配：启动类、`application*.yml`、`DynamicDataSourceConfig`、`DatabaseInitializer`。
-- **leaf-rbac-codegen** — MyBatis-Flex 代码生成器（生成 Mapper/实体/Service 样板）。
 
 ## Conventions
 

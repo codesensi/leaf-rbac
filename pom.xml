@@ -16,7 +16,6 @@
         <module>leaf-rbac-system</module>
         <module>leaf-rbac-api</module>
         <module>leaf-rbac-bootstrap</module>
-        <module>leaf-rbac-codegen</module>
     </modules>
 
     <properties>
@@ -84,12 +83,6 @@
                 <artifactId>leaf-rbac-bootstrap</artifactId>
                 <version>${revision}</version>
             </dependency>
-            <!-- 内部模块：代码生成器 -->
-            <dependency>
-                <groupId>cn.codesensi.leaf</groupId>
-                <artifactId>leaf-rbac-codegen</artifactId>
-                <version>${revision}</version>
-            </dependency>
 
             <!-- Spring Boot 依赖管理 BOM（统一管理所有 Spring Boot 相关库的版本） -->
             <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-dependencies -->
@@ -133,13 +126,6 @@
             <dependency>
                 <groupId>com.mybatis-flex</groupId>
                 <artifactId>mybatis-flex-spring-boot3-starter</artifactId>
-                <version>${mybatis-flex.version}</version>
-            </dependency>
-            <!-- MyBatis-Flex 代码生成器 -->
-            <!-- https://mvnrepository.com/artifact/com.mybatis-flex/mybatis-flex-codegen -->
-            <dependency>
-                <groupId>com.mybatis-flex</groupId>
-                <artifactId>mybatis-flex-codegen</artifactId>
                 <version>${mybatis-flex.version}</version>
             </dependency>
             <!-- H2 内存数据库 -->
