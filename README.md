@@ -16,7 +16,6 @@
 - [接口概览](#接口概览)
 - [统一响应](#统一响应)
 - [配置说明](#配置说明)
-- [运行部署](#运行部署)
 - [项目目录](#项目目录)
 - [许可证](#许可证)
 
@@ -210,28 +209,9 @@ app:
 | `logbook` | 请求日志 + 敏感字段脱敏 |
 | `management` | Actuator 监控（独立端口 `9099`）与链路追踪采样 |
 
-生产环境（`application-prod.yml`）支持通过环境变量覆盖数据库与 Redis 连接（`DB_TYPE`、`MYSQL_URL`、`REDIS_HOST` 等），用于容器化部署。
+生产环境（`application-prod.yml`）支持通过环境变量覆盖数据库与 Redis 连接（`DB_TYPE`、`MYSQL_HOST`/`MYSQL_PORT`/`MYSQL_DATABASE`/`MYSQL_USERNAME`/`MYSQL_PASSWORD`、`POSTGRESQL_HOST`/`POSTGRESQL_PORT`/`POSTGRESQL_DATABASE`/`POSTGRESQL_USERNAME`/`POSTGRESQL_PASSWORD`、`REDIS_HOST` 等），用于容器化部署。
 
 ---
-
-## 运行部署
-
-### Docker Compose
-
-仓库 `docker/` 目录提供了完整的容器化编排（应用 + 可选托管数据库 + Redis）：
-
-```bash
-cd docker
-# 使用托管数据库：DB_MODE=managed 并指定 DB_TYPE
-DB_TYPE=mysql DB_MODE=managed docker compose up -d
-# 外部数据库：DB_MODE=external REDIS_MODE=external 并传入连接环境变量
-docker compose up -d
-```
-
-- 应用镜像：`codesensi/leaf-rbac:latest`
-- 端口映射：`9098:9098`
-- 健康检查：`GET /actuator/health`
-- 数据与日志通过 volume 持久化到宿主机 `/docker/leafrbac/{data,logs}`
 
 ### 生产建议
 
@@ -256,7 +236,6 @@ leaf-rbac/
 │       ├── sql/{h2,mysql,postgresql}/   # 建表与初始化脚本
 │       └── xdb/                          # IP 定位库
 ├── leaf-rbac-codegen/      # 代码生成器
-├── docker/                 # Dockerfile 与 Compose 编排
 ├── data/                   # 运行数据（数据库文件、app.lock 锁文件）
 ├── logs/                   # 运行日志
 └── pom.xml                 # 父 POM（版本与依赖统一管理）

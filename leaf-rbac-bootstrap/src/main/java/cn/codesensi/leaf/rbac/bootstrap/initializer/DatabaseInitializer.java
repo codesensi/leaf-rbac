@@ -81,7 +81,7 @@ public class DatabaseInitializer {
             throw new IllegalStateException("Failed to obtain current database configuration");
         }
 
-        String url = config.getUrl();
+        String url = appDbProperties.getCurrentUrl();
         String dbType = resolveDbTypeFromUrl(url);
         if (dbType == null) {
             throw new IllegalStateException("Unable to resolve database type from URL");
@@ -156,7 +156,7 @@ public class DatabaseInitializer {
         initializer.setDataSource(dataSource);
         initializer.setEnabled(true);
 
-        String dbType = resolveDbTypeFromUrl(appDbProperties.getCurrentConfig().getUrl());
+        String dbType = resolveDbTypeFromUrl(appDbProperties.getCurrentUrl());
         if (dbType == null) {
             throw new IllegalStateException("Unable to resolve database type from URL");
         }

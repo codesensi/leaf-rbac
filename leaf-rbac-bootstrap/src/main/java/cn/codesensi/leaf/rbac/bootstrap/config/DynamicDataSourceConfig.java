@@ -60,7 +60,7 @@ public class DynamicDataSourceConfig {
         Binder.get(environment).bind("spring.datasource.hikari", Bindable.ofInstance(dataSource));
 
         // 设置动态连接信息（会覆盖 Hikari 中可能存在的同名属性）
-        dataSource.setJdbcUrl(config.getUrl());
+        dataSource.setJdbcUrl(appDbProperties.getCurrentUrl());
         dataSource.setUsername(config.getUsername());
         dataSource.setPassword(config.getPassword());
         dataSource.setDriverClassName(config.getDriverClassName());

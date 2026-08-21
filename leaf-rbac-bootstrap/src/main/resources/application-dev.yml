@@ -141,14 +141,18 @@ app:
       password:
       driver-class-name: org.h2.Driver
     mysql:
-      url: jdbc:mysql://192.168.2.3:3306/leaf_rbac_dev?useSSL=false&allowPublicKeyRetrieval=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&tinyInt1isBit=false
-      username: root
-      password: mysql_GzxMw2
+      host: ${MYSQL_HOST:192.168.2.3}
+      port: ${MYSQL_PORT:3306}
+      database: ${MYSQL_DATABASE:leaf_rbac_dev}
+      username: ${MYSQL_USERNAME:root}
+      password: ${MYSQL_PASSWORD:mysql_GzxMw2}
       driver-class-name: com.mysql.cj.jdbc.Driver
     postgresql:
-      url: jdbc:postgresql://192.168.2.3:5432/leaf_rbac_dev?ssl=false&sslmode=disable&client_encoding=UTF8&timezone=Asia/Shanghai
-      username: postgres
-      password: postgres_saiFPX
+      host: ${POSTGRESQL_HOST:192.168.2.3}
+      port: ${POSTGRESQL_PORT:5432}
+      database: ${POSTGRESQL_DATABASE:leaf_rbac_dev}
+      username: ${POSTGRESQL_USERNAME:postgres}
+      password: ${POSTGRESQL_PASSWORD:postgres_saiFPX}
       driver-class-name: org.postgresql.Driver
   demo-mode: false
   # 民政部地名服务

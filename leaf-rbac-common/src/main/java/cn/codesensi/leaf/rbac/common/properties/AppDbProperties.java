@@ -17,9 +17,11 @@ import org.springframework.stereotype.Component;
  *   db:
  *     type: mysql
  *     mysql:
- *       url: jdbc:mysql://localhost:3306/db
- *       username: root
- *       password: pass
+ *       host: ${MYSQL_HOST:192.168.2.3}
+ *       port: ${MYSQL_PORT:3306}
+ *       database: ${MYSQL_DATABASE:leaf_rbac}
+ *       username: ${MYSQL_USERNAME:root}
+ *       password: ${MYSQL_PASSWORD:pass}
  *       driver-class-name: com.mysql.cj.jdbc.Driver
  * }</pre>
  *
@@ -68,6 +70,38 @@ public class AppDbProperties {
     }
 
     /**
+     * 获取当前选中数据库类型的完整 JDBC URL。
+     * <p>
+     * 优先返回配置中显式填写的 {@code url} 字段（适用于 H2 文件数据库，或直接给完整 URL 的
+     * 写法）；否则根据该类型的 {@code host}/{@code port}/{@code database} 字段组装，
+     * 并补充该数据库类型固定的连接参数。host/port/database 缺失时返回 null。
+     *
+     * @return 当前数据库类型的完整 JDBC URL；无法确定时返回 null
+     */
+    public String getCurrentUrl() {
+        DataSourceConfig config = getCurrentConfig();
+        if (config == null) {
+            return null;
+        }
+        // 显式填写的 url 优先（H2 为文件路径，无法拆 host/port）
+        if (config.getUrl() != null && !config.getUrl().isBlank()) {
+            return config.getUrl();
+        }
+        if (type == null || config.getHost() == null || config.getPort() == null) {
+            return null;
+        }
+        return switch (type.toLowerCase()) {
+            case "mysql" -> "jdbc:mysql://" + config.getHost() + ":" + config.getPort()
+                    + "/" + config.getDatabase()
+                    + "?useSSL=false&allowPublicKeyRetrieval=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&tinyInt1isBit=false";
+            case "postgresql" -> "jdbc:postgresql://" + config.getHost() + ":" + config.getPort()
+                    + "/" + config.getDatabase()
+                    + "?ssl=false&sslmode=disable&client_encoding=UTF8&timezone=Asia/Shanghai";
+            default -> null;
+        };
+    }
+
+    /**
      * 单个数据源的连接配置。
      * <p>
      * 包含 JDBC URL、用户名、密码、驱动类名四个属性，
@@ -77,9 +111,27 @@ public class AppDbProperties {
     public static class DataSourceConfig {
 
         /**
-         * JDBC 连接地址
+         * JDBC 连接地址（完整 URL）。
+         * <p>
+         * 由 {@link AppDbProperties#getCurrentUrl()} 优先使用；对 H2（文件路径）必填，
+         * 对 MySQL / PostgreSQL 也可直接填写完整 URL（与 host/port/database 二选一）。
          */
         private String url;
+
+        /**
+         * 数据库主机地址（MySQL / PostgreSQL 使用，配合 {@link #port} 组装 JDBC URL）
+         */
+        private String host;
+
+        /**
+         * 数据库端口（MySQL / PostgreSQL 使用）
+         */
+        private String port;
+
+        /**
+         * 数据库名称（MySQL / PostgreSQL 使用）
+         */
+        private String database;
 
         /**
          * 数据库登录用户名
