@@ -23,8 +23,10 @@ COPY leaf-rbac-bootstrap/pom.xml leaf-rbac-bootstrap/pom.xml
 # 转成 LF 并补可执行位，保证容器内可运行。
 RUN sed -i 's/\r$//' mvnw && chmod +x mvnw
 
-# 预下载依赖（仅 pom，命中缓存时后续编译秒级完成）
-RUN ./mvnw -B -q dependency:go-offline -pl leaf-rbac-bootstrap -am || true
+# 预下载依赖（仅 pom，命中缓存时后续编译秒级完成）。
+# 用 dependency:resolve 只解析当前构建真正会用到的 compile/runtime 依赖
+# 既快又不往镜像层塞垃圾；pom 不变时此层命中缓存，后续编译近乎秒级。
+RUN ./mvnw -B -q dependency:resolve -pl leaf-rbac-bootstrap -am || true
 
 # 拷贝源码并打包
 COPY leaf-rbac-common leaf-rbac-common
