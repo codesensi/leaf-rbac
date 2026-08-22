@@ -143,18 +143,18 @@ app:
       password:
       driver-class-name: org.h2.Driver
     mysql:
-      host: ${MYSQL_HOST:192.168.2.3}
+      host: ${MYSQL_HOST:-}
       port: ${MYSQL_PORT:3306}
       database: ${MYSQL_DATABASE:leaf_rbac}
       username: ${MYSQL_USERNAME:root}
-      password: ${MYSQL_PASSWORD:mysql_GzxMw2}
+      password: ${MYSQL_PASSWORD:-}
       driver-class-name: com.mysql.cj.jdbc.Driver
     postgresql:
-      host: ${POSTGRESQL_HOST:192.168.2.3}
+      host: ${POSTGRESQL_HOST:-}
       port: ${POSTGRESQL_PORT:5432}
       database: ${POSTGRESQL_DATABASE:leaf_rbac}
       username: ${POSTGRESQL_USERNAME:postgres}
-      password: ${POSTGRESQL_PASSWORD:postgres_saiFPX}
+      password: ${POSTGRESQL_PASSWORD:-}
       driver-class-name: org.postgresql.Driver
   demo-mode: false
   # 民政部地名服务
