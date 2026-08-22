@@ -32,13 +32,13 @@ services:
       # ---- 数据库类型：mysql / postgresql ----
       DB_TYPE: ${DB_TYPE:-mysql}
       # HOST 填宿主机 IP（中间件容器需已把端口映射到宿主机）
-      MYSQL_HOST: ${MYSQL_HOST:}
+      MYSQL_HOST: ${MYSQL_HOST:-}
       MYSQL_PORT: ${MYSQL_PORT:-3306}
       MYSQL_DATABASE: ${MYSQL_DATABASE:-leaf_rbac}
       MYSQL_USERNAME: ${MYSQL_USERNAME:-root}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD:-}
       # PostgreSQL（DB_TYPE=postgresql 时使用）
-      POSTGRESQL_HOST: ${POSTGRESQL_HOST:}
+      POSTGRESQL_HOST: ${POSTGRESQL_HOST:-}
       POSTGRESQL_PORT: ${POSTGRESQL_PORT:-5432}
       POSTGRESQL_DATABASE: ${POSTGRESQL_DATABASE:-leaf_rbac}
       POSTGRESQL_USERNAME: ${POSTGRESQL_USERNAME:-postgres}
@@ -46,7 +46,7 @@ services:
 
       # ---- Redis ----
       REDIS_DATABASE: ${REDIS_DATABASE:-1}
-      REDIS_HOST: ${REDIS_HOST:}
+      REDIS_HOST: ${REDIS_HOST:-}
       REDIS_PORT: ${REDIS_PORT:-6379}
       REDIS_PASSWORD: ${REDIS_PASSWORD:-}
 
