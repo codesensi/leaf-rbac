@@ -19,8 +19,9 @@ COPY leaf-rbac-system/pom.xml leaf-rbac-system/pom.xml
 COPY leaf-rbac-api/pom.xml leaf-rbac-api/pom.xml
 COPY leaf-rbac-bootstrap/pom.xml leaf-rbac-bootstrap/pom.xml
 
-# Windows 下 COPY 的 mvnw 可能丢失可执行位，补上
-RUN chmod +x mvnw
+# Windows 下 COPY 的 mvnw 可能是 CRLF 行尾，Linux 容器的 shebang 无法解析会报 "./mvnw: not found"；
+# 转成 LF 并补可执行位，保证容器内可运行。
+RUN sed -i 's/\r$//' mvnw && chmod +x mvnw
 
 # 预下载依赖（仅 pom，命中缓存时后续编译秒级完成）
 RUN ./mvnw -B -q dependency:go-offline -pl leaf-rbac-bootstrap -am || true

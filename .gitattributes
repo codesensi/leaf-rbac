@@ -1,0 +1,10 @@
+# 统一换行符约定：避免 Windows/Linux 签出差 ISO 导致 Docker/CI 脚本异常
+* text=auto
+
+# Unix 脚本必须 LF（Docker 容器内 shebang 依赖 LF，CRLF 会报 ./xxx: not found）
+*.sh text eol=lf
+mvnw text eol=lf
+
+# Windows 批处理保留 CRLF
+*.cmd text eol=crlf
+mvnw.cmd text eol=crlf
