@@ -9,11 +9,6 @@
 FROM maven:3.9-eclipse-temurin-21 AS builder
 WORKDIR /build
 
-# 安装 git：供 Spring Boot / git-commit-id 插件读取 commit 信息（禁止再报 "current commit information was not captured by the build: git was not found" 警告）
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends git \
-    && rm -rf /var/lib/apt/lists/*
-
 # 优先拷贝 pom 与 mvnw，利用 Docker 层缓存加速依赖下载
 COPY pom.xml ./
 COPY .mvn .mvn
