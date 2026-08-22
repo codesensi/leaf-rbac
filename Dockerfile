@@ -2,7 +2,7 @@
 # leaf-rbac 多阶段构建 Dockerfile
 #   阶段1: Maven 编译打包  阶段2: 精简运行镜像
 # 用法:
-#   docker build -t leaf-rbac:1.0.0 .
+#   docker build -t codesensi/leaf-rbac:latest .
 # ============================================================
 
 # ---------- 阶段1：构建 ----------
