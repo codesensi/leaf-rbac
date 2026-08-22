@@ -26,6 +26,12 @@ DEPLOY.md               # 本文档
    ```
    若某中间件没映射端口，需要重新以映射方式启动它，或改用「方案：join 中间件网络」（见文末扩展）。
 3. 记下宿主机对外可达的 IP（`hostname -I` 或局域网 IP）。应用与该中间件同机、且中间件用 `bridge` 映射时，填 `127.0.0.1` 即可；跨机/外部访问则填那台机器的局域网或公网 IP。
+4. **bind mount 目录属主必须与容器运行 UID(1001) 对齐**（否则首次启动写 `app.lock`/日志会 `Permission denied` 导致应用启动失败）：
+   ```bash
+   sudo mkdir -p /docker/leaf-rbac/data /docker/leaf-rbac/logs
+   sudo chown -R 1001:1001 /docker/leaf-rbac
+   ```
+   `1001` 是 Dockerfile 中 `useradd -u 1001 appuser` 的容器内用户 UID。若用 root 建目录而未设属主，容器内非 root 用户无法写入，症状是：`docker ps` 里容器 Up，但 `curl 127.0.0.1:9098` 报 `Connection reset by peer`、日志出现 `FileNotFoundException: ./data/app.lock (Permission denied)`。
 
 ## 二、配置环境变量
 

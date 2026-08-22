@@ -48,14 +48,14 @@ LABEL maintainer="codesensi"
 
 WORKDIR /app
 
-# 非 root 用户运行，提升安全性
+# 运行用户 appuser（entrypoint 内会 chown 挂载目录并降权到该用户运行，故容器以 root 进入）
 RUN useradd -r -u 1001 appuser
 COPY --from=builder /build/app.jar /app/app.jar
 
-# 数据/日志目录交给卷挂载；运行目录权限交给 appuser
-RUN mkdir -p /app/data /app/logs && chown -R appuser:appuser /app
-
-USER appuser
+# entrypoint：root 进入修正 bind 目录属主后降权到 appuser 启动
+COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh \
+    && mkdir -p /app/data /app/logs && chown -R appuser:appuser /app/app.jar /app/data /app/logs
 
 # 主业务端口 9098；Actuator 管理端口 9099（health 检查用）
 EXPOSE 9098 9099
@@ -63,5 +63,5 @@ EXPOSE 9098 9099
 ENV JAVA_OPTS="-Xms256m -Xmx512m" \
     SPRING_PROFILES_ACTIVE=prod
 
-# CMD 使用 exec 形式，保证优雅停机信号(TERM)能被 JVM 捕获
-ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar /app/app.jar"]
+# 用 entrypoint（先 root chown 挂载目录，再 setpriv 降权到 appuser 执行 java）
+ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
