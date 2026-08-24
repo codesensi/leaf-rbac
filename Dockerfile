@@ -1,5 +1,5 @@
 # ============================================================
-# leaf-rbac 多阶段构建 Dockerfile
+# leaf-rbac 多阶段构建 Dockerfile（分层 jar 版本）
 #   阶段1: Maven 编译打包  阶段2: 精简运行镜像
 # 用法:
 #   docker build -t codesensi/leaf-rbac:latest .
@@ -36,8 +36,10 @@ COPY leaf-rbac-api leaf-rbac-api
 COPY leaf-rbac-bootstrap leaf-rbac-bootstrap
 
 # 父 pom 已硬编码 surefire skipTests=true，无需额外 -DskipTests
+# 打包后用 jarmode=tools 解包为分层（dependencies / spring-boot-loader /
+# snapshot-dependencies / application），运行阶段按层 COPY 以独立缓存依赖层。
 RUN ./mvnw -B clean package -pl leaf-rbac-bootstrap -am \
-    && cp leaf-rbac-bootstrap/target/leaf-rbac-1.0.0.jar /build/app.jar
+    && java -Djarmode=tools -jar leaf-rbac-bootstrap/target/leaf-rbac-1.0.0.jar extract --layers --launcher --destination /build/extracted
 
 # ---------- 阶段2：运行 ----------
 FROM eclipse-temurin:21-jre
@@ -47,12 +49,18 @@ WORKDIR /app
 
 # 运行用户 appuser（entrypoint 内会 chown 挂载目录并降权到该用户运行，故容器以 root 进入）
 RUN useradd -r -u 1001 appuser
-COPY --from=builder /build/app.jar /app/app.jar
+
+# 按层拷贝，依赖层独立于业务代码层，依赖不变时命中缓存、镜像更小
+COPY --from=builder /build/extracted/dependencies/ ./
+COPY --from=builder /build/extracted/spring-boot-loader/ ./
+COPY --from=builder /build/extracted/snapshot-dependencies/ ./
+COPY --from=builder /build/extracted/application/ ./
 
 # entrypoint：root 进入修正 bind 目录属主后降权到 appuser 启动
+# （分层后不再 -jar，改用 Spring Boot 的 JarLauncher 启动）
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh \
-    && mkdir -p /app/data /app/logs && chown -R appuser:appuser /app/app.jar /app/data /app/logs
+    && mkdir -p /app/data /app/logs && chown -R appuser:appuser /app/data /app/logs
 
 # 主业务端口 9098；Actuator 管理端口 9099（health 检查用）
 EXPOSE 9098 9099
