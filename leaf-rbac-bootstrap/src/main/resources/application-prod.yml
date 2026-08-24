@@ -28,9 +28,9 @@ spring:
   data:
     redis:
       database: ${REDIS_DATABASE:1}
-      host: ${REDIS_HOST:192.168.2.3}
+      host: ${REDIS_HOST:-}
       port: ${REDIS_PORT:6379}
-      password: ${REDIS_PASSWORD:redis_kiGRPw}
+      password: ${REDIS_PASSWORD:-}
       timeout: 60s
       lettuce:
         pool:
