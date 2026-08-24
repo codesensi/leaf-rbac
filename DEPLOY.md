@@ -6,6 +6,7 @@
 
 ```
 Dockerfile              # 多阶段构建：Maven(JDK21) 编译 → 精简 JRE 运行
+docker-entrypoint.sh    # 容器入口：root 进入 chown bind 目录后降权到 appuser 启动
 docker-compose.yml      # 仅编排应用，经宿主机 IP 直连中间件（无自定义网络）
 .env.example            # 部署环境变量模板（复制为 .env 使用）
 DEPLOY.md               # 本文档
@@ -26,12 +27,10 @@ DEPLOY.md               # 本文档
    ```
    若某中间件没映射端口，需要重新以映射方式启动它，或改用「方案：join 中间件网络」（见文末扩展）。
 3. 记下宿主机对外可达的 IP（`hostname -I` 或局域网 IP）。应用与该中间件同机、且中间件用 `bridge` 映射时，填 `127.0.0.1` 即可；跨机/外部访问则填那台机器的局域网或公网 IP。
-4. **bind mount 目录属主必须与容器运行 UID(1001) 对齐**（否则首次启动写 `app.lock`/日志会 `Permission denied` 导致应用启动失败）：
+4. `bind mount` 目录无需手工设置属主：容器以 root 进入，启动时由 `docker-entrypoint.sh` 自动 `chown` `/app/data`、`/app/logs` 到 `appuser(UID 1001)` 后再降权运行，不需要 `sudo chown`。只需确保目标目录存在即可：
    ```bash
    sudo mkdir -p /docker/leaf-rbac/data /docker/leaf-rbac/logs
-   sudo chown -R 1001:1001 /docker/leaf-rbac
    ```
-   `1001` 是 Dockerfile 中 `useradd -u 1001 appuser` 的容器内用户 UID。若用 root 建目录而未设属主，容器内非 root 用户无法写入，症状是：`docker ps` 里容器 Up，但 `curl 127.0.0.1:9098` 报 `Connection reset by peer`、日志出现 `FileNotFoundException: ./data/app.lock (Permission denied)`。
 
 ## 二、配置环境变量
 
@@ -58,6 +57,7 @@ docker build -t codesensi/leaf-rbac:latest .
 
 - `-t codesensi/leaf-rbac:latest`：镜像标签（名称:标签）。`codesensi` 为镜像仓库命/发布账号，`leaf-rbac` 为镜像名，`latest` 为标签，均可自定义，如 `-t codesensi/leaf-rbac:1.0.0`。
 - 构建完成后 `docker images` 可看到 `codesensi/leaf-rbac  latest`。
+- 镜像标签与 compose 中的 `image: codesensi/leaf-rbac:${APP_IMAGE_TAG:-latest}` 对应：构建/部署的标签需与 `.env` 的 `APP_IMAGE_TAG`（默认 `latest`）保持一致，否则 compose 会因找不到对应 tag 的镜像而失败。
 - 若要把镜像推到私有仓库供其它机器拉取：
   ```bash
   docker tag codesensi/leaf-rbac:latest <registry>/codesensi/leaf-rbac:latest
@@ -81,7 +81,7 @@ docker compose --env-file .env logs -f app
 docker compose --env-file .env ps
 ```
 
-> 说明：`pull_policy: never` 表示只用本地镜像、不去 registry 拉取。重新打包镜像后，需 `docker compose --env-file .env up -d --force-recreate` 让新镜先生效。
+> 说明：compose 采用 `image:` 直引镜像（无 `build:` 段，不做构建）。本地若无该镜像且无法从 registry 拉取则会失败，故部署前请先完成上一步的镜像打包。重新打包镜像后，需 `docker compose --env-file .env up -d --force-recreate` 让新镜像生效。
 
 启动成功后：
 
@@ -109,7 +109,7 @@ docker compose --env-file .env ps
 - traceId 链路：每次请求会生成 traceId 打印在日志中，跨服务排查可在日志中检索。
 
 ### 5. 限定访问 / 安全
-- 镜像以非 root 用户（`appuser`）运行。
+- 应用进程以非 root 用户（`appuser`, UID 1001）运行：容器以 root 进入，`docker-entrypoint.sh` 先 `chown` bind 挂载目录，再用 `setpriv`（缺失时回退 `su`）降权到 `appuser` 启动 Java。
 - 连接密码通过 `.env` 注入，`.env` **已被 .gitignore 忽略，勿提交**。镜像内不含明文密码。
 - 若需限制单台实例内存：改 `JAVA_OPTS`（默认 `-Xms256m -Xmx512m`）。
 - 生产建议在应用前加 Nginx/Traefik 反代 https；`9099` 管理端点默认不映射，天然不对外。
