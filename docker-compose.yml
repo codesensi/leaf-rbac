@@ -16,7 +16,8 @@
 services:
   app:
     # image-only：引用已打包好的镜像（先 docker build 生成）。本地没有时不会自动构建，而是直接使用
-    image: codesensi/leaf-rbac:latest
+    # 镜像名固定 codesensi/leaf-rbac，标签由 .env 的 APP_IMAGE_TAG 指定（缺省 latest）
+    image: codesensi/leaf-rbac:${APP_IMAGE_TAG:-latest}
     container_name: leaf-rbac
     restart: unless-stopped
     ports:
