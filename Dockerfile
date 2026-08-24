@@ -41,7 +41,7 @@ RUN ./mvnw -B clean package -pl leaf-rbac-bootstrap -am \
 
 # ---------- 阶段2：运行 ----------
 FROM eclipse-temurin:21-jre
-LABEL maintainer="codesensi"
+LABEL maintainer="codesensi<codesensi@aliyun.com>"
 
 WORKDIR /app
 
