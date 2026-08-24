@@ -105,10 +105,23 @@ management:
       # 追踪数据会通过该端点发送到后端的追踪系统（如 Jaeger、Tempo、Grafana Cloud 或 OpenTelemetry Collector）。
       # endpoint: http://localhost:4318/v1/traces
   server:
-    # 独立管理端口
+    # 独立管理端口（区别于上面 server.port 的主业务端口 9098）
+    # 此端口会启动一个独立的 Tomcat 实例，仅承载 Actuator 监控端点，
+    # 与主业务端口隔离，便于在 Nginx/防火墙层面单独控制其暴露范围。
     port: 9099
+    # 独立管理端点的请求路径（同时也是该管理 Tomcat 的 context path）。
+    # 设置后日志会打印 "Tomcat started ... with context path '/actuator'"
+    # 与主业务端口的 context path '/' 区分开，避免两条启动日志难以辨认。
+    # 访问形式：http://127.0.0.1:9099/actuator/health（与下面前缀组合后不加双 /actuator）
+    base-path: /actuator
   endpoints:
     web:
+      # 端点基础路径前缀。配合上面的 base-path 必须配套设置：
+      #   显式设为 "/"，base-path=/actuator + 端点(health) => /actuator/health
+      # 若省略此项（保留 Spring Boot 默认 /actuator），端点前缀会与 base-path
+      # 叠加，导致 URL 变成 /actuator/actuator/health 的双重路径（实测 404/200 验证
+      #：/actuator/health 失效）。故此处必须固定为 "/" 以维持原有访问地址。
+      base-path: /
       exposure:
         # 通过 HTTP 暴露的端点列表（白名单）
         include: health,info,metrics,loggers

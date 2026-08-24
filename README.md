@@ -333,6 +333,10 @@ java -jar leaf-rbac-1.0.0.jar --spring.profiles.active=prod
 | `9098` | 应用主端口（业务 API） | 对外暴露，置于反向代理 / 负载均衡之后 |
 | `9099` | Actuator 管理端口 | **仅内网访问**，勿暴露公网 |
 
+> 两个端口各由独立的 Tomcat 实例承载，启动日志各打印一行 `Tomcat started on port ... (http) with context path '...'`：
+> `9098` 的 context path 为 `/`（业务接口），`9099` 的 context path 为 `/actuator`（管理端点，即 `management.server.base-path`），
+> 二者据此可直接区分，管理端点访问地址形如 `http://127.0.0.1:9099/actuator/health`。
+
 生产默认已关闭 Swagger（`springdoc.*.enabled: false`）；Actuator 仅开放 `health,info,metrics,loggers` 且 `read_only`。
 
 ### 验证部署
