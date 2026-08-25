@@ -25,7 +25,7 @@ DEPLOY.md               # 本文档
    #   0.0.0.0:3306->3306/tcp   (MySQL)
    #   0.0.0.0:6379->6379/tcp   (Redis)
    ```
-   若某中间件没映射端口，需要重新以映射方式启动它，或改用「方案：join 中间件网络」（见文末扩展）。
+   若某中间件没映射端口，需要重新以映射方式启动它。
 3. 记下宿主机对外可达的 IP（`hostname -I` 或局域网 IP）。应用与该中间件同机、且中间件用 `bridge` 映射时，填 `127.0.0.1` 即可；跨机/外部访问则填那台机器的局域网或公网 IP。
 4. `bind mount` 目录无需手工设置属主：容器以 root 进入，启动时由 `docker-entrypoint.sh` 自动 `chown` `/app/data`、`/app/logs` 到 `appuser(UID 1001)` 后再降权运行，不需要 `sudo chown`。只需确保目标目录存在即可：
    ```bash
@@ -127,67 +127,3 @@ docker compose --env-file .env down          # 停止
 docker compose --env-file .env exec app sh   # 进入容器
 ```
 
-## 七、备选方案
-
-### A. 中间件未映射端口时：让应用 join 中间件所在网络
-
-上文默认「宿主机 IP 直连」要求中间件端口映射到宿主机。若某中间件**没有**映射端口（如 MySQL 只在容器内网暴露），可改为让应用加入它所在的 Docker 网络，用服务名访问。此时在 `docker-compose.yml` 中给 `app` 加回网络归属并声明外部网络：
-
-```yaml
-services:
-  app:
-    # ...（其余同上）
-    networks:
-      - ext-net
-
-networks:
-  ext-net:
-    name: <查到的中间件网络名>   # docker inspect <中间件容器> --format '{{range $k,$v := .NetworkSettings.Networks}}{{$k}}{{println}}{{end}}'
-    external: true
-```
-
-并把 `.env` 中 `MYSQL_HOST`/`REDIS_HOST` 改为容器服务名（`mysql`/`redis`），而不是宿主机 IP。
-
-### B. 想连中间件一起用 Compose 编排
-
-本方案是「统一由 Compose 管理中间件 + 应用」，与「已有中间件」场景不同，供没有现成中间件容器时参考。为应用声明内部网络并与中间件同网：
-
-```yaml
-services:
-  mysql:
-    image: mysql:8.4
-    environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD}
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
-      MYSQL_USER: ${MYSQL_USERNAME}
-    volumes: ["mysql_data:/var/lib/mysql"]
-    networks: ["leaf-net"]
-  redis:
-    image: redis:7
-    command: ["redis-server", "--requirepass", "${REDIS_PASSWORD}"]
-    volumes: ["redis_data:/data"]
-    networks: ["leaf-net"]
-
-networks:
-  leaf-net: {}          # 非 external，由 Compose 创建
-volumes:
-  mysql_data:
-  redis_data:
-```
-
-> 提醒：此方案下 `MYSQL_HOST`/`REDIS_HOST` 填服务名 `mysql`/`redis`（Compose DNS 解析），端口也填容器内端口（3306/6379），无需靠宿主机映射。
-
-### 不引入 Maven、直接 COPY 已打好的 jar 的替代 Dockerfile
-
-若你在宿主机用 `.\mvnw.cmd clean package` 已打好 `leaf-rbac-bootstrap/target/leaf-rbac-1.0.0.jar`，可用更快的单阶段镜像：
-
-```dockerfile
-FROM eclipse-temurin:21-jre
-WORKDIR /app
-RUN useradd -r -u 1001 appuser
-COPY leaf-rbac-bootstrap/target/leaf-rbac-1.0.0.jar /app/app.jar
-RUN mkdir -p /app/data /app/logs && chown -R appuser:appuser /app
-USER appuser
-EXPOSE 9098 9099
-ENTRYPOINT ["sh", "-c", "java ${JAVA_OPTS} -jar /app/app.jar"]
-```
